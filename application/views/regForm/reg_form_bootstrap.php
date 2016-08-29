@@ -61,7 +61,7 @@
             float: left;
             display: inline-block;
         }
-        a#addSelectorUniversity{
+        a.addBtn{
             background: #fff none repeat scroll 0 0;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -324,7 +324,8 @@
                                     }
                                     ?>
                                 </select>
-                                <input type="button" class="addNewToSelector">
+                                <a></a>
+                                <a class="btn addBtn" data-toggle="modal" data-target=".EntrepreneurProgrammeModal" id="addProgramme"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
                             </div>
                         </div>
                     </div>
@@ -405,7 +406,7 @@
                                     ?>
                                 </select>
                                 <a></a>
-                                <a class="btn" data-toggle="modal" data-target=".InstitutionModal" id="addSelectorUniversity"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
+                                <a class="btn addBtn" data-toggle="modal" data-target=".InstitutionModal" id="addSelectorUniversity"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
                             </div>
                         </div>
                     </div>
@@ -421,7 +422,7 @@
 
 <!--Working on Modals-->
 
-<div class="modal fade InstitutionModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal InstitutionModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -443,6 +444,58 @@
         </div>
     </div>
 </div>
+
+<div class="modal EntrepreneurProgrammeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Member">Programme Member Name</label>
+                    <input id="Member" name="Member" type="text" class="form-control" placeholder="Member" />
+                </div>
+                <div class="form-group">
+                    <label for="Web_Address">Web Address</label>
+                    <input id="Web_Address" name="Web_Address" type="text" class="form-control" placeholder="Web Address" />
+                </div>
+                <div class="form-group">
+                    <label for="State_Territory">State Territory</label>
+                    <input id="State_Territory" name="State_Territory" type="text" class="form-control" placeholder="State_Territory" />
+                </div>
+                <div class="form-group">
+                    <label for="Project_Location">Project Location</label>
+                    <input id="Project_Location" name="Project_Location" type="text" class="form-control" placeholder="Project_Location" />
+                </div>
+                <div class="form-group">
+                    <label for="Project_Title">Project Title</label>
+                    <input id="Project_Title" name="Project_Title" type="text" class="form-control" placeholder="Project_Title" />
+                </div>
+                <div class="form-group">
+                    <label for="Project_Summary">Project Summary</label>
+                    <input id="Project_Summary" name="Project_Summary" type="text" class="form-control" placeholder="Project_Summary" />
+                </div>
+                <div class="form-group">
+                    <label for="Market">Market</label>
+                    <input id="Market" name="Market" type="text" class="form-control" placeholder="Market" />
+                </div>
+                 <div class="form-group">
+                    <label for="Technology">Technology</label>
+                    <input id="Technology" name="Technology" type="text" class="form-control" placeholder="Technology" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="addEntrepreneurProgramme" type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     $(function(){
         $("input[name='incorporatedAus']").on("change",function(){
@@ -489,21 +542,114 @@
             }else{
                 Institution.parents(".form-group").removeClass('has-error');
             }
-            $.ajax({
-                url: "<?=base_url()?>Reg/addInstitution",
-                type:"POST",
-                data:{institution:InstitutionValue},
-                success:function(output){
-                    var data = output.split("::");
-                    if(data[0] === 'OK'){
-                        $("#selectorUniversity").select2('data', {id: data[1], text: data[2]});
-                    }else{
-
+            var InstitutionCheck='0';
+            var InstitutionFilter = $('#selectorUniversity option').filter(
+                function(){ 
+                    if($(this).html().toLowerCase() == InstitutionValue.toLowerCase()){  
+                        var valuecheck       = $(this).val();
+                        var selectUniversity = $("#selectorUniversity").select2();
+                        selectUniversity.val(valuecheck).trigger("change");
+                        InstitutionCheck ='1';
+                        $('.InstitutionModal').modal().hide();
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
                     }
-                }
-            });
-        });
+                });
+            if(InstitutionCheck=='0'){
+                $.ajax({
+                    url: "<?=base_url()?>Reg/addInstitution",
+                    type:"POST",
+                    data:{institution:InstitutionValue},
+                    success:function(output){
+                            var  data =  output.split('::');
+                               if(data[0]=='OK'){
+                                   var institutionId   = data[1];
+                                   var institutionName = data[2];
+                                   var newOption = new Option(institutionName,institutionId, true, true);
+                                    $("#selectorUniversity").append(newOption).trigger('change');
+                                    $('.InstitutionModal').modal().hide();
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                }else if(data[0]=='Existed'){
+                                    var InstitutionNameValue = $('#selectorUniversity option').filter(function (){ 
+                                        return $(this).html() == InstitutionValue}).val();
+                                    var selectUniversity     = $("#selectorUniversity").select2();
+                                    selectUniversity.val(InstitutionNameValue).trigger("change"); 
+                                    $('.InstitutionModal').modal().hide();
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                }
+                    }
+                });
 
+            }
+        });
+        $("#addEntrepreneurProgramme").on("click",function(){
+            var Member = $("#Member");  
+            var MemberValue = Member.val();
+            if(MemberValue.length === 0){
+                Member.parents(".form-group").addClass('has-error');
+                return false ;
+            }else{
+                Member.parents(".form-group").removeClass('has-error');
+            }
+            var Web_Address         = $("#Web_Address").val();
+            var Project_Title       = $("#Project_Title").val();
+            var State_Territory     = $("#State_Territory").val();
+            var Project_Summary     = $("#Project_Summary").val();
+            var Project_Location    = $("#Project_Location").val();
+            var Market              = $("#Market").val();
+            var Technology          = $("#Technology").val();
+            var ProgrammeNameCheck  = '0';
+            var ProgrammeFilter  = $('#selectAcceleration option').filter(
+                function(){ 
+                    if($(this).html() == MemberValue){
+                        var valuecheck      = $(this).val();
+                        var selectProgramme = $("#selectAcceleration").select2();
+                        selectProgramme.val(valuecheck).trigger("change"); 
+                        ProgrammeNameCheck  = '1';
+                        $('.EntrepreneurProgrammeModal').modal().hide();
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                    }
+                });
+            if(ProgrammeNameCheck=='0'){
+                $.ajax({
+                    url: "<?=base_url()?>Reg/addEntrepreneurProgramme",
+                    type:"POST",
+                    data:{
+                        Market:Market,
+                        Member:MemberValue,
+                        Technology:Technology,
+                        Web_Address:Web_Address,
+                        Project_Title:Project_Title,
+                        State_Territory:State_Territory,
+                        Project_Summary:Project_Summary,
+                        Project_Location:Project_Location
+                    },
+                    success:function(output){
+                        var  data =  output.split('::');
+                        if(data[0]=='OK'){
+                            var programmeId   = data[1];
+                            var programmeName = data[2]; 
+                            var newOption = new Option(programmeName,programmeId, true, true);
+                                $("#selectAcceleration").append(newOption).trigger('change');
+                                $('.EntrepreneurProgrammeModal').modal().hide();
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
+                        }else if(data[0]=='Existed'){
+                            var ProgrammeNameValue = $('#selectAcceleration option').filter(function () { return $(this).html() == ProgrammeValue}).val();
+                            var valuecheck         = $(this).val();
+                            var selectProgramme    = $("#selectAcceleration").select2();
+                            selectProgramme.val(ProgrammeNameValue).trigger("change");  
+                            $('.EntrepreneurProgrammeModal').modal().hide();
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>
 </body>

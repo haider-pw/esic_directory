@@ -109,7 +109,7 @@
                     <label for="industryClassification">Industry classification (from our provided listing))</label>
                     <div class="row">
                         <div class="col-lg-6">
-                            <select id="industryClassification" style="width: 100%;">
+                            <select id="industryClassification" style="width: 80%;">
                                 <option value="0">Select...</option>
                                 <?php
                                 if(isset($sectors) and !empty($sectors)){
@@ -119,6 +119,8 @@
                                 }
                                 ?>
                             </select>
+                             <a class="btn addBtn" data-toggle="modal" data-target=".IndustryClassificationModal" id="addIndustryClassification">
+                             <span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
                         </div>
                     </div>
                 </div>
@@ -127,9 +129,34 @@
         </form>
 
     </div></div>
+<!--Working on Modals-->
 
+<div class="modal IndustryClassificationModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Industry">Industry Classification Name</label>
+                    <input id="Industry" name="Industry" type="text" class="form-control" placeholder="Industry Classification" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="addClassification" type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Latest compiled and minified JavaScript -->
+<script type="text/javascript" src="<?=base_url()?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 <script type="text/javascript">
     $(function(){
@@ -182,6 +209,59 @@
 
                 }
             });
+        });
+
+        $("#addClassification").on("click",function(){
+            var Industry = $("#Industry");
+            var IndustryValue = Industry.val();
+            
+            if(IndustryValue.length === 0){
+                Industry.parents(".form-group").addClass('has-error');
+                return false ;
+            }else{
+                Industry.parents(".form-group").removeClass('has-error');
+            }
+            var IndustryNameCheck = '0';
+            var Industryfilter    = $('#industryClassification option').filter(
+                function(){ 
+                    if($(this).html() == IndustryValue){
+                        var valuecheck      = $(this).val();
+                        var selectIndustry  = $("#industryClassification").select2();
+                        selectIndustry.val(valuecheck).trigger("change"); 
+                        IndustryNameCheck='1';
+                        $('.IndustryClassificationModal').modal().hide();
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                    }
+                });
+            if(IndustryNameCheck=='0'){
+                $.ajax({
+                    url: "<?=base_url()?>Reg/addIndustryClassification",
+                    type:"POST",
+                    data:{Industry:IndustryValue},
+                    success:function(output){
+                        var  data =  output.split('::');    
+                        if(data[0]=='OK'){
+                            var IndustryId   = data[1];
+                            var IndustryName = data[2]; 
+                            var newOption    = new Option(IndustryName,IndustryId, true, true);
+                                $("#industryClassification").append(newOption).trigger('change');
+                                $('.IndustryClassificationModal').modal().hide();
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
+                        }else if(data[0]=='Existed'){
+                            var IndustryNameValue   = $('#industryClassification option').filter(function () { return $(this).html() == IndustryValue}).val();
+                            var valuecheck          = $(this).val();
+                            var selectIndustry      = $("#industryClassification").select2();
+                            selectIndustry.val(IndustryNameValue).trigger("change"); 
+                            $('.IndustryClassificationModal').modal().hide();
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+                        }
+                    }
+                });
+            }
+            
         });
     });
 </script>

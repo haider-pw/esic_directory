@@ -255,18 +255,99 @@ class Reg extends CI_Controller {
     public function addInstitution(){
         $institution = $this->input->post("institution");
         if(empty($institution) or !is_string($institution)){
-            echo "FAIL::Please Add Institution, Field Can Not be Black During Submission.";
+            echo "FAIL::Please Add Institution, Field Can Not be Blank During Submission.";
             return;
         }
 
-        $insertData = array(
-            'institution' => $institution
-        );
+        $institutionCheckQuery = $this->db->get_where('esic_institution',array('institution'=>$institution));
 
-        $insertResult = $this->Common_model->insert_record('esic_institution',$insertData);
+        if($institutionCheckQuery->num_rows() > 0){
+      
+            echo "Existed::".$institution;
 
-        if($insertResult > 0){
-            echo "OK::".$insertResult."::".$institution;
+        }else{
+           
+            $insertData = array(
+                'institution' => $institution
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_institution',$insertData);
+
+            if($insertResult > 0){
+                echo "OK::".$insertResult."::".$institution;
+            }
+       }
+
+    }
+    public function addIndustryClassification(){
+      //  echo 'OK';
+
+    
+        $Industry = $this->input->post("Industry");
+        if(empty($Industry) or !is_string($Industry)){
+            echo "FAIL::Please Add Institution, Field Can Not be Blank During Submission.";
+            return;
         }
+
+        $institutionCheckQuery = $this->db->get_where('esic_sectors',array('sector'=>$Industry));
+
+        if($institutionCheckQuery->num_rows() > 0){
+            //print_r($institutionCheckQuery);
+            echo "Existed::".$Industry;
+
+        }else{
+           
+            $insertData = array(
+                'sector' => $Industry
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_sectors',$insertData);
+
+            if($insertResult > 0){
+                echo "OK::".$insertResult."::".$Industry;
+            }
+        }
+
+    }
+
+     public function addEntrepreneurProgramme(){
+        $Member             = $this->input->post("Member");
+        $Market             = $this->input->post("Market");
+        $Technology         = $this->input->post("Technology");
+        $Web_Address        = $this->input->post("Web_Address");
+        $Project_Title      = $this->input->post("Project_Title");
+        $State_Territory    = $this->input->post("State_Territory");
+        $Project_Summary    = $this->input->post("Project_Summary");
+        $Project_Location   = $this->input->post("Project_Location");
+        if(empty($Member) or !is_string($Member)){
+            echo "FAIL::Please Fill All Required Fields, Those Can Not be Blank During Submission.";
+            return;
+        }
+
+        $iMemberCheckQuery = $this->db->get_where('esic_acceleration',array('Member'=>$Member));
+
+        if($iMemberCheckQuery->num_rows() > 0){
+            //print_r($iMemberCheckQuery);
+            echo "Already Exist!";
+        }else{
+           
+            $insertData = array(
+                'Member'            => $Member,
+                'Market'            => $Market,
+                'Technology'        => $Technology,
+                'Web_Address'       => $Web_Address,
+                'Project_Title'     => $Project_Title,
+                'State_Territory'   => $State_Territory,
+                'Project_Summary'   => $Project_Summary,
+                'Project_Location'  => $Project_Location
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_acceleration',$insertData);
+
+            if($insertResult > 0){
+                echo "OK::".$insertResult."::".$Member;
+            }
+        }
+
     }
 }
