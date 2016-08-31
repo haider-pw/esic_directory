@@ -6,14 +6,14 @@
     <title>Form to Wizard with jQuery Validation plugin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/form.css">
+    <link href="<?=base_url();?>assets/css/form.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
-    <link href="<?=base_url()?>assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="<?=base_url()?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
+    <link href="<?=base_url();?>assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="<?=base_url();?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?=base_url()?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="<?=base_url();?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -29,7 +29,13 @@
             });
         });
     </script>
-
+    <style type="text/css">
+        #mainFormDiv {
+/*background-color: #424242;*/
+  box-shadow: 0 0 9px rgba(0,0,0,0.3);
+  background-image: url(uploads/8/4/3/6/84367404/background-images/561993498.jpg) !important;
+}
+    </style>
 </head>
 
 <body>
@@ -825,6 +831,10 @@
  var $signupForm = $( '#SignupForm' );
             
     $(document).ready(function() {
+
+    	$('#main-wrap').css('z-index', 'initial');
+    	$('#main-content').css('z-index', 'initial');
+
         var $form = $('#SignupForm');
         $("#SubmitForm").on("click",function(e){
             e.preventDefault();

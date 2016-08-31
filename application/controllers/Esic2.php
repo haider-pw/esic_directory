@@ -26,6 +26,9 @@ class Esic2 extends CI_Controller{
 
         //Pagination Config
         $this->perPage = 5;
+
+        //
+
     }
 
     public function index($uriSegment = NULL){
@@ -33,6 +36,9 @@ class Esic2 extends CI_Controller{
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
+         $data['sectors'] = $this->Common_model->select('esic_sectors');
+         $data['company'] = $this->Common_model->select('user');
 
         $config = array();
         $config['target']      = '#regList';
@@ -137,11 +143,20 @@ class Esic2 extends CI_Controller{
         $data["pageInfo"] = "Showing ".( $this->ajax_pagination->cur_page * $this->ajax_pagination->per_page)." of ". $config["total_rows"]." total results";
         $this->load->view('box_listing/db_list_ajax', $data, false);
     }
-    public function getCountry(){
+    public function getlist(){
         $page =  $_GET['page'];
         $this->load->model('Esic_model');
-        $countries = $this->Esic_model->getCountry($page);
-        print_r($countries);
+        $list= $this->Esic_model->getlist($page);
+        print_r($list);
+        exit;
+    }
+    public function getfilterlist(){
+        $page       =  $_GET['page'];
+        $secSelect  =  $_GET['secSelect'];
+        $comSelect  =  $_GET['comSelect'];
+        $this->load->model('Esic_model');
+        $list = $this->Esic_model->getfilterlist($page,$secSelect,$comSelect);
+        print_r($list);
         exit;
     }
 

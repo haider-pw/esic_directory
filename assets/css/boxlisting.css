@@ -37,20 +37,33 @@ body,body * {
 
 #filter #location_search[type="text"] {
   width: 100%;
+  height: 30px;
+  font-size: 13px;
 }
-
+#filter{
+   width: 82%;
+    display: inline-block;
+    vertical-align: top;
+}
+.filter.form{
+  padding: 10px 0px;
+}
 #filter_submit {
+    display: inline-block;
+    vertical-align: top;
+    float: right;
 }
 
-#filter_submit input {
+#filter_submit button {
   background: #345;
   color: #fff;
   border: solid thin #fff;
-  margin: 10px 0;
+  margin: 0px 0;
   padding: 8px 20px;
   font-size: 12px;
   cursor: pointer;
   letter-spacing: 1px;
+  height: 30px;
 }
 
 .module {
@@ -103,14 +116,16 @@ body,body * {
 }
 
 #filter input[type="text"] {
-  background: #FFF;
+	border: solid 2px #eee;
+  /*background: #FFF;
   background-color: #FFF;
   background-image: -ms-linear-gradient(top,#EEE 0%,#FFF 100%);
   background-image: -moz-linear-gradient(top,#EEE 0%,#FFF 100%);
   background-image: -o-linear-gradient(top,#EEE 0%,#FFF 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#FC3620),color-stop(1,#FFF));
   background-image: -webkit-linear-gradient(top,#EEE 0%,#FFF 100%);
-  background-image: linear-gradient(to bottom,#EEE 0%,#FFF 100%);
+  background-image: linear-gradient(to bottom,#EEE 0%,#FFF 100%);*/
+  background: transparent;
   width: calc(100% - 6px);
   padding: 5px 10px;
 }
@@ -147,23 +162,24 @@ div#search-left {
 }
 
 .module {
-  background: #424242 none repeat scroll 0 0;
-  border-color: #82b1ff;
-  border-radius: 0;
-  border-style: solid;
-  border-width: 3px 0 0;
-  box-shadow: none;
-  color: #fff;
-  display: inline-block;
-  float: none;
-  margin-bottom: 25px;
-  padding: 10px 15px;
-  position: relative;
-  width: calc(100% - 30px);
+      /* background: #424242 none repeat scroll 0 0; */
+    border-color: #82b1ff;
+    border-radius: 0;
+    border-style: solid;
+    border-width: 3px 0 0;
+    box-shadow: none;
+    color: #fff;
+    display: inline-block;
+    float: none;
+    margin-bottom: 25px;
+    padding: 10px 15px;
+    position: relative;
+    width: calc(100% - 30px);
+    border: solid thin #eee;
 }
 
 .module .module-section {
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 }
 
 .module h2,.module h3,.module h4 {
@@ -190,7 +206,7 @@ div#search-left {
 }
 
 #filter .searchbox {
-  width: 33%;
+  width: 30%;
   display: inline-block;
   vertical-align: top;
   max-width: 200px;
@@ -204,21 +220,24 @@ div#search-left {
   max-width: 200px;
   margin: 0 auto;
   float: none;
-  width: 33%;
+  width: 30%;
   margin-left: 20px;
 }
 
 .selectFilters select {
+	font-size: 13px;
   width: 100%;
-  background: #FFF;
-  background-color: #FFF;
+  background: transparent;
+  border: solid 2px #eee;
+  /*background-color: #FFF;
   background-image: -ms-linear-gradient(top,#EEE 0%,#FFF 100%);
   background-image: -moz-linear-gradient(top,#EEE 0%,#FFF 100%);
   background-image: -o-linear-gradient(top,#EEE 0%,#FFF 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#FC3620),color-stop(1,#FFF));
   background-image: -webkit-linear-gradient(top,#EEE 0%,#FFF 100%);
-  background-image: linear-gradient(to bottom,#EEE 0%,#FFF 100%);
+  background-image: linear-gradient(to bottom,#EEE 0%,#FFF 100%);*/
   padding: 5px 10px;
+  height: 30px;
 }
 
 .hcard-search {
@@ -250,11 +269,11 @@ h1.homepage,.page-body h1,h1.hero {
 
 .featured-red {
   float: right;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: #FFF;
   padding: 5px 10px;
-  background-color: #e71a1a;
+  background-color: #334455;
   box-shadow: none;
 }
 
@@ -263,7 +282,7 @@ h1.homepage,.page-body h1,h1.hero {
   box-shadow: none;
   color: #fff;
   float: right;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   padding: 5px 10px;
 }
@@ -273,7 +292,7 @@ h1.homepage,.page-body h1,h1.hero {
   box-shadow: none;
   color: #000;
   float: right;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   padding: 5px 10px;
 }
@@ -294,7 +313,7 @@ ul.product-list li {
   border: solid thin #eee;
   border-radius: 25px;
   padding: 20px;
-  height: 600px;
+  height: 650px;
 }
 
 ul.product-list li div {
@@ -383,6 +402,21 @@ ul.product-list li .product-details span {
     height: auto;
     height: 650px;
   }
+  #filter {
+  	width: 100%;
+  	display: block;
+  	float: none;
+  	text-align: center;
+    margin: 0px auto 10px;
+  }
+  #filter_submit {
+  	width: 100%;
+  	display: block;
+  	float: none;
+  	text-align: center;
+    margin: 10px auto 0px;
+  }
+
 }
 
 @media all and (max-width:768px) {
@@ -394,4 +428,11 @@ ul.product-list li .product-details span {
     height: auto;
     min-height: auto;
   }
+  #filter .searchbox,.selectFilters{
+  	display: block;
+  	width: 100%;
+  	float: none;
+  	margin:10px auto;
+  }
+
 }
