@@ -20,6 +20,7 @@ class Reg extends CI_Controller {
      * So any other public methods not prefixed with an underscore will
      * map to /index.php/welcome/<method_name>
      * @see https://codeigniter.com/user_guide/general/urls.html
+     *
      */
 
 
@@ -42,23 +43,14 @@ class Reg extends CI_Controller {
         //University
         $data['institutions'] = $this->Common_model->select('esic_institution');
         $data['accelerationCommercials'] = $this->Common_model->select('esic_acceleration');
+        $data['acceleratorProgramme'] = $this->Common_model->select('esic_acceleration_logo');
+        $data['userID'] = $this->input->get('id');
+        $data['sectors'] = $this->Common_model->select('esic_sectors');
 
 
 
         $this->load->view('regForm/reg_form_bootstrap',$data);
     }
-    public function step2(){
-        $data = array();
-        $data['userID'] = $this->input->get('id');
-        $data['sectors'] = $this->Common_model->select('esic_sectors');
-        $view = $this->load->view("regForm/step2_ajax",$data,true);
-        $outputArray = array(
-            "OK",$view
-        );
-        print_r(json_encode($outputArray));
-//        $this->load->view("regForm/step2_ajax",$data,false);
-    }
-
     public function submit(){
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
@@ -69,6 +61,8 @@ class Reg extends CI_Controller {
         $email = $this->input->post('email');
         $company = $this->input->post('company');
         $business = $this->input->post('business');
+        $cop_date = $this->input->post('cop_date');
+        $acn = $this->input->post('acn');
 
         $mExpense = $this->input->post('1mExpense');
         $assessableIncomeYear = $this->input->post('assessableIncomeYear');
@@ -103,6 +97,8 @@ class Reg extends CI_Controller {
             'email' => $email,
             'company' => $company,
             'business' => $business,
+            'acn_number' => $acn,
+            'corporate_date' => $cop_date,
             'score' => 0
         );
 
@@ -152,106 +148,105 @@ class Reg extends CI_Controller {
             $this->db->trans_commit();
             echo 'OK::Thank you. Your information has been submitted.::'.$insertID;
         }
+}
+
+    public function step2(){
+        //step2
+            $userID = $this->input->post('userID');
+            $sector = $this->input->post('sector');
+            $allowedExt = array('jpeg','jpg','png','gif');
+
+            $uploadPath = './uploads/users/'.$userID.'/';
+            $uploadDirectory = './uploads/users/'.$userID;
+            $uploadDBPath = 'uploads/users/'.$userID.'/';
+
+            $insertDataArray = array(
+                'sectorID' => $sector
+            );
+
+            //For Logo Upload
+            if(isset($_FILES['logo']['name']))
+            {
+                $FileName = $_FILES['logo']['name'];
+                $explodedFileName = explode('.',$FileName);
+                $ext = end($explodedFileName);
+                if(!in_array(strtolower($ext),$allowedExt))
+                {
+                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                    return;
+                }else
+                {
+
+                    $FileName = "Logo_".$userID."_".time().".".$ext;
+                    if(!is_dir($uploadDirectory)){
+                        mkdir($uploadDirectory, 0755, true);
+                    }
+
+                    move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
+                    $insertDataArray['logo'] = $uploadDBPath.$FileName;
+                }
+            }else{
+                echo "FAIL::Logo Image Is Required";
+                return;
+            }
+            //For Banner Upload
+            if(isset($_FILES['banner']['name']))
+            {
+                $FileName = $_FILES['banner']['name'];
+                $explodedFileName = explode('.',$FileName);
+                $ext = end($explodedFileName);
+                if(!in_array(strtolower($ext),$allowedExt))
+                {
+                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                    return;
+                }else
+                {
+                    $FileName = "Banner_".$userID."_".time().".".$ext;
+                    if(!is_dir($uploadDirectory)){
+                        mkdir($uploadDirectory, 0755, true);
+                    }
+
+                    move_uploaded_file($_FILES['banner']['tmp_name'],$uploadPath.$FileName);
+                    $insertDataArray['bannerImage'] = $uploadDBPath.$FileName;
+                }
+            }
+            //For product service Image Upload
+            if(isset($_FILES['product']['name']))
+            {
+                $FileName = $_FILES['product']['name'];
+                $explodedFileName = explode('.',$FileName);
+                $ext = end($explodedFileName);
+                if(!in_array(strtolower($ext),$allowedExt))
+                {
+                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                    return;
+                }else
+                {
+                    $FileName = "Product_".$userID."_".time().".".$ext;
+                    if(!is_dir($uploadDirectory)){
+                        mkdir($uploadDirectory, 0755, true);
+                    }
+
+                    move_uploaded_file($_FILES['product']['tmp_name'],$uploadPath.$FileName);
+                    $insertDataArray['productImage'] = $uploadDBPath.$FileName;
+                }
+            }
+
+            if(empty($userID)){
+                echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                exit;
+            }
+
+            $whereUpdate = array(
+                'id' => $userID
+            );
+            $resultUpdate = $this->Common_model->update('user',$whereUpdate,$insertDataArray);
+            if($resultUpdate === true){
+                echo "OK::Record Updated Successfully";
+            }else{
+                echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+            }
     }
-
-    public function submitStep2(){
-        $userID = $this->input->post('userID');
-        $sector = $this->input->post('sector');
-        $allowedExt = array('jpeg','jpg','png','gif');
-
-        $uploadPath = './uploads/users/'.$userID.'/';
-        $uploadDirectory = './uploads/users/'.$userID;
-        $uploadDBPath = 'uploads/users/'.$userID.'/';
-
-        $insertDataArray = array(
-            'sectorID' => $sector
-        );
-
-        //For Logo Upload
-        if(isset($_FILES['logo']['name']))
-        {
-            $FileName = $_FILES['logo']['name'];
-            $explodedFileName = explode('.',$FileName);
-            $ext = end($explodedFileName);
-            if(!in_array(strtolower($ext),$allowedExt))
-            {
-                echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
-                return;
-            }else
-            {
-
-                $FileName = "Logo_".$userID."_".time().".".$ext;
-                if(!is_dir($uploadDirectory)){
-                    mkdir($uploadDirectory, 0755, true);
-                }
-
-                move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
-                $insertDataArray['logo'] = $uploadDBPath.$FileName;
-            }
-        }else{
-            echo "FAIL::Logo Image Is Required";
-            return;
-        }
-        //For Banner Upload
-        if(isset($_FILES['banner']['name']))
-        {
-            $FileName = $_FILES['banner']['name'];
-            $explodedFileName = explode('.',$FileName);
-            $ext = end($explodedFileName);
-            if(!in_array(strtolower($ext),$allowedExt))
-            {
-                echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
-                return;
-            }else
-            {
-                $FileName = "Banner_".$userID."_".time().".".$ext;
-                if(!is_dir($uploadDirectory)){
-                    mkdir($uploadDirectory, 0755, true);
-                }
-
-                move_uploaded_file($_FILES['banner']['tmp_name'],$uploadPath.$FileName);
-                $insertDataArray['bannerImage'] = $uploadDBPath.$FileName;
-            }
-        }
-        //For product service Image Upload
-        if(isset($_FILES['product']['name']))
-        {
-            $FileName = $_FILES['product']['name'];
-            $explodedFileName = explode('.',$FileName);
-            $ext = end($explodedFileName);
-            if(!in_array(strtolower($ext),$allowedExt))
-            {
-                echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
-                return;
-            }else
-            {
-                $FileName = "Product_".$userID."_".time().".".$ext;
-                if(!is_dir($uploadDirectory)){
-                    mkdir($uploadDirectory, 0755, true);
-                }
-
-                move_uploaded_file($_FILES['product']['tmp_name'],$uploadPath.$FileName);
-                $insertDataArray['productImage'] = $uploadDBPath.$FileName;
-            }
-        }
-
-        if(empty($userID)){
-            echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
-            exit;
-        }
-
-        $whereUpdate = array(
-            'id' => $userID
-        );
-        $resultUpdate = $this->Common_model->update('user',$whereUpdate,$insertDataArray);
-        if($resultUpdate === true){
-            echo "OK::Record Updated Successfully";
-        }else{
-            echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
-        }
-    }
-
-
     public function addInstitution(){
         $institution = $this->input->post("institution");
         if(empty($institution) or !is_string($institution)){
@@ -347,6 +342,75 @@ class Reg extends CI_Controller {
             if($insertResult > 0){
                 echo "OK::".$insertResult."::".$Member;
             }
+        }
+
+    }
+
+     public function addAcceleratorProgramme(){
+        $name                         = $this->input->post("AcceleratorProgrammeName");
+        $Programme_Web_Address        = $this->input->post("Programme_Web_Address");
+       
+
+        if(empty($name) or !is_string($name)){
+            echo "FAIL::Please Fill All Required Fields, Those Can Not be Blank During Submission.";
+            return;
+        }
+
+        $nameCheckQuery = $this->db->get_where('esic_acceleration_logo',array('name'=>$name));
+
+        if($nameCheckQuery->num_rows() > 0){
+            //print_r($nameCheckQuery);
+            echo "Already Exist!";
+        }else{
+           
+            $insertData = array(
+                'name'    => $name,
+                'website'  => $Programme_Web_Address
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_acceleration_logo',$insertData);
+
+            if($insertResult > 0){
+                echo "OK::".$insertResult."::".$name;
+
+                    $allowedExt = array('jpeg','jpg','png','gif');
+                    $uploadPath = './uploads/logos/'.$insertResult.'/';
+                    $uploadDirectory = './uploads/logos/'.$insertResult;
+                    $uploadDBPath = 'uploads/logos/'.$insertResult.'/';
+                    $insertDataArray = array();
+                 //For Logo Upload
+                if(isset($_FILES['ProgrammeLogoImage']['name'])){
+                        $FileName = $_FILES['ProgrammeLogoImage']['name'];
+                        $explodedFileName = explode('.',$FileName);
+                        $ext = end($explodedFileName);
+                        if(!in_array(strtolower($ext),$allowedExt))
+                        {
+                            echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                            return;
+                        }else
+                        {
+
+                            $FileName = "ProgrammeLogoImage".$insertResult."_".time().".".$ext;
+                            if(!is_dir($uploadDirectory)){
+                                mkdir($uploadDirectory, 0755, true);
+                            }
+
+                            move_uploaded_file($_FILES['ProgrammeLogoImage']['tmp_name'],$uploadPath.$FileName);
+                            $insertDataArray['logo'] = $uploadDBPath.$FileName;
+                        }
+                }
+                    
+
+                $whereUpdate = array(
+                        'id' => $insertResult
+                );
+                $resultUpdate = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$insertDataArray);
+                    if($resultUpdate === true){
+                        echo "OK::Record Updated Successfully";
+                    }else{
+                        echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                    }
+                }
         }
 
     }
