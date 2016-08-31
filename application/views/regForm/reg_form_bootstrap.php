@@ -4,28 +4,116 @@
 
 <head>
     <title>Form to Wizard with jQuery Validation plugin</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/form.css">
+    <style>
+        .wrap { max-width: 980px; margin: 10px auto 0; }
+        #steps { margin: 80px 0 0 0 }
+        .commands { overflow: hidden; margin-top: 30px; }
+        .prev {float:left}
+        .next, .submit {float:right}
+        .error { color: #b33; }
+        #progress { position: relative; height: 5px; background-color: #eee; margin-bottom: 20px; }
+        #progress-complete { border: 0; position: absolute; height: 5px; min-width: 10px; background-color: #337ab7; transition: width .2s ease-in-out; }
+
+    </style>
+
+    <style type="text/css">
+        fieldset{
+            background: rgba(232, 234, 246, 0.87) none repeat scroll 0 0;
+            padding: 10px;
+        }
+        fieldset > div {
+            background: rgba(66, 66, 66, 0.1) none repeat scroll 0 0;
+            border-radius: 5px;
+            margin: 5px;
+            padding: 5px;
+        }
+        legend{
+            background-color: #424242;
+            color: #fff;
+            text-align: center;
+            height:60px;
+            padding: 15px 0;
+        }
+        form{
+            /*background-color: #424242;*/
+        }
+        #mainFormDiv{
+            /*background-color: #424242;*/
+            box-shadow: 0 0 9px rgba(0, 0, 0, 0.3);
+            background-image: url("uploads/8/4/3/6/84367404/background-images/561993498.jpg") !important;
+        }
+        #SaveAccount{
+            margin-top:5px;
+            margin-bottom:5px;
+        }
+        .selectorDiv{
+            background: rgba(66, 66, 66, 0.1) none repeat scroll 0 0;
+            margin-top: 8px;
+            padding: 10px;
+            display: none;
+        }
+        .select2Style{
+            float: left;
+        }
+        .addNewToSelector{
+            float: left;
+            display: inline-block;
+        }
+        a.addBtn{
+            background: #fff none repeat scroll 0 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 14px;
+            padding: 3px 7px;
+            cursor: pointer;
+        }
+    </style>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
     <link href="<?=base_url()?>assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="<?=base_url()?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?=base_url()?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
 
     <script type="text/javascript">
         $(function() {
-            $('#SaveAccount').click(function(event) {
-                event.preventDefault();
-                $("#form1").slideUp('slow');
-                $("#SignupFormStep2").slideDown('slow');
-            });
-            $('#back').click(function(event) {
-                event.preventDefault();
-                $("#SignupFormStep2").slideUp('slow');
-                $("#form1").slideDown('slow');
+            var $signupForm = $( '#SignupForm' );
+            $signupForm.validate({
+                errorElement: 'em',
+                submitHandler: function (form) {
+                    $.ajax({
+                            crossOrigin: true,
+                            type: $(form).attr('method'),
+                            url: $(form).attr('action'),
+                            data: $(form).serialize()
+                        })
+                        .done(function (response) {
+                            var data = response.split("::");
+                            if(data[0] === "OK"){
+                                //Run another Ajax To Get Another Form.
+                                $.ajax({
+                                    crossOrigin: true,
+                                    url:"<?=base_url()?>Reg/step2",
+                                    type:'GET',
+                                    data:{id:data[2]},
+                                    dataType:"json",
+                                    success:function(output){
+//                                        var inData = output.split("::");
+                                        if(output[0] === "OK"){
+                                            $signupForm.remove();
+                                            $("#mainFormDiv").html(output[1]);
+                                        }
+                                    }
+                                });
+                            }else{
+
+                            }
+
+                        });
+                    return false; // required to block normal submit since you used ajax
+                }
             });
         });
     </script>
@@ -35,402 +123,299 @@
 <body>
 <div class="row wrap">
     <div class="col-lg-12" id="mainFormDiv">
-        <form id="SignupForm" action="<?php echo base_url('Reg/submit')?>" method="post" enctype="multipart/form-data">
-              <div id="form1">
-                <fieldset>
-                    <legend>Early Stage Companies Pre-assessment</legend>
-                    <p>
-                        This pre-assessment will help you determine if you are likely to qualify as an Eligible Early Stage
-                        Innovation Company, i.e. a company that meets both the Early Stage Test and either the 100 point
-                        Innovation Test or the Principles-based Innovation Test. Failing these tests, the company may
-                        request a taxation ruling from the Australian Tax Office.
-                    </p>
 
-                    <div class="form-group">
-                        <label for="Name">Name</label>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <input id="NameFirst" name="firstName" type="text" placeholder="First" class="form-control"
-                                      required />
-                            </div>
-                            <div class="col-lg-6">
-                                <input id="NameLast" name="lastName" type="text" placeholder="Last" class="form-control"
-                                      required />
-                            </div>
-                        </div>
-                    </div>
+        <form id="SignupForm" action="<?php echo base_url('Reg/submit')?>" method="post">
+            <fieldset>
+                <legend>Early Stage Companies Pre-assessment</legend>
+                <p>
+                    This pre-assessment will help you determine if you are likely to qualify as an Eligible Early Stage
+                    Innovation Company, i.e. a company that meets both the Early Stage Test and either the 100 point
+                    Innovation Test or the Principles-based Innovation Test. Failing these tests, the company may
+                    request a taxation ruling from the Australian Tax Office.
+                </p>
 
-                    <div class="form-group">
-                        <label for="Email">Email</label>
-                        <input id="Email" name="email" type="email" class="form-control" placeholder="e-g: jhon@example.com" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="Company">Company Name</label>
-                        <input id="Company" name="company" type="text" class="form-control" placeholder="Company" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Business">Business Name (if different)</label>
-                        <input id="Business" name="business" type="text" class="form-control" placeholder="Business Name" />
-                    </div>
-                    <div class="form-group">
-                        <label for="shortDescription">Short Description of business</label>
-                        <textarea id="shortDescription" class="form-control" name="shortDescription"></textarea>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Early Stage Limb</legend>
-                    <div>
-                        <strong>Did your business have less than or equal to $1 million in expenses in the previous income year?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="1mExpense">Yes</label>
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <input id="NameFirst" name="firstName" type="text" placeholder="First" class="form-control"
+                                  required />
                         </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="1mExpense">No</label>
+                        <div class="col-lg-6">
+                            <input id="NameLast" name="lastName" type="text" placeholder="Last" class="form-control"
+                                  required />
                         </div>
                     </div>
-
-                    <div>
-                        <strong>Did your business have less than or equal to $200,000 in assessable income in the previous income year? (Excluding Accelerating Commercialisation Grant)</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="assessableIncomeYear">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="assessableIncomeYear">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Is your business listed on any stock exchanges?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="listedInSExchange">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="listedInSExchange">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>When was your company incorporated in Australia?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Within the past three years" name="incorporatedAus">Within the past three years</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" id="3and6" value="Between six and three years ago" name="incorporatedAus">Between six and three years ago</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="Greater than six years ago" name="incorporatedAus">Greater than six years ago</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="Not incorporated in Australia" name="incorporatedAus">Not incorporated in Australia</label>
-                        </div>
-                         <!--Div For Input-->
-                        <div class="inputDiv" id="dateInsertDiv">
-                            <label for="selectorUniversity">Enter The Dates</label>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="cop_date">Corporate Date</label>
-                                        <input id="cop_date" name="cop_date" type="text" class="form-control" placeholder="DD/MM/YYYY" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="acn">ACN #</label>
-                                        <input id="acn" name="acn" type="text" class="form-control" placeholder="ACN #" />
-                                    </div>
-                                    <!--div class="form-group">
-                                        <label for="exp_date">Expiry Date</label>
-                                        <input id="exp_date" name="exp_date" type="text" class="form-control" placeholder="DD/MM/YYYY" />
-                                    </div-->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="whollyOwned">
-                        <strong>Have you and your wholly owned subsidiaries incurred less than $1 million in expenses total across the last 3 income years?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="ownedSubsidiaries">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="ownedSubsidiaries">No</label>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <fieldset class="form-horizontal" role="form">
-                    <legend>Innovation Limb</legend>
-                    <span style="text-decoration: underline">Principles-Based Test</span>
-
-                    <div>
-                        <strong>Is your company developing a new or significantly improved type of innovation? (See http://www.oecd.org/sti/oslomanual for examples of innovation)
-                        </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="improvedInnovation">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="improvedInnovation">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Does your company have the potential for high growth?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="potentialHighGrowth">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="potentialHighGrowth">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Is your company scalable? (Can you reduce or minimize cost increase as your revenues grow)
-                        </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="companyScalable">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="companyScalable">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Will you be able to address a national, international or global market?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="globalMarket">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="globalMarket">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Is there potential for a clear competitive advantage over other companies? </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="competitiveAdvantage">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="competitiveAdvantage">No</label>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset class="form-horizontal" role="form">
-                    <legend>Innovation Limb</legend>
-                    <p><span style="text-decoration: underline">Objective Test (100 Points Required)</span><br />
-                        See the <span style="text-decoration: underline">FAQ</span> for an explanation of how points are awarded.
-                    </p>
-
-                    <div>
-                        <strong>Which of the following describes your R&D expenses as a proportion of total expenses?
-                        </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Greater than or equal to 50%" name="rdExpenses">Greater than or equal to 50%</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="Between 15% and 50%" name="rdExpenses">Between 15% and 50%</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="Less than 15%" name="rdExpenses">Less than 15%</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Have you received an Accelerating Commercialisation Grant under the Accelerating Commercialisation element of the Commonwealth's Entrepreneur's programme?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="EntrepreneurProgramme">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="EntrepreneurProgramme">No</label>
-                        </div>
-                        <!--                    Div For Selector-->
-                        <div class="selectorDiv" id="EntrepreneurProgramme">
-                            <label for="selectAcceleration">Select Acceleration Commercial</label>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <select class="select2Style" id="selectAcceleration" style="width:90%">
-                                        <option value="0">Select...</option>
-                                        <?php
-                                        if(isset($accelerationCommercials) and !empty($accelerationCommercials)){
-                                            foreach($accelerationCommercials as $accelerationCommercial){
-                                                echo '<option value="'.$accelerationCommercial->id.'">'.$accelerationCommercial->Member.'</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                    <a></a>
-                                    <a class="btn addBtn" data-toggle="modal" data-target=".EntrepreneurProgrammeModal" id="addProgramme"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Has your business undertaken or completed an accelerator programme? Provided that the entity has been operating the programme for 6 months and has provided a complete programme to at least one cohort of entrepreneurs.
-                        </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="cohortOfEntrepreneurs">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="cohortOfEntrepreneurs">No</label>
-                        </div>
-                        <!--                    Div For Selector-->
-                        <div class="selectorDiv" id="acceleratorProgramme">
-                            <label for="acceleratorAcceleration">Select Acceleration Commercial</label>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <select class="select2Style" id="selectAcceleratorProgramme" style="width:90%">
-                                        <option value="0">Select...</option>
-                                        <?php
-                                        if(isset($acceleratorProgramme) and !empty($acceleratorProgramme)){
-                                            foreach($acceleratorProgramme as $acceleratorProgramme){
-                                                echo '<option value="'.$acceleratorProgramme->id.'">'.$acceleratorProgramme->name.'</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                    <a></a>
-                                    <a class="btn addBtn" data-toggle="modal" data-target=".acceleratorProgrammeModal" id="addAcceleratorProgrammeBtn"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Has your business issued $50,000 or more in shares to a third party who was not an associate and did not acquire those shares to help another entity become entitled to the tax incentives? </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="taxIncentives">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="taxIncentives">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Does your business have a standard patent or plant breeder's right, or the equivalent in another country within the past 5 years?  </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="standardPatent">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="standardPatent">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Does your business have an innovation patent or design right or the equivalent in another country within the the past 5 years?</strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="innovationPatent">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="innovationPatent">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Does your business hold a license to IP that falls into either of the previous 2 categories? </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="previous2Categories">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="previous2Categories">No</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <strong>Does your business have a written agreement to co-develop and commercialise an innovation with a university or a research organization? </strong>
-                        <div class="radio">
-                            <label><input type="radio" value="Yes" name="researchOrganization">Yes</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" value="No" name="researchOrganization">No</label>
-                        </div>
-    <!--                    Div For Selector-->
-                        <div class="selectorDiv" id="selectorUniversityDiv">
-                            <label for="selectorUniversity">Select University</label>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <select class="select2Style" id="selectorUniversity" style="width: 90%">
-                                        <option value="0">Select...</option>
-                                        <?php
-                                        if(isset($institutions) and !empty($institutions)){
-                                            foreach($institutions as $institution){
-                                                echo '<option value="'.$institution->id.'">'.$institution->institution.'</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                    <a></a>
-                                    <a class="btn addBtn" data-toggle="modal" data-target=".InstitutionModal" id="addSelectorUniversity"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   </fieldset>
-                <div class="button-container">
-                    <button id="SaveAccount" class="btn btn-primary submit">Submit form</button>
                 </div>
-              </div>
-            <div class="clear"></div>
-            <div id="SignupFormStep2">
-                <fieldset>
-                    <legend>Early Stage Companies Pre-assessment</legend>
-                    <p>
-                        This pre-assessment will help you determine if you are likely to qualify as an Eligible Early Stage
-                        Innovation Company, i.e. a company that meets both the Early Stage Test and either the 100 point
-                        Innovation Test or the Principles-based Innovation Test. Failing these tests, the company may
-                        request a taxation ruling from the Australian Tax Office.
-                    </p>
 
-                    <div class="form-group">
-                        <label for="Logo">Logo</label>
-                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span>
-                                <input type="file" id="Logo" name="Logo"></span>
-                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                        </div>
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input id="Email" name="email" type="email" class="form-control" placeholder="e-g: jhon@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="Company">Company Name</label>
+                    <input id="Company" name="company" type="text" class="form-control" placeholder="Company" />
+                </div>
+                <div class="form-group">
+                    <label for="Business">Business Name (if different)</label>
+                    <input id="Business" name="business" type="text" class="form-control" placeholder="Business Name" />
+                </div>
+                <div class="form-group">
+                    <label for="shortDescription">Short Description of business</label>
+                    <textarea id="shortDescription" class="form-control" name="shortDescription"></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Early Stage Limb</legend>
+                <div>
+                    <strong>Did your business have less than or equal to $1 million in expenses in the previous income year?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="1mExpense">Yes</label>
                     </div>
-                    <div class="form-group">
-                        <label for="BannerImage">Banner Image</label>
-                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span>
-                                <input type="file" id="BannerImage" name="Banner"></span>
-                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                        </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="1mExpense">No</label>
                     </div>
-                    <div class="form-group">
-                        <label for="productImage">Product / Service Image</label>
-                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span>
-                                <input type="file" id="productImage" name="product"></span>
-                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                        </div>
+                </div>
+
+                <div>
+                    <strong>Did your business have less than or equal to $200,000 in assessable income in the previous income year? (Excluding Accelerating Commercialisation Grant)</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="assessableIncomeYear">Yes</label>
                     </div>
-                    <div class="form-group">
-                        <label for="industryClassification">Industry classification (from our provided listing))</label>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="assessableIncomeYear">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Is your business listed on any stock exchanges?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="listedInSExchange">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="listedInSExchange">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>When was your company incorporated in Australia?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Within the past three years" name="incorporatedAus">Within the past three years</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" id="3and6" value="Between six and three years ago" name="incorporatedAus">Between six and three years ago</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="Greater than six years ago" name="incorporatedAus">Greater than six years ago</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="Not incorporated in Australia" name="incorporatedAus">Not incorporated in Australia</label>
+                    </div>
+                </div>
+
+                <div id="whollyOwned">
+                    <strong>Have you and your wholly owned subsidiaries incurred less than $1 million in expenses total across the last 3 income years?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="ownedSubsidiaries">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="ownedSubsidiaries">No</label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-horizontal" role="form">
+                <legend>Innovation Limb</legend>
+                <span style="text-decoration: underline">Principles-Based Test</span>
+
+                <div>
+                    <strong>Is your company developing a new or significantly improved type of innovation? (See http://www.oecd.org/sti/oslomanual for examples of innovation)
+                    </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="improvedInnovation">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="improvedInnovation">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Does your company have the potential for high growth?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="potentialHighGrowth">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="potentialHighGrowth">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Is your company scalable? (Can you reduce or minimize cost increase as your revenues grow)
+                    </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="companyScalable">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="companyScalable">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Will you be able to address a national, international or global market?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="globalMarket">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="globalMarket">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Is there potential for a clear competitive advantage over other companies? </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="competitiveAdvantage">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="competitiveAdvantage">No</label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-horizontal" role="form">
+                <legend>Innovation Limb</legend>
+                <p><span style="text-decoration: underline">Objective Test (100 Points Required)</span><br />
+                    See the <span style="text-decoration: underline">FAQ</span> for an explanation of how points are awarded.
+                </p>
+
+                <div>
+                    <strong>Which of the following describes your R&D expenses as a proportion of total expenses?
+                    </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Greater than or equal to 50%" name="rdExpenses">Greater than or equal to 50%</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="Between 15% and 50%" name="rdExpenses">Between 15% and 50%</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="Less than 15%" name="rdExpenses">Less than 15%</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Have you received an Accelerating Commercialisation Grant under the Accelerating Commercialisation element of the Commonwealth's Entrepreneur's programme?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="EntrepreneurProgramme">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="EntrepreneurProgramme">No</label>
+                    </div>
+                    <!--                    Div For Selector-->
+                    <div class="selectorDiv" id="EntrepreneurProgramme">
+                        <label for="selectAcceleration">Select Acceleration Commercial</label>
                         <div class="row">
                             <div class="col-lg-6">
-                                <select id="industryClassification" style="width: 80%;">
+                                <select class="select2Style" id="selectAcceleration" style="width:90%">
                                     <option value="0">Select...</option>
                                     <?php
-                                    if(isset($sectors) and !empty($sectors)){
-                                        foreach($sectors as $sector){
-                                            echo '<option value="'.$sector->id.'">'.$sector->sector.'</option>';
+                                    if(isset($accelerationCommercials) and !empty($accelerationCommercials)){
+                                        foreach($accelerationCommercials as $accelerationCommercial){
+                                            echo '<option value="'.$accelerationCommercial->id.'">'.$accelerationCommercial->Member.'</option>';
                                         }
                                     }
                                     ?>
                                 </select>
-                                 <a class="btn addBtn" data-toggle="modal" data-target=".IndustryClassificationModal" id="addIndustryClassification">
-                                 <span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
+                                <a></a>
+                                <a class="btn addBtn" data-toggle="modal" data-target=".EntrepreneurProgrammeModal" id="addProgramme"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
                             </div>
                         </div>
                     </div>
-                </fieldset>
-                <div class="button-container">
-                    <button id="back"  class="btn btn-primary submit">Back</button>
-                    <button id="SubmitForm" type="button" class="btn btn-primary submit">Submit</button>
                 </div>
-            </div>
+
+                <div>
+                    <strong>Has your business undertaken or completed an accelerator programme? Provided that the entity has been operating the programme for 6 months and has provided a complete programme to at least one cohort of entrepreneurs.
+                    </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="cohortOfEntrepreneurs">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="cohortOfEntrepreneurs">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Has your business issued $50,000 or more in shares to a third party who was not an associate and did not acquire those shares to help another entity become entitled to the tax incentives? </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="taxIncentives">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="taxIncentives">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Does your business have a standard patent or plant breeder's right, or the equivalent in another country within the past 5 years?  </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="standardPatent">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="standardPatent">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Does your business have an innovation patent or design right or the equivalent in another country within the the past 5 years?</strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="innovationPatent">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="innovationPatent">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Does your business hold a license to IP that falls into either of the previous 2 categories? </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="previous2Categories">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="previous2Categories">No</label>
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Does your business have a written agreement to co-develop and commercialise an innovation with a university or a research organization? </strong>
+                    <div class="radio">
+                        <label><input type="radio" value="Yes" name="researchOrganization">Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" value="No" name="researchOrganization">No</label>
+                    </div>
+<!--                    Div For Selector-->
+                    <div class="selectorDiv" id="selectorUniversityDiv">
+                        <label for="selectorUniversity">Select University</label>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <select class="select2Style" id="selectorUniversity" style="width: 90%">
+                                    <option value="0">Select...</option>
+                                    <?php
+                                    if(isset($institutions) and !empty($institutions)){
+                                        foreach($institutions as $institution){
+                                            echo '<option value="'.$institution->id.'">'.$institution->institution.'</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                                <a></a>
+                                <a class="btn addBtn" data-toggle="modal" data-target=".InstitutionModal" id="addSelectorUniversity"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <button id="SaveAccount" type="submit" class="btn btn-primary submit">Submit form</button>
+
         </form>
 
     </div></div>
@@ -511,71 +496,6 @@
     </div>
 </div>
 
-<div class="modal acceleratorProgrammeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="AcceleratorProgrammeName">Accelerator Programme Name</label>
-                    <input id="AcceleratorProgrammeName" name="AcceleratorProgrammeName" type="text" class="form-control" placeholder="Programme Name" />
-                </div>
-                <div class="form-group">
-                    <label for="Programme_Web_Address">Programme Web Address</label>
-                    <input id="Programme_Web_Address" name="Programme_Web_Address" type="text" class="form-control" placeholder="Programme Web Address" />
-                </div>
-                <div class="form-group">
-                   <label for="logoImage">Logo Image</label>
-                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                        <div class="form-control" data-trigger="fileinput">
-                            <i class="glyphicon glyphicon-file fileinput-exists"></i> 
-                            <span class="fileinput-filename"></span>
-                        </div>
-                        <span class="input-group-addon btn btn-default btn-file">
-                        <span class="fileinput-new">Select file</span>
-                        <span class="fileinput-exists">Change</span>
-                                <input type="file" id="ProgrammeLogoImage" name="ProgrammeLogoImage"/>
-                        </span>
-                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="addAcceleratorProgramme" type="button" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal IndustryClassificationModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="Industry">Industry Classification Name</label>
-                    <input id="Industry" name="Industry" type="text" class="form-control" placeholder="Industry Classification" />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="addClassification" type="button" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
     $(function(){
         $("input[name='incorporatedAus']").on("change",function(){
@@ -588,10 +508,12 @@
         });
     });
 </script>
-
+<script type="text/javascript" src="<?=base_url()?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#selectorUniversity, #selectAcceleration,#selectAcceleratorProgramme").select2();
+        $("#selectorUniversity, #selectAcceleration").select2();
+
         $("input[name=EntrepreneurProgramme]").on("change",function(){
             var EntrepreneurProgramme = $(this).val();
             if(EntrepreneurProgramme === 'Yes'){
@@ -609,85 +531,7 @@
                 $("#selectorUniversityDiv").css('display','none');
             }
         });
-        $("input[name=incorporatedAus]").on("change",function(){
-            var incorporatedAus = $(this).val();
-            if(incorporatedAus == 'Not incorporated in Australia' || incorporatedAus == ''){
-                $("#dateInsertDiv").css('display','none');
-            }else{
-                $("#dateInsertDiv").css('display','block');
-            }
-        });
 
-
-        $("input[name=cohortOfEntrepreneurs]").on("change",function(){
-            var cohortOfEntrepreneurs = $(this).val();
-            if(cohortOfEntrepreneurs === 'Yes'){
-                $("#acceleratorProgramme").css('display','block');
-            }else{
-                $("#acceleratorProgramme").css('display','none');
-            }
-        });
-
-        $("#addAcceleratorProgramme").on("click",function(){
-            var  AcceleratorProgrammeName = $("#AcceleratorProgrammeName");  
-            var AcceleratorProgrammeNameValue = AcceleratorProgrammeName.val();
-            if(AcceleratorProgrammeNameValue.length === 0){
-                AcceleratorProgrammeName.parents(".form-group").addClass('has-error');
-                return false ;
-            }else{
-                AcceleratorProgrammeName.parents(".form-group").removeClass('has-error');
-            }
-            var Programme_Web_Address   = $("#Programme_Web_Address").val();
-            var formData = new FormData();
-            formData.append('ProgrammeLogoImage', $('#ProgrammeLogoImage')[0].files[0]);
-            formData.append('AcceleratorProgrammeName',AcceleratorProgrammeNameValue);
-            formData.append('Programme_Web_Address',Programme_Web_Address);
-
-            var ProgrammeNameCheck = '0';
-            var ProgrammeFilter  = $('#selectAcceleratorProgramme option').filter(
-                function(){ 
-                    if($(this).html() == AcceleratorProgrammeNameValue){
-                        var valuecheck      = $(this).val();
-                        var selectProgramme = $("#selectAcceleratorProgramme").select2();
-                        selectProgramme.val(valuecheck).trigger("change"); 
-                        ProgrammeNameCheck  = '1';
-                        $('.acceleratorProgrammeModal').modal().hide();
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                    }
-                });
-            if(ProgrammeNameCheck=='0'){
-                //console.log(AcceleratorProgrammeNameValue);
-                $.ajax({
-                    crossOrigin: true,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    type:"POST",
-                    url: "<?=base_url()?>Reg/addAcceleratorProgramme",
-                    success:function(output){
-                        var  data =  output.split('::');
-                        if(data[0]=='OK'){
-                            var programmeId   = data[1];
-                            var programmeName = data[2]; 
-                            var newOption = new Option(programmeName,programmeId, true, true);
-                                $("#selectAcceleratorProgramme").append(newOption).trigger('change');
-                                $('.acceleratorProgrammeModal').modal().hide();
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
-                        }else if(data[0]=='Existed'){
-                            var ProgrammeNameValue = $('#selectAcceleratorProgramme option').filter(function () { return $(this).html() == ProgrammeValue}).val();
-                            var valuecheck         = $(this).val();
-                            var selectProgramme    = $("#selectAcceleratorProgramme").select2();
-                            selectProgramme.val(ProgrammeNameValue).trigger("change");  
-                            $('.acceleratorProgrammeModal').modal().hide();
-                            $('body').removeClass('modal-open');
-                            $('.modal-backdrop').remove();
-                        }
-                    }
-                });
-            }
-        });
 
         $("#addInstitution").on("click",function(){
             var Institution = $("#Institution");
@@ -805,121 +649,6 @@
                     }
                 });
             }
-        });
-    });
-</script>
-<script type="text/javascript">
-    $(function(){
-        $("input[name='incorporatedAus']").on("change",function(){
-            if($(this).val() === 'Between six and three years ago'){
-                $("#whollyOwned").show();
-                console.log("show");
-            }else{
-                $("#whollyOwned").hide();
-            }
-        });
-    });
-</script>
-
-<script type="text/javascript">
- var $signupForm = $( '#SignupForm' );
-            
-    $(document).ready(function() {
-        var $form = $('#SignupForm');
-        $("#SubmitForm").on("click",function(e){
-            e.preventDefault();
-            var formData = new FormData();
-                    $.ajax({
-                            crossOrigin: true,
-                            type: $form.attr('method'),
-                            url: $form.attr('action'),
-                            data: $form.serialize()
-                        })
-                        .done(function (response) {
-                            var data = response.split("::");
-                            if(data[0] === "OK"){
-                                //Run another Ajax To Get Another Form.
-                               console.log(response);
-                                formData.append('logo', $('#Logo')[0].files[0]);
-                                formData.append('banner', $('#BannerImage')[0].files[0]);
-                                formData.append('product', $('#productImage')[0].files[0]);
-                                formData.append('sector', $('#industryClassification').val());
-                                formData.append('userID', data[2]);
-
-                                $.ajax({       
-                                    crossOrigin: true,
-                                    type: $form.attr('method'),
-                                    url: "<?=base_url()?>Reg/step2",
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false
-                                }).done(function (response) {
-                                    var data = response.split("::");
-                                    if(data[0] === 'OK'){
-                                        $("#mainFormDiv").html('<span style="padding: 5px; color: green; font-weight: bold; border: 2px dotted green;">Thank you, Your Record have been successfully Updated</span>');
-                                    }else if(data[0] === 'FAIL'){
-
-                                    }
-                                });
-                            }else{
-                                console.log(response);
-                            }
-
-                        });
-            
-                    });
-$("#industryClassification").select2();
-        $("#addClassification").on("click",function(){
-            var Industry = $("#Industry");
-            var IndustryValue = Industry.val();
-            
-            if(IndustryValue.length === 0){
-                Industry.parents(".form-group").addClass('has-error');
-                return false ;
-            }else{
-                Industry.parents(".form-group").removeClass('has-error');
-            }
-            var IndustryNameCheck = '0';
-            var Industryfilter    = $('#industryClassification option').filter(
-                function(){ 
-                    if($(this).html() == IndustryValue){
-                        var valuecheck      = $(this).val();
-                        var selectIndustry  = $("#industryClassification").select2();
-                        selectIndustry.val(valuecheck).trigger("change"); 
-                        IndustryNameCheck='1';
-                        $('.IndustryClassificationModal').modal().hide();
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                    }
-                });
-            if(IndustryNameCheck=='0'){
-                $.ajax({
-                    url: "<?=base_url()?>Reg/addIndustryClassification",
-                    type:"POST",
-                    data:{Industry:IndustryValue},
-                    success:function(output){
-                        var  data =  output.split('::');    
-                        if(data[0]=='OK'){
-                            var IndustryId   = data[1];
-                            var IndustryName = data[2]; 
-                            var newOption    = new Option(IndustryName,IndustryId, true, true);
-                                $("#industryClassification").append(newOption).trigger('change');
-                                $('.IndustryClassificationModal').modal().hide();
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
-                        }else if(data[0]=='Existed'){
-                            var IndustryNameValue   = $('#industryClassification option').filter(function () { return $(this).html() == IndustryValue}).val();
-                            var valuecheck          = $(this).val();
-                            var selectIndustry      = $("#industryClassification").select2();
-                            selectIndustry.val(IndustryNameValue).trigger("change"); 
-                            $('.IndustryClassificationModal').modal().hide();
-                            $('body').removeClass('modal-open');
-                            $('.modal-backdrop').remove();
-                        }
-                    }
-                });
-            }
-            
         });
     });
 </script>
