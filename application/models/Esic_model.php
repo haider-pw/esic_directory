@@ -146,7 +146,17 @@ class Esic_model extends CI_Model
 	                ',
 	            false
 	        );
-	         $where ="user.company = ".$comSelect;
+	        //$where = 'user.company = "'.$comSelect.'" AND user.company = "'.$comSelect.'';
+	        $where=array();
+	        if($comSelect!=''){
+	        	$condition = array('user.company' => $comSelect);
+	        	array_push($where, $condition);
+		         
+		    }
+		    if($secSelect!=''){
+		        $condition = array('user.sectorID' => $secSelect);
+	        	array_push($where, $condition);
+		    }
 	        $joins = array(
 	            array(
 	                'table' => 'esic_status ES',
@@ -213,7 +223,7 @@ class Esic_model extends CI_Model
 		}else{
 			$result="NORESULT";
 		}
-		return $result;
+		return $result.$this->db->last_query();
 
     }
 }

@@ -99,14 +99,23 @@ echo "</pre>";
             }
             companySelect = $('#companySelect option:selected').text();
             sectorsSelect = $('#sectorsSelect option:selected').text();
-            if(companySelect=='' && sectorsSelect=='' ){
+            companySelectValue = $('#companySelect option:selected').val();
+            sectorsSelectValue = $('#sectorsSelect option:selected').val();
+            if(companySelectValue=='' && sectorsSelectValue=='' ){
+                $("#regList").html('');
                 getlist(0);
                 return false;
+            }
+            if(companySelectValue==''){
+                companySelect='';
+            }
+            if(sectorsSelectValue==''){
+                sectorsSelect='';
             }
             $("#load_more").addClass('loading');
             $("#loader").show();
             setTimeout(function(){
-                 getfilterlist(page,'"'+sectorsSelect+'"','"'+companySelect+'"');
+                 getfilterlist(page,sectorsSelectValue,companySelect);
               }, 2000);
         });
 
