@@ -157,6 +157,20 @@ class Esic_model extends CI_Model
 		        $condition = array('user.sectorID' => $secSelect);
 	        	array_push($where, $condition);
 		    }
+=======
+
+            $where = '';
+            if(!empty($secSelect)){
+                $where .= "user.sectorID =".$secSelect;
+            }
+            if(!empty($comSelect)){
+                if(!empty($where)){
+                    $where .=" AND ";
+                }
+                $where .= "user.company =".$comSelect;
+            }
+//	         $where ="user.company = ".$comSelect;
+>>>>>>> 02d81c6cdcc6563fa7d4beffd908ebac49539f58
 	        $joins = array(
 	            array(
 	                'table' => 'esic_status ES',
