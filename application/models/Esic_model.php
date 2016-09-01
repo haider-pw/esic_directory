@@ -117,7 +117,7 @@ class Esic_model extends CI_Model
 		return $result;
 
     }
-    public function getfilterlist($page,$secSelect,$comSelect){
+    public function getfilterlist($page,$search,$secSelect,$comSelect){
         $offset = 3*$page;
         $pagelimit = 3;
         header("Access-Control-Allow-Origin: *");
@@ -146,17 +146,6 @@ class Esic_model extends CI_Model
 	                ',
 	            false
 	        );
-	        //$where = 'user.company = "'.$comSelect.'" AND user.company = "'.$comSelect.'';
-	        $where=array();
-	        if($comSelect!=''){
-	        	$condition = array('user.company' => $comSelect);
-	        	array_push($where, $condition);
-		         
-		    }
-		    if($secSelect!=''){
-		        $condition = array('user.sectorID' => $secSelect);
-	        	array_push($where, $condition);
-		    }
 
             $where = '';
             if(!empty($secSelect)){
@@ -168,6 +157,18 @@ class Esic_model extends CI_Model
                 }
                 $where .= "user.company =".$comSelect;
             }
+            if(!empty($search)){
+				if(!empty($where)){
+			        $where .=" AND ";
+			     }
+			     $where .= "user.firstname LIKE '%".$search."%'
+				        OR user.lastname LIKE '%".$search."%'
+				        OR user.email LIKE '%".$search."%'
+				        OR user.company LIKE '%".$search."%'
+				        OR user.business LIKE '%".$search."%'
+				        OR user.businessShortDescription LIKE '%".$search."%'
+				        OR user.website LIKE '%".$search."%'";
+			}
 	        $joins = array(
 	            array(
 	                'table' => 'esic_status ES',
@@ -179,7 +180,9 @@ class Esic_model extends CI_Model
 	        $result="";
 	        
 	       if(!empty($usersResult) && is_array($usersResult)){
+	       		$count=0;
 			    foreach($usersResult as $key=>$user){
+			    	$count++;
 			    	$status='';
 			    	$web='';
 			    	$desc='';
@@ -203,7 +206,7 @@ class Esic_model extends CI_Model
 			    		$img = base_url('pictures/defaultLogo.png');
 			    	}
 			       
-			    $result .= '<li class="hcard-search member_level_5" '.$page.'>';
+			    $result .= '<li '.$offset.' ll '.$count.' class="hcard-search member_level_5" '.$page.'>';
 			     $result .= '<div class="img-container">';
 			       $result .= '<a href="/england/newcastle-upon-tyne/e-commerce-markets/janet-stansfield" title="Janet Stansfield SEIS Companies" rel="nofollow">';
 			         $result .= '<img src="'.$img.'" alt="" class="left">';
@@ -230,11 +233,16 @@ class Esic_model extends CI_Model
 			         $result .= '</div></li>';
 			       
 			    }
+			    if($offset >= $count){
+			    	$result="NORESULT";
+			    }
+			}else{
+				$result="NORESULT";
 			}
 		}else{
 			$result="NORESULT";
 		}
-		return $result.$this->db->last_query();
+		return $result;//.$this->db->last_query();
 
     }
 }

@@ -36,9 +36,14 @@ echo "</pre>";
                                         <option value="" disabled selected>Select Company</option>
                                         <?php
                                         if(isset($company) and !empty($company)){
+                                            $checkArray = array();
                                             foreach($company as $company){
-                                                if(!empty($company->company))
-                                                echo '<option value="'.$company->id.'">'.$company->company.'</option>';
+                                                if(!empty($company->company)){
+                                                   if (!(in_array($company->company, $checkArray))){
+                                                            echo '<option value="'.$company->id.'">'.$company->company.'</option>';
+                                                            array_push($checkArray, $company->company);
+                                                    }
+                                                }
                                             }
                                         }
                                         ?>
@@ -78,36 +83,61 @@ echo "</pre>";
 <script>
     jQuery(document).ready(function($){
         getlist(0);
-        var sectorsSelect,companySelect;
+        var sectorsSelect,companySelect,searchInput;
         $("#load_more").click(function(e){
             e.preventDefault();
+            var clickBtn ='load_more';
             var page = $(this).data('val');
+            //console.log('page ='+page);
             $("#load_more").addClass('loading');
             $("#loader").show();
+            companySelect = $('#companySelect option:selected').text();
+            sectorsSelect = $('#sectorsSelect option:selected').text();
+            searchInput = $('#location_search').val();
+            //console.log(searchInput);
+            companySelectValue = $('#companySelect option:selected').val();
+            sectorsSelectValue = $('#sectorsSelect option:selected').val();
+            if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' ){
+                //$("#regList").html('');
+                callfilter(clickBtn);
+                return false;
+            }
             setTimeout(function(){
                  getlist(page);
-              }, 2000);
+              }, 500);
         });
         $("#filter_search").click(function(e){
             e.preventDefault();
+            var clickBtn ='filter_search';
+            callfilter(clickBtn);
+        });
+
+    function callfilter(clickBtn){
             var page = $("#filter_search").data('val');
-            if(sectorsSelect != $('#sectorsSelect option:selected').text()){
-                page = 0;
-            }
-            if(companySelect != $('#companySelect option:selected').text()){
-                page = 0;
+            //console.log('page ='+page);
+            if(clickBtn=='filter_search'){
+                if(sectorsSelect != $('#sectorsSelect option:selected').text()){
+                    page = 0;
+                }
+                if(companySelect != $('#companySelect option:selected').text()){
+                    page = 0;
+                }
             }
             companySelect = $('#companySelect option:selected').text();
             sectorsSelect = $('#sectorsSelect option:selected').text();
+            searchInput = $('#location_search').val();
+            //console.log(searchInput);
             companySelectValue = $('#companySelect option:selected').val();
             sectorsSelectValue = $('#sectorsSelect option:selected').val();
-            if(companySelectValue=='' && sectorsSelectValue=='' ){
+            if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' ){
                 $("#regList").html('');
                 getlist(0);
                 return false;
             }
             if(companySelectValue==''){
                 companySelect='';
+            }else{
+               companySelect = '"'+companySelect+'"';
             }
             if(sectorsSelectValue==''){
                 sectorsSelect='';
@@ -115,16 +145,16 @@ echo "</pre>";
             $("#load_more").addClass('loading');
             $("#loader").show();
             setTimeout(function(){
-                 getfilterlist(page,sectorsSelectValue,'"'+companySelect+'"');
-              }, 2000);
-        });
+                 getfilterlist(page,searchInput,sectorsSelectValue,companySelect);
+              }, 500);
+    }
 
-    function getfilterlist(page,secSelect,comSelect){
+    function getfilterlist(page,searchInput,secSelect,comSelect){
         
         $.ajax({
             url:"<?php echo base_url() ?>Esic2/getfilterlist",
             type:'GET',
-            data: {page:page,secSelect:secSelect,comSelect:comSelect}
+            data: {page:page,searchInput:searchInput,secSelect:secSelect,comSelect:comSelect}
         }).done(function(response){
             if(page==0){
                 $("#regList").html('');
@@ -133,12 +163,15 @@ echo "</pre>";
                 $("#loader").hide();
                 $("#load_more").removeClass('loading');
                 $('#load_more').hide();
-                $('.btn-more').append('Sorry No More Result Found');
+                $('#no-result').remove();
+                $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
+                //console.log(response);
             }else{
+                 //console.log(response);
                 $("#regList").append(response);
                 $("#loader").hide();
                 $("#load_more").removeClass('loading');
-                $('#load_more').data('val', ($('#filter_search').data('val')+1));
+                $('#filter_search').data('val', ($('#filter_search').data('val')+1));
                 scroll();
             }
             
@@ -155,8 +188,11 @@ echo "</pre>";
                 $("#loader").hide();
                 $("#load_more").removeClass('loading');
                 $('#load_more').hide();
-                $('.btn-more').append('Sorry No More Result Found');
+                $('#no-result').remove();
+                $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
+                //console.log(response);
             }else{
+                 //console.log(response);
                 $("#regList").append(response);
                 $("#loader").hide();
                 $("#load_more").removeClass('loading');

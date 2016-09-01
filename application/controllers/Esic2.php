@@ -151,11 +151,12 @@ class Esic2 extends CI_Controller{
         exit;
     }
     public function getfilterlist(){
-        $page       =  $_GET['page'];
-        $secSelect  =  $_GET['secSelect'];
-        $comSelect  =  $_GET['comSelect'];
+        $page        =  $_GET['page'];
+        $secSelect   =  $_GET['secSelect'];
+        $comSelect   =  $_GET['comSelect'];
+        $searchInput =  $_GET['searchInput'];
         $this->load->model('Esic_model');
-        $list = $this->Esic_model->getfilterlist($page,$secSelect,$comSelect);
+        $list = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect);
         print_r($list);
         exit;
     }
