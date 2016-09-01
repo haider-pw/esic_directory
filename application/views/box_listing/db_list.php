@@ -115,7 +115,7 @@ echo "</pre>";
             $("#load_more").addClass('loading');
             $("#loader").show();
             setTimeout(function(){
-                 getfilterlist(page,sectorsSelectValue,companySelect);
+                 getfilterlist(page,sectorsSelectValue,'"'+companySelect+'"');
               }, 2000);
         });
 
