@@ -502,14 +502,20 @@ ul.product-list li .product-details a.website {
   text-align: center;
   font-size: 15px;
 }
-
+ul.product-list li .product-details.exp{
+    border: solid thin #eee;
+    padding: 5px 10px;
+    background: #eee;
+}
 ul.product-list li .product-details.exp p {
 	display: inline-block;
     margin: 0px;
     padding: 0px 20px;
+    font-size: 12px;
 }
 ul.product-list li .product-details.exp label{
 	display: inline-block;
+    font-size: 12px;
 }
 
 @media all and (max-width:992px) {

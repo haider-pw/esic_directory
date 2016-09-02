@@ -72,8 +72,8 @@ class Esic_model extends CI_Model
 			    		$web = '<a target="_blank" href="http://'.$user['Web'].'" class="website">'.$user['Web'].'</a>';
 			    	}
 			    	if(!empty($user['BusinessShortDesc'])){
-			    		if(strlen($user['BusinessShortDesc']) > 200){
-			    			$desc =  substr($user['BusinessShortDesc'],0,200).'...';
+			    		if(strlen($user['BusinessShortDesc']) > 170){
+			    			$desc =  substr($user['BusinessShortDesc'],0,160).'...';
 			    		}else{
 			    			$desc =   $user['BusinessShortDesc'];
 			    		}
@@ -109,7 +109,6 @@ class Esic_model extends CI_Model
                     $result .= $desc;
                     $result .= '</p>';
                     $result .= '</div>';
-			        $result .= "<br />";
 			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
                     $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
                     $result .= '</div>';
@@ -201,8 +200,8 @@ class Esic_model extends CI_Model
 			    		$web = '<a target="_blank" href="http://'.$user['Web'].'" class="website">'.$user['Web'].'</a>';
 			    	}
 			    	if(!empty($user['BusinessShortDesc'])){
-			    		if(strlen($user['BusinessShortDesc']) > 200){
-			    			$desc =  substr($user['BusinessShortDesc'],0,200).'...';
+			    		if(strlen($user['BusinessShortDesc']) > 170){
+			    			$desc =  substr($user['BusinessShortDesc'],0,160).'...';
 			    		}else{
 			    			$desc =   $user['BusinessShortDesc'];
 			    		}
@@ -238,7 +237,6 @@ class Esic_model extends CI_Model
                     $result .= $desc;
                     $result .= '</p>';
                     $result .= '</div>';
-			        $result .= "<br />";
 			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
                     $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
                     $result .= '</div>';
