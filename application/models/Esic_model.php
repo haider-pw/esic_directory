@@ -44,6 +44,7 @@ class Esic_model extends CI_Model
 	                score as Score,
 	                logo as Logo,
 	                website as Web,
+	                expiry_date as expiry_date,
 	                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
 	            ',
 	            false
@@ -83,15 +84,15 @@ class Esic_model extends CI_Model
 			    		$img = base_url('pictures/defaultLogo.png');
 			    	}
 			       
-			    $result .= '<li class="hcard-search member_level_5" '.$page.'>';
+			    $result .= '<li class="list-item hcard-search member_level_5" '.$page.'>';
 			     $result .= '<div class="img-container">';
-			       $result .= '<a href="/england/newcastle-upon-tyne/e-commerce-markets/janet-stansfield" title="Janet Stansfield SEIS Companies" rel="nofollow">';
+			       $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
 			         $result .= '<img src="'.$img.'" alt="" class="left">';
 			       $result .= '</a>';
-			     $result .= '</div>';
+			     $result .= '</div><div class="product-container">';
 			     $result .= '<div class="status-container">'.$status.'</div>';
 			     $result .= '<div class="name-container">';
-			        $result .= '<a href="/england/newcastle-upon-tyne/e-commerce-markets/janet-stansfield">';
+			        $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
 			         $result .= '<h3>'.$user['FullName'].'</h3>';
 			        $result .= '</a>';
 			     $result .= '</div><div class="clear"></div>';
@@ -103,11 +104,16 @@ class Esic_model extends CI_Model
 			        $result .= '<span class="price-assuarance">';
 			        $result .= $web;
 			        $result .= '</span>';
-			         $result .= '<p>';
-			         $result .= $desc ;
-			         $result .= '</p>';
-			         $result .= "<br />";
-			         $result .= '</div></li>';
+			        $result .= '<div class="description">';
+                    $result .= '<p>';
+                    $result .= $desc;
+                    $result .= '</p>';
+                    $result .= '</div>';
+			        $result .= "<br />";
+			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
+                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
+                    $result .= '</div>';
+			        $result .= '</div></div></li>';
 			       
 			    }
 			}
@@ -142,6 +148,7 @@ class Esic_model extends CI_Model
 	                score as Score,
 	                logo as Logo,
 	                website as Web,
+	                expiry_date as expiry_date,
 	                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
 	                ',
 	            false
@@ -206,15 +213,15 @@ class Esic_model extends CI_Model
 			    		$img = base_url('pictures/defaultLogo.png');
 			    	}
 			       
-			    $result .= '<li '.$offset.' ll '.$count.' class="hcard-search member_level_5" '.$page.'>';
+			    $result .= '<li class="list-item hcard-search member_level_5">';
 			     $result .= '<div class="img-container">';
-			       $result .= '<a href="/england/newcastle-upon-tyne/e-commerce-markets/janet-stansfield" title="Janet Stansfield SEIS Companies" rel="nofollow">';
+			       $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
 			         $result .= '<img src="'.$img.'" alt="" class="left">';
 			       $result .= '</a>';
-			     $result .= '</div>';
+			     $result .= '</div><div class="product-container">';
 			     $result .= '<div class="status-container">'.$status.'</div>';
 			     $result .= '<div class="name-container">';
-			        $result .= '<a href="/england/newcastle-upon-tyne/e-commerce-markets/janet-stansfield">';
+			        $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
 			         $result .= '<h3>'.$user['FullName'].'</h3>';
 			        $result .= '</a>';
 			     $result .= '</div><div class="clear"></div>';
@@ -226,11 +233,16 @@ class Esic_model extends CI_Model
 			        $result .= '<span class="price-assuarance">';
 			        $result .= $web;
 			        $result .= '</span>';
-			         $result .= '<p>';
-			         $result .= $desc ;
-			         $result .= '</p>';
-			         $result .= "<br />";
-			         $result .= '</div></li>';
+                    $result .= '<div class="description">';
+                    $result .= '<p>';
+                    $result .= $desc;
+                    $result .= '</p>';
+                    $result .= '</div>';
+			        $result .= "<br />";
+			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
+                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
+                    $result .= '</div>';
+			        $result .= '</div></div></li>';
 			       
 			    }
 			    if($offset >= $count){
@@ -243,6 +255,120 @@ class Esic_model extends CI_Model
 			$result="NORESULT";
 		}
 		return $result;//.$this->db->last_query();
+    }
+    public function getdetails($id){
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: PUT, GET, POST");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+ 
+            $selectData = array(
+                '
+                    user.id as userID,
+                    concat(firstName, " ", lastName) as FullName,
+                    email as Email,
+                    company as Company,
+                    business as Business,
+                    businessShortDescription as BusinessShortDesc,
+                    score as Score,
+                    logo as Logo,
+                    corporate_date as corporate_date,
+                    added_date as added_date,
+                    expiry_date as expiry_date,
+                    acn_number as acn_number,                    
+                    bannerImage as bannerImage,
+                    website as Web,
+                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
+                    ',
+                false
+            );
+            $where = "user.id =".$id;
+            $joins = array(
+                array(
+                    'table' => 'esic_status ES',
+                    'condition' => 'ES.id = user.status',
+                    'type' => 'LEFT'
+                )
+            );
+            $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,false,'','','','','',true);
+            $result="";
+            //print_r($where);
+            //print_r($usersResult);
+           if(!empty($usersResult)){
+                $count=0;
+                foreach($usersResult as $key=>$user){
+                    $count++;
+                    $status='';
+                    $web='';
+                    $desc='';
+                    $img ='';
+                    $bgimg ='';
+                    if(!empty($user['Status'])){
+                        $status = $user['Status'];
+                    }
+                    if(!empty($user['Web'])){
+                        $web = '<a target="_blank" href="http://'.$user['Web'].'" class="website">'.$user['Web'].'</a>';
+                    }
+                    
+                    $desc =   $user['BusinessShortDesc'];
+
+                    if(isset($user['Logo']) and !empty($user['Logo']) and is_file(FCPATH.'/'.$user['Logo'])){
+                        $img = base_url($user['Logo']);
+                    }else{
+                        $img = base_url('pictures/defaultLogo.png');
+                    }
+                    if(isset($user['bannerImage']) and !empty($user['bannerImage']) and is_file(FCPATH.'/'.$user['bannerImage'])){
+                        $bgimg = base_url($user['bannerImage']);
+                    }else{
+                        $bgimg = base_url('pictures/defaultBanner.jpg');
+                    }
+                   
+                    $result .= '<div class="single-item list-item hcard-search member_level_5">';
+                    $result .= '<div class="container">';
+                    $result .= '<div class="background-img-container"><img src="'.$bgimg.'" alt="" class="left"></div>';
+                    $result .= '<div class="container-box">';
+                    $result .= '<div class="img-container">';
+                    $result .= '<a href="#" class="permalink">';
+                    $result .= '<img src="'.$img.'" alt="" class="left">';
+                    $result .= '</a>';
+                    $result .= '</div>';
+                    $result .= '<div class="detail-container">';
+                    $result .= '<div class="product-details"><label>Name:</label>';
+                    $result .= '<a href="#" class="permalink" >';
+                    $result .= '<h3>'.$user['FullName'].'</h3>';
+                    $result .= '</a>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details"><label>Sector:</label>';
+                    $result .= '<p class="info-type">'.$user['Company'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details status-container"><label>Status:</label>'.$status.'</div>';
+                    $result .= '<div class="product-details"><label>Corporate Date:</label>';
+                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details"><label>Added Date:</label>';
+                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details"><label>Expiry Date:</label>';
+                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details"><label>ACN Number:</label>';
+                    $result .= '<p class="info-type">'.$user['acn_number'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details website-address"><label>Website:</label><p>';
+                    $result .= $web;
+                    $result .= '</p></div>';
+                    $result .= '<div class="description">';
+                    $result .= '<label>Overview:</label><p>';
+                    $result .= $desc ;
+                    $result .= '</p>';
+                    $result .= '</div>';
+                    $result .= "<br />";
+                    $result .= '</div></div></div>';
+                    $result .= '</div></div>';
+                }
+                   
+            }
+                
+        return $result;//.$this->db->last_query();
 
     }
 }

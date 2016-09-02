@@ -4,6 +4,15 @@ var_dump($links);
 echo "</pre>";
 */?>
 <link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/boxlisting.css">
+<style type="text/css">
+    .container-box{
+    /*background-image: url("uploads/8/4/3/6/84367404/background-images/561993498.jpg") !important;
+    background-repeat: no-repeat !important;
+    background-position: 50.00% 19.91% !important;
+    background-size: 100% 100%!important;
+    background-color: transparent !important;*/
+}
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <div class="content-shell">
     <div class="content-wrap" id="wrap">
@@ -84,6 +93,12 @@ echo "</pre>";
     jQuery(document).ready(function($){
         getlist(0);
         var sectorsSelect,companySelect,searchInput;
+        $("body").on("click","a.permalink",function(e) {
+            e.preventDefault();
+            var linkId = $(this).attr('data-link');
+            console.log('link'+linkId);
+            redirectToLink(linkId);
+        });
         $("#load_more").click(function(e){
             e.preventDefault();
             var clickBtn ='load_more';
@@ -111,106 +126,126 @@ echo "</pre>";
             var clickBtn ='filter_search';
             callfilter(clickBtn);
         });
-
-    function callfilter(clickBtn){
-            var page = $("#filter_search").data('val');
-            //console.log('page ='+page);
-            if(clickBtn=='filter_search'){
-                if(sectorsSelect != $('#sectorsSelect option:selected').text()){
-                    page = 0;
-                }
-                if(companySelect != $('#companySelect option:selected').text()){
-                    page = 0;
-                }
-            }
-            companySelect = $('#companySelect option:selected').text();
-            sectorsSelect = $('#sectorsSelect option:selected').text();
-            searchInput = $('#location_search').val();
-            //console.log(searchInput);
-            companySelectValue = $('#companySelect option:selected').val();
-            sectorsSelectValue = $('#sectorsSelect option:selected').val();
-            if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' ){
-                $("#regList").html('');
-                getlist(0);
-                return false;
-            }
-            if(companySelectValue==''){
-                companySelect='';
-            }else{
-               companySelect = '"'+companySelect+'"';
-            }
-            if(sectorsSelectValue==''){
-                sectorsSelect='';
-            }
-            $("#load_more").addClass('loading');
-            $("#loader").show();
-            setTimeout(function(){
-                 getfilterlist(page,searchInput,sectorsSelectValue,companySelect);
-              }, 500);
-    }
-
-    function getfilterlist(page,searchInput,secSelect,comSelect){
-        
-        $.ajax({
-            url:"<?php echo base_url() ?>Esic2/getfilterlist",
-            type:'GET',
-            data: {page:page,searchInput:searchInput,secSelect:secSelect,comSelect:comSelect}
-        }).done(function(response){
-            if(page==0){
-                $("#regList").html('');
-            }
-            if(response=='NORESULT'){
-                $("#loader").hide();
-                $("#load_more").removeClass('loading');
-                $('#load_more').hide();
-                $('#no-result').remove();
-                $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
-                //console.log(response);
-            }else{
-                 //console.log(response);
-                $("#regList").append(response);
-                $("#loader").hide();
-                $("#load_more").removeClass('loading');
-                $('#filter_search').data('val', ($('#filter_search').data('val')+1));
-                scroll();
-            }
-            
+        $("body").on("click","#back",function(e){
+            e.preventDefault();
+            $('.content-shell #wrap .content').slideDown('slow');
+            $('.content-shell #wrap .single-item').slideUp('slow');  
+            $('.content-shell #wrap .single-item').remove();
+            $(this).parent().remove();
+            return false;    
         });
-    }
-    function getlist(page){
-        
-        $.ajax({
-            url:"<?php echo base_url() ?>Esic2/getlist",
-            type:'GET',
-            data: {page:page}
-        }).done(function(response){
-            if(response=='NORESULT'){
-                $("#loader").hide();
-                $("#load_more").removeClass('loading');
-                $('#load_more').hide();
-                $('#no-result').remove();
-                $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
-                //console.log(response);
-            }else{
-                 //console.log(response);
-                $("#regList").append(response);
-                $("#loader").hide();
-                $("#load_more").removeClass('loading');
-                $('#load_more').data('val', ($('#load_more').data('val')+1));
-                if(page!=0){
+        function callfilter(clickBtn){
+                var page = $("#filter_search").data('val');
+                //console.log('page ='+page);
+                if(clickBtn=='filter_search'){
+                    if(sectorsSelect != $('#sectorsSelect option:selected').text()){
+                        page = 0;
+                    }
+                    if(companySelect != $('#companySelect option:selected').text()){
+                        page = 0;
+                    }
+                }
+                companySelect = $('#companySelect option:selected').text();
+                sectorsSelect = $('#sectorsSelect option:selected').text();
+                searchInput = $('#location_search').val();
+                //console.log(searchInput);
+                companySelectValue = $('#companySelect option:selected').val();
+                sectorsSelectValue = $('#sectorsSelect option:selected').val();
+                if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' ){
+                    $("#regList").html('');
+                    getlist(0);
+                    return false;
+                }
+                if(companySelectValue==''){
+                    companySelect='';
+                }else{
+                   companySelect = '"'+companySelect+'"';
+                }
+                if(sectorsSelectValue==''){
+                    sectorsSelect='';
+                }
+                $("#load_more").addClass('loading');
+                $("#loader").show();
+                setTimeout(function(){
+                     getfilterlist(page,searchInput,sectorsSelectValue,companySelect);
+                  }, 500);
+        }
+
+        function getfilterlist(page,searchInput,secSelect,comSelect){
+            
+            $.ajax({
+                url:"<?php echo base_url() ?>Esic2/getfilterlist",
+                type:'GET',
+                data: {page:page,searchInput:searchInput,secSelect:secSelect,comSelect:comSelect}
+            }).done(function(response){
+                if(page==0){
+                    $("#regList").html('');
+                }
+                if(response=='NORESULT'){
+                    $("#loader").hide();
+                    $("#load_more").removeClass('loading');
+                    $('#load_more').hide();
+                    $('#no-result').remove();
+                    $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
+                    //console.log(response);
+                }else{
+                     //console.log(response);
+                    $("#regList").append(response);
+                    $("#loader").hide();
+                    $("#load_more").removeClass('loading');
+                    $('#filter_search').data('val', ($('#filter_search').data('val')+1));
                     scroll();
                 }
-            }
+                
+            });
+        }
+        function getlist(page){
             
-        });
-    }
- 
-    function scroll(){
-        $('html, body').animate({
-            scrollTop: $('#load_more').offset().top
-        }, 1000);
-    }
-     });
- 
+            $.ajax({
+                url:"<?php echo base_url() ?>Esic2/getlist",
+                type:'GET',
+                data: {page:page}
+            }).done(function(response){
+                if(response=='NORESULT'){
+                    $("#loader").hide();
+                    $("#load_more").removeClass('loading');
+                    $('#load_more').hide();
+                    $('#no-result').remove();
+                    $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
+                    //console.log(response);
+                }else{
+                     //console.log(response);
+                    $("#regList").append(response);
+                    $("#loader").hide();
+                    $("#load_more").removeClass('loading');
+                    $('#load_more').data('val', ($('#load_more').data('val')+1));
+                    if(page!=0){
+                        scroll();
+                    }
+                }
+                
+            });
+        }
+     
+        function scroll(){
+            $('html, body').animate({
+                scrollTop: $('#load_more').offset().top
+            }, 1000);
+        }
+        function redirectToLink(id){
+            console.log('ID'+id);
+            $.ajax({
+                url:"<?php echo base_url() ?>Esicdetails/getdetails",
+                type:'GET',
+                data: {id:id}
+            }).done(function(response){
+                $('.content-shell #wrap .content').slideUp('slow');
+                $('.content-shell #wrap').css('min-height', '500px');
+                $('.content-shell #wrap').append(response);          
+                $('.content-shell #wrap').append('<div class="btn-back container"><button id="back"  class="btn">Back</button></div>');
+            });
+        }
+    });
+     
  
 </script>

@@ -37,7 +37,11 @@ if(!function_exists('dateDifference')){
     }
 }
 
-
+if(!function_exists('getExpiryDate')){
+   function getExpiryDate($added_date){
+        return date("Y-m-d", strtotime(date("Y-m-d", strtotime($added_date)) . " + 5 year"));
+    }
+}
 //Found This Function on
 //http://php.net/manual/en/function.date-diff.php
 if(!function_exists('validateDate')){

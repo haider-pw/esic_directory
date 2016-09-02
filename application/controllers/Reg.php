@@ -28,6 +28,7 @@ class Reg extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Common_model');
+        $this->load->helper('my_site_helper');
 
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
@@ -51,6 +52,7 @@ class Reg extends CI_Controller {
 
         $this->load->view('regForm/reg_form_bootstrap',$data);
     }
+
     public function submit(){
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
@@ -61,8 +63,12 @@ class Reg extends CI_Controller {
         $email = $this->input->post('email');
         $company = $this->input->post('company');
         $business = $this->input->post('business');
-        $cop_date = $this->input->post('cop_date');
+        $date_pickter_format = $this->input->post('cop_date');
+        $cop_date = date("Y-m-d",strtotime($date_pickter_format));
         $acn = $this->input->post('acn');
+        $added_date =  date('Y-m-d');
+        
+        $expiry_date =  getExpiryDate($added_date);
 
         $mExpense = $this->input->post('1mExpense');
         $assessableIncomeYear = $this->input->post('assessableIncomeYear');
@@ -92,14 +98,16 @@ class Reg extends CI_Controller {
         }
 
         $userInsertArray = array(
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-            'email' => $email,
-            'company' => $company,
-            'business' => $business,
-            'acn_number' => $acn,
-            'corporate_date' => $cop_date,
-            'score' => 0
+            'firstName'         => $firstName,
+            'lastName'          => $lastName,
+            'email'             => $email,
+            'company'           => $company,
+            'business'          => $business,
+            'acn_number'        => $acn,
+            'added_date'        => $added_date,
+            'expiry_date'       => $expiry_date,
+            'corporate_date'    => $cop_date,
+            'score'             => 0
         );
 
         $this->db->trans_begin();

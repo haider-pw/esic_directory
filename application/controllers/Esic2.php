@@ -164,4 +164,5 @@ class Esic2 extends CI_Controller{
     public function info($userID){
         echo "User Profile WIll Show up Here.";
     }
+
 }

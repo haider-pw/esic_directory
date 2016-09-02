@@ -6,6 +6,7 @@
     <title>Form to Wizard with jQuery Validation plugin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
     <link href="<?=base_url();?>assets/css/form.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
@@ -14,6 +15,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
     <script type="text/javascript" src="<?=base_url();?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -137,7 +139,12 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="cop_date">Corporate Date</label>
-                                        <input id="cop_date" name="cop_date" type="text" class="form-control" placeholder="DD/MM/YYYY" />
+                                        <div class="input-group date" data-provide="datepicker">
+                                            <input id="cop_date" name="cop_date" type="text" class="form-control" placeholder="DD/MM/YYYY" />
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>    
                                     </div>
                                     <div class="form-group">
                                         <label for="acn">ACN #</label>
@@ -825,6 +832,7 @@
             }
         });
     });
+      
 </script>
 
 <script type="text/javascript">
@@ -878,6 +886,11 @@
                         });
             
                     });
+        $( function() {
+        $( "#cop_date" ).datepicker({
+            format: 'dd/mm/yyyy'
+        });
+      });
 $("#industryClassification").select2();
         $("#addClassification").on("click",function(){
             var Industry = $("#Industry");
