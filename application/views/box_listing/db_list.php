@@ -20,7 +20,7 @@ echo "</pre>";
                 <div class="module">
                     <div class="module-section">
                         <!--h3>Search by Location</h3-->
-                        <div class=" filter form">
+                        <div class="filter form">
                             <div class="filter3" id="filter">
                                 <div class="searchbox">
                                     <input type="text" value="" name="location_value" id="location_search"
@@ -63,6 +63,34 @@ echo "</pre>";
                                 <button  id="filter_search" class="hero-link green-bg" value="Search Now" data-val = "0">Search Now</button> 
                             </div>
                         </div>
+                        <div class="filter form">
+                            <div class="filter-inner" id="sort-filters">
+                                <div class="sortFilters">
+                                    <select id="dateAddedOrderSelect" placeholder="Order By date added">
+                                        <option value="" disabled selected>Order by date added</option>
+                                        <option value="1">Newest</option>
+                                        <option value="2">Oldest</option>
+                                    </select>
+                                </div>
+                                <div class="sortFilters">
+                                    <select id="assessmentOrderSelect" placeholder="Order By assessment date">
+                                        <option value="" disabled selected>Order by assessment date</option>
+                                        <option value="1">Newest</option>
+                                        <option value="2">Oldest</option>
+                                    </select>
+                                </div>
+                                <div class="sortFilters">
+                                    <select id="expiryOrderSelect" placeholder="Order By expiry date">
+                                        <option value="" disabled selected>Order by expiry date</option>
+                                        <option value="1">Newest</option>
+                                        <option value="2">Oldest</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="filter_submit">
+                                <button  id="filter_reset" class="hero-link green-bg" value="Reset" data-val = "0">Reset</button> 
+                            </div>
+                        </div>
                     </div>
                 </div>
             <div class="new-results" >
@@ -92,12 +120,17 @@ echo "</pre>";
 <script>
     jQuery(document).ready(function($){
         getlist(0);
-        var sectorsSelect,companySelect,searchInput;
+        var sectorsSelect,companySelect,searchInput,AdOrderSelect,ASOrderSelect,ExOrderSelect;
         $("body").on("click","a.permalink",function(e) {
             e.preventDefault();
             var linkId = $(this).attr('data-link');
             console.log('link'+linkId);
             redirectToLink(linkId);
+        });
+        $("#filter_reset").click(function(e){
+            e.preventDefault();
+            $(".module select").val($("module select option:first").val());
+            $(".module input").val('');
         });
         $("#load_more").click(function(e){
             e.preventDefault();
@@ -106,13 +139,20 @@ echo "</pre>";
             //console.log('page ='+page);
             $("#load_more").addClass('loading');
             $("#loader").show();
+            searchInput = $('#location_search').val();
             companySelect = $('#companySelect option:selected').text();
             sectorsSelect = $('#sectorsSelect option:selected').text();
-            searchInput = $('#location_search').val();
+            AdOrderSelect = $('#dateAddedOrderSelect option:selected').text();
+            ASOrderSelect = $('#assessmentOrderSelect option:selected').text();
+            ExOrderSelect = $('#expiryOrderSelect option:selected').text();
+
             //console.log(searchInput);
             companySelectValue = $('#companySelect option:selected').val();
             sectorsSelectValue = $('#sectorsSelect option:selected').val();
-            if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' ){
+            AdOrderSelectValue = $('#dateAddedOrderSelect option:selected').val();
+            ASOrderSelectValue = $('#assessmentOrderSelect option:selected').val();
+            ExOrderSelectValue = $('#expiryOrderSelect option:selected').val();
+            if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' || AdOrderSelectValue!='' || ASOrderSelectValue!='' || ExOrderSelectValue!='' ){
                 //$("#regList").html('');
                 callfilter(clickBtn);
                 return false;
@@ -145,13 +185,20 @@ echo "</pre>";
                         page = 0;
                     }
                 }
+                searchInput = $('#location_search').val();
                 companySelect = $('#companySelect option:selected').text();
                 sectorsSelect = $('#sectorsSelect option:selected').text();
-                searchInput = $('#location_search').val();
+                AdOrderSelect = $('#dateAddedOrderSelect option:selected').text();
+                ASOrderSelect = $('#assessmentOrderSelect option:selected').text();
+                ExOrderSelect = $('#expiryOrderSelect option:selected').text();
+
                 //console.log(searchInput);
                 companySelectValue = $('#companySelect option:selected').val();
                 sectorsSelectValue = $('#sectorsSelect option:selected').val();
-                if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' ){
+                AdOrderSelectValue = $('#dateAddedOrderSelect option:selected').val();
+                ASOrderSelectValue = $('#assessmentOrderSelect option:selected').val();
+                ExOrderSelectValue = $('#expiryOrderSelect option:selected').val();
+        if(searchInput=='' && companySelectValue=='' && sectorsSelectValue==''  && AdOrderSelectValue!='' && ASOrderSelectValue!='' && ExOrderSelectValue!='' ){
                     $("#regList").html('');
                     getlist(0);
                     return false;
@@ -167,16 +214,23 @@ echo "</pre>";
                 $("#load_more").addClass('loading');
                 $("#loader").show();
                 setTimeout(function(){
-                     getfilterlist(page,searchInput,sectorsSelectValue,companySelect);
+                     getfilterlist(page,searchInput,sectorsSelectValue,companySelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue);
                   }, 500);
         }
 
-        function getfilterlist(page,searchInput,secSelect,comSelect){
+        function getfilterlist(page,searchInput,secSelect,comSelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue){
             
             $.ajax({
                 url:"<?php echo base_url() ?>Esic2/getfilterlist",
                 type:'GET',
-                data: {page:page,searchInput:searchInput,secSelect:secSelect,comSelect:comSelect}
+                data: {page:page,
+                    searchInput:searchInput,
+                    secSelect:secSelect,
+                    comSelect:comSelect,
+                    AdOrderSelect:AdOrderSelectValue,
+                    ASOrderSelect:ASOrderSelectValue,
+                    ExOrderSelect:ExOrderSelectValue
+                    }
             }).done(function(response){
                 if(page==0){
                     $("#regList").html('');

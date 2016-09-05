@@ -122,7 +122,7 @@ class Esic_model extends CI_Model
 		return $result;
 
     }
-    public function getfilterlist($page,$search,$secSelect,$comSelect){
+    public function getfilterlist($page,$search,$secSelect,$comSelect,$AdOrderSelect,$ASOrderSelect,$ExOrderSelect){
         $offset = 3*$page;
         $pagelimit = 3;
         header("Access-Control-Allow-Origin: *");
@@ -175,6 +175,20 @@ class Esic_model extends CI_Model
 				        OR user.businessShortDescription LIKE '%".$search."%'
 				        OR user.website LIKE '%".$search."%'";
 			}
+			if($ExOrderSelect==1){
+				$exsort ='asc';
+			}else{
+				$exsort ='desc';
+			}
+			$orderBy='';
+			if(!empty($ExOrderSelect)){
+				$orderBy = array(
+		            array(
+		                'name' => 'expiry_date',
+		                'sort' => $exsort
+		            )
+		        );
+			}
 	        $joins = array(
 	            array(
 	                'table' => 'esic_status ES',
@@ -182,7 +196,7 @@ class Esic_model extends CI_Model
 	                'type' => 'LEFT'
 	            )
 	        );
-	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','','','',$limit,true);
+	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','','',$orderBy,$limit,true);
 	        $result="";
 	        
 	       if(!empty($usersResult) && is_array($usersResult)){
@@ -252,7 +266,7 @@ class Esic_model extends CI_Model
 		}else{
 			$result="NORESULT";
 		}
-		return $result;//.$this->db->last_query();
+		return $result.$this->db->last_query();
     }
     public function getdetails($id){
         header("Access-Control-Allow-Origin: *");
@@ -366,7 +380,7 @@ class Esic_model extends CI_Model
                    
             }
                 
-        return $result;//.$this->db->last_query();
+        return $result.$this->db->last_query();
 
     }
 }

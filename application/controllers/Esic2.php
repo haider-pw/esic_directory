@@ -155,8 +155,11 @@ class Esic2 extends CI_Controller{
         $secSelect   =  $_GET['secSelect'];
         $comSelect   =  $_GET['comSelect'];
         $searchInput =  $_GET['searchInput'];
+        $AdOrderSelect  =  $_GET['AdOrderSelect'];
+        $ASOrderSelect  =  $_GET['ASOrderSelect'];
+        $ExOrderSelect  =  $_GET['ExOrderSelect'];
         $this->load->model('Esic_model');
-        $list = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect);
+        $list = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect,$AdOrderSelect,$ASOrderSelect,$ExOrderSelect);
         print_r($list);
         exit;
     }
@@ -164,5 +167,4 @@ class Esic2 extends CI_Controller{
     public function info($userID){
         echo "User Profile WIll Show up Here.";
     }
-
 }
