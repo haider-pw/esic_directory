@@ -29,7 +29,7 @@
                 "mData": "UserID",
                 "bVisible": true,
                 "bSortable": true,
-                "bSearchable": true
+                "bSearchable": false
             },
             /* Full Name */ {
                 "mData" : "FullName"
