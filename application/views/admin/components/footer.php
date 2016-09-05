@@ -73,11 +73,15 @@
         });
 
         $("#yesApprove").on("click",function () {
-            var hiddenModalUserID = $(this).parents("modal-content").find("#hiddenUserID").val();
+            var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+            console.log(hiddenModalUserID);
             var postData = {id:hiddenModalUserID,value:"approve"};
             $.ajax({
                url:"<?=base_url();?>Admin/assessment_list",
-                data:postData,
+                data:{
+                    id:hiddenModalUserID,
+                    value:"approve"
+                },
                 type:"POST",
                 success:function (output) {
                     var data = output.split("::");
@@ -87,10 +91,14 @@
 
         $("#noPending").on("click",function () {
             var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+            console.log(hiddenModalUserID);
             var postData = {id:hiddenModalUserID,value:"pending"};
             $.ajax({
                url:"<?=base_url();?>Admin/assessment_list",
-                data: postData,
+                data:{
+                    id:hiddenModalUserID,
+                    value:"pending"
+                },
                 type:"POST",
                 success:function (output) {
                     var data = output.split("::");

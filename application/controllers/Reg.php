@@ -68,7 +68,7 @@ class Reg extends CI_Controller {
         $acn = $this->input->post('acn');
         $added_date =  date('Y-m-d');
         
-        $expiry_date =  getExpiryDate($added_date);
+        $expiry_date =  getExpiryDate($cop_date);
 
         $mExpense = $this->input->post('1mExpense');
         $assessableIncomeYear = $this->input->post('assessableIncomeYear');

@@ -59,37 +59,33 @@ echo "</pre>";
                                     </select>
                                 </div>
                             </div>
-                            <div id="filter_submit">
-                                <button  id="filter_search" class="hero-link green-bg" value="Search Now" data-val = "0">Search Now</button> 
-                            </div>
-                        </div>
-                        <div class="filter form">
                             <div class="filter-inner" id="sort-filters">
                                 <div class="sortFilters">
                                     <select id="dateAddedOrderSelect" placeholder="Order By date added">
                                         <option value="" disabled selected>Order by date added</option>
-                                        <option value="1">Newest</option>
-                                        <option value="2">Oldest</option>
+                                        <option value="asc">Newest</option>
+                                        <option value="desc">Oldest</option>
                                     </select>
                                 </div>
                                 <div class="sortFilters">
                                     <select id="assessmentOrderSelect" placeholder="Order By assessment date">
                                         <option value="" disabled selected>Order by assessment date</option>
-                                        <option value="1">Newest</option>
-                                        <option value="2">Oldest</option>
+                                        <option value="asc">Newest</option>
+                                        <option value="desc">Oldest</option>
                                     </select>
                                 </div>
                                 <div class="sortFilters">
                                     <select id="expiryOrderSelect" placeholder="Order By expiry date">
                                         <option value="" disabled selected>Order by expiry date</option>
-                                        <option value="1">Newest</option>
-                                        <option value="2">Oldest</option>
+                                        <option value="asc">Newest</option>
+                                        <option value="desc">Oldest</option>
                                     </select>
                                 </div>
                             </div>
-                            <div id="filter_submit">
-                                <button  id="filter_reset" class="hero-link green-bg" value="Reset" data-val = "0">Reset</button> 
-                            </div>
+                        </div>
+                        <div id="filter_submit">
+                            <button  id="filter_search" class="hero-link green-bg" value="Search Now" data-val = "0">Search Now</button>
+                            <button  id="filter_reset" class="hero-link green-bg" value="Reset" data-val = "0">Reset</button>  
                         </div>
                     </div>
                 </div>
@@ -133,37 +129,41 @@ echo "</pre>";
             $(".module input").val('');
         });
         $('#dateAddedOrderSelect').change(function(){
-            var selectvalue = $(this).val();
-            $(".module select").val($("module select option:first").val());
             OrderSelect = 'added_date';
+            var selectvalue = $(this).val();
+            $(".module select").val($("module #sort-filters select option:first").val());
             $(this).val(selectvalue);
-            if($(this).val(selectvalue)==1){
+            var selectstring = JSON.stringify(selectvalue);
+            if(selectstring == '"asc"'){
                 OrderSelectValue = 'asc';
             }else{
                 OrderSelectValue = 'desc';
             }
         });
         $('#assessmentOrderSelect').change(function(){
+            OrderSelect = 'corporate_date';
             var selectvalue = $(this).val();
-            $(".module select").val($("module select option:first").val());
-            OrderSelect = 'copreate_date';
+            $(".module select").val($("module #sort-filters select option:first").val());
             $(this).val(selectvalue);
-            if($(this).val(selectvalue)==1){
+            var selectstring = JSON.stringify(selectvalue);
+            if(selectstring == '"asc"'){
                 OrderSelectValue = 'asc';
             }else{
                 OrderSelectValue = 'desc';
             }
         });
         $('#expiryOrderSelect').change(function(){
-            var selectvalue = $(this).val();
-            $(".module select").val($("module select option:first").val());
             OrderSelect = 'expiry_date';
+            var selectvalue = $(this).val();
+            $(".module select").val($("module #sort-filters select option:first").val());
             $(this).val(selectvalue);
-            if($(this).val(selectvalue)==1){
+            var selectstring = JSON.stringify(selectvalue);
+            if(selectstring == '"asc"'){
                 OrderSelectValue = 'asc';
             }else{
                 OrderSelectValue = 'desc';
             }
+            //console.log('s'+OrderSelectValue+' cc '+selectstring);
         });
         $("#load_more").click(function(e){
             e.preventDefault();
@@ -252,7 +252,11 @@ echo "</pre>";
                   }, 500);
         }
 
-        function getfilterlist(page,searchInput,secSelect,comSelect,OrderSelect,OrderSelectValue){
+        function getfilterlist(page,searchInput,secSelect,comSelect,orderSelect,orderSelectValue){
+            if(orderSelect==undefined){
+                orderSelect='';
+                orderSelectValue ='';
+            }
             
             $.ajax({
                 url:"<?php echo base_url() ?>Esic2/getfilterlist",
@@ -261,8 +265,8 @@ echo "</pre>";
                     searchInput:searchInput,
                     secSelect:secSelect,
                     comSelect:comSelect,
-                    OrderSelect:OrderSelect,
-                    OrderSelectValue:OrderSelectValue
+                    orderSelect:orderSelect,
+                    orderSelectValue:orderSelectValue
                     }
             }).done(function(response){
                 if(page==0){

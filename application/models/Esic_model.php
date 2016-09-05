@@ -22,9 +22,9 @@ class Esic_model extends CI_Model
     public function getlist($page){
         $offset = 3*$page;
         $pagelimit = 3;
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: PUT, GET, POST");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        //header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: PUT, GET, POST");
+        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         
         $total_results = $this->db->count_all("user");
         if($offset < $total_results){
@@ -45,7 +45,9 @@ class Esic_model extends CI_Model
 	                logo as Logo,
 	                website as Web,
 	                expiry_date as expiry_date,
-	                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
+	                corporate_date as corporate_date,
+	                added_date as added_date,
+	                 CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
 	            ',
 	            false
 	        );
@@ -109,7 +111,13 @@ class Esic_model extends CI_Model
                     $result .= $desc;
                     $result .= '</p>';
                     $result .= '</div>';
-			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
+			        $result .= '<div class="product-details date-container add"><label>Added Date:</label>';
+                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details date-container cop"><label>Coporate Date:</label>';
+                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
                     $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
                     $result .= '</div>';
 			        $result .= '</div></div></li>';
@@ -125,9 +133,9 @@ class Esic_model extends CI_Model
     public function getfilterlist($page,$search,$secSelect,$comSelect,$OrderSelect,$OrderSelectValue){
         $offset = 3*$page;
         $pagelimit = 3;
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: PUT, GET, POST");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        //header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: PUT, GET, POST");
+        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         
         $total_results = $this->db->count_all("user");
         if($offset < $total_results){
@@ -148,6 +156,8 @@ class Esic_model extends CI_Model
 	                logo as Logo,
 	                website as Web,
 	                expiry_date as expiry_date,
+	                corporate_date as corporate_date,
+	                added_date as added_date,
 	                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
 	                ',
 	            false
@@ -179,10 +189,7 @@ class Esic_model extends CI_Model
 			$orderBy='';
 			if(!empty($OrderSelect)){
 				$orderBy = array(
-		             //'name' => $OrderSelect,
-		             //'sort' => $OrderSelectValue
-					'name' => 'expiry_date',
-		             'sort' =>  'ASC'
+		             $OrderSelect,$OrderSelectValue
 		        );
 			}
 	        $joins = array(
@@ -247,27 +254,31 @@ class Esic_model extends CI_Model
                     $result .= $OrderSelect.$desc;
                     $result .= '</p>';
                     $result .= '</div>';
-			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
+			        $result .= '<div class="product-details date-container add"><label>Added Date:</label>';
+                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details date-container cop"><label>Coporate Date:</label>';
+                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
+                    $result .= '</div>';
+                    $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
                     $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
                     $result .= '</div>';
 			        $result .= '</div></div></li>';
 			       
 			    }
-			    if($offset >= $count){
-			    	$result="NORESULT";
-			    }
+
 			}else{
 				$result="NORESULT";
 			}
 		}else{
 			$result="NORESULT";
 		}
-		return $result.$this->db->last_query();
+		return $result;//.$this->db->last_query();
     }
     public function getdetails($id){
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: PUT, GET, POST");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+       // header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: PUT, GET, POST");
+        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
  
             $selectData = array(
                 '
