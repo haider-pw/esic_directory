@@ -155,11 +155,11 @@ class Esic2 extends CI_Controller{
         $secSelect   =  $_GET['secSelect'];
         $comSelect   =  $_GET['comSelect'];
         $searchInput =  $_GET['searchInput'];
-        $AdOrderSelect  =  $_GET['AdOrderSelect'];
-        $ASOrderSelect  =  $_GET['ASOrderSelect'];
-        $ExOrderSelect  =  $_GET['ExOrderSelect'];
+        $OrderSelect =  $_GET['OrderSelect'];
+        $OrderSelectValue = $_GET['OrderSelectValue'];
+
         $this->load->model('Esic_model');
-        $list = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect,$AdOrderSelect,$ASOrderSelect,$ExOrderSelect);
+        $list = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect,$OrderSelect,$OrderSelectValue);
         print_r($list);
         exit;
     }

@@ -122,7 +122,7 @@ class Esic_model extends CI_Model
 		return $result;
 
     }
-    public function getfilterlist($page,$search,$secSelect,$comSelect,$AdOrderSelect,$ASOrderSelect,$ExOrderSelect){
+    public function getfilterlist($page,$search,$secSelect,$comSelect,$OrderSelect,$OrderSelectValue){
         $offset = 3*$page;
         $pagelimit = 3;
         header("Access-Control-Allow-Origin: *");
@@ -175,18 +175,14 @@ class Esic_model extends CI_Model
 				        OR user.businessShortDescription LIKE '%".$search."%'
 				        OR user.website LIKE '%".$search."%'";
 			}
-			if($ExOrderSelect==1){
-				$exsort ='asc';
-			}else{
-				$exsort ='desc';
-			}
+			
 			$orderBy='';
-			if(!empty($ExOrderSelect)){
+			if(!empty($OrderSelect)){
 				$orderBy = array(
-		            array(
-		                'name' => 'expiry_date',
-		                'sort' => $exsort
-		            )
+		             //'name' => $OrderSelect,
+		             //'sort' => $OrderSelectValue
+					'name' => 'expiry_date',
+		             'sort' =>  'ASC'
 		        );
 			}
 	        $joins = array(
@@ -248,7 +244,7 @@ class Esic_model extends CI_Model
 			        $result .= '</span>';
                     $result .= '<div class="description">';
                     $result .= '<p>';
-                    $result .= $desc;
+                    $result .= $OrderSelect.$desc;
                     $result .= '</p>';
                     $result .= '</div>';
 			        $result .= '<div class="product-details exp"><label>Expiry Date:</label>';
@@ -303,8 +299,6 @@ class Esic_model extends CI_Model
             );
             $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,false,'','','','','',true);
             $result="";
-            //print_r($where);
-            //print_r($usersResult);
            if(!empty($usersResult)){
                 $count=0;
                 foreach($usersResult as $key=>$user){
@@ -380,7 +374,7 @@ class Esic_model extends CI_Model
                    
             }
                 
-        return $result.$this->db->last_query();
+        return $result;//.$this->db->last_query();
 
     }
 }

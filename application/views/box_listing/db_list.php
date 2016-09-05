@@ -97,8 +97,8 @@ echo "</pre>";
                 <?php
 
                 if(!empty($usersResult) && is_array($usersResult)){
-                echo '<ul id="regList" class="product-list" >';
-                echo '</ul>';
+                    echo '<ul id="regList" class="product-list" >';
+                    echo '</ul>';
                 }
 
                 ?>
@@ -120,7 +120,7 @@ echo "</pre>";
 <script>
     jQuery(document).ready(function($){
         getlist(0);
-        var sectorsSelect,companySelect,searchInput,AdOrderSelect,ASOrderSelect,ExOrderSelect;
+        var sectorsSelect,companySelect,searchInput,OrderSelect,OrderSelectValue,AdOrderSelect,ASOrderSelect,ExOrderSelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue;
         $("body").on("click","a.permalink",function(e) {
             e.preventDefault();
             var linkId = $(this).attr('data-link');
@@ -131,6 +131,39 @@ echo "</pre>";
             e.preventDefault();
             $(".module select").val($("module select option:first").val());
             $(".module input").val('');
+        });
+        $('#dateAddedOrderSelect').change(function(){
+            var selectvalue = $(this).val();
+            $(".module select").val($("module select option:first").val());
+            OrderSelect = 'added_date';
+            $(this).val(selectvalue);
+            if($(this).val(selectvalue)==1){
+                OrderSelectValue = 'asc';
+            }else{
+                OrderSelectValue = 'desc';
+            }
+        });
+        $('#assessmentOrderSelect').change(function(){
+            var selectvalue = $(this).val();
+            $(".module select").val($("module select option:first").val());
+            OrderSelect = 'copreate_date';
+            $(this).val(selectvalue);
+            if($(this).val(selectvalue)==1){
+                OrderSelectValue = 'asc';
+            }else{
+                OrderSelectValue = 'desc';
+            }
+        });
+        $('#expiryOrderSelect').change(function(){
+            var selectvalue = $(this).val();
+            $(".module select").val($("module select option:first").val());
+            OrderSelect = 'expiry_date';
+            $(this).val(selectvalue);
+            if($(this).val(selectvalue)==1){
+                OrderSelectValue = 'asc';
+            }else{
+                OrderSelectValue = 'desc';
+            }
         });
         $("#load_more").click(function(e){
             e.preventDefault();
@@ -188,17 +221,18 @@ echo "</pre>";
                 searchInput = $('#location_search').val();
                 companySelect = $('#companySelect option:selected').text();
                 sectorsSelect = $('#sectorsSelect option:selected').text();
-                AdOrderSelect = $('#dateAddedOrderSelect option:selected').text();
-                ASOrderSelect = $('#assessmentOrderSelect option:selected').text();
-                ExOrderSelect = $('#expiryOrderSelect option:selected').text();
+                //AdOrderSelect = $('#dateAddedOrderSelect option:selected').text();
+                //ASOrderSelect = $('#assessmentOrderSelect option:selected').text();
+                //ExOrderSelect = $('#expiryOrderSelect option:selected').text();
 
                 //console.log(searchInput);
                 companySelectValue = $('#companySelect option:selected').val();
                 sectorsSelectValue = $('#sectorsSelect option:selected').val();
-                AdOrderSelectValue = $('#dateAddedOrderSelect option:selected').val();
-                ASOrderSelectValue = $('#assessmentOrderSelect option:selected').val();
-                ExOrderSelectValue = $('#expiryOrderSelect option:selected').val();
-        if(searchInput=='' && companySelectValue=='' && sectorsSelectValue==''  && AdOrderSelectValue!='' && ASOrderSelectValue!='' && ExOrderSelectValue!='' ){
+                //AdOrderSelectValue = $('#dateAddedOrderSelect option:selected').val();
+                //ASOrderSelectValue = $('#assessmentOrderSelect option:selected').val();
+                //ExOrderSelectValue = $('#expiryOrderSelect option:selected').val();
+                console.log('OrderSelectValue'+OrderSelectValue);
+        if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' && OrderSelectValue=='' ){
                     $("#regList").html('');
                     getlist(0);
                     return false;
@@ -214,11 +248,11 @@ echo "</pre>";
                 $("#load_more").addClass('loading');
                 $("#loader").show();
                 setTimeout(function(){
-                     getfilterlist(page,searchInput,sectorsSelectValue,companySelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue);
+                     getfilterlist(page,searchInput,sectorsSelectValue,companySelect,OrderSelect,OrderSelectValue);
                   }, 500);
         }
 
-        function getfilterlist(page,searchInput,secSelect,comSelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue){
+        function getfilterlist(page,searchInput,secSelect,comSelect,OrderSelect,OrderSelectValue){
             
             $.ajax({
                 url:"<?php echo base_url() ?>Esic2/getfilterlist",
@@ -227,9 +261,8 @@ echo "</pre>";
                     searchInput:searchInput,
                     secSelect:secSelect,
                     comSelect:comSelect,
-                    AdOrderSelect:AdOrderSelectValue,
-                    ASOrderSelect:ASOrderSelectValue,
-                    ExOrderSelect:ExOrderSelectValue
+                    OrderSelect:OrderSelect,
+                    OrderSelectValue:OrderSelectValue
                     }
             }).done(function(response){
                 if(page==0){
