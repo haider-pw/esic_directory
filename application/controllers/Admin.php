@@ -120,4 +120,22 @@ class Admin extends MY_Controller{
             exit;*/
         $this->show_admin("admin/reg_details",$data);
     }
+
+    public function manage_universities(){
+        $this->show_admin('admin/configuration/universities');
+    }
+    public function manage_sectors(){
+        $this->show_admin('admin/configuration/sectors');
+    }
+    //R&D
+    public function manage_rd(){
+        $this->show_admin('admin/configuration/rd');
+    }
+    public function manage_accelerators(){
+        $this->show_admin('admin/configuration/accelerators');
+    }
+    public function manage_acc_commercials(){
+        $this->show_admin('admin/configuration/acc_commercials');
+    }
+
 }

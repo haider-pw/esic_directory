@@ -1,6 +1,6 @@
 <ul class="sidebar-menu">
     <li class="header">MAIN NAVIGATION</li>
-    <li class="treeview">
+<!--    <li class="treeview">
         <a href="#">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
@@ -11,8 +11,24 @@
             <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
             <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
         </ul>
-    </li>
+    </li>-->
     <li><a href="<?= base_url('Admin/assessments_list')?>"><i class="fa fa-list"></i> <span>ESIC Pre-Assessments</span></a></li>
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Configuration</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="<?=base_url('Admin/manage_universities')?>"><i class="fa fa-circle-o"></i> Manage Universities</a></li>
+            <li><a href="<?=base_url('Admin/manage_rd')?>"><i class="fa fa-circle-o"></i> Manage R&D</a></li>
+<!--            Acceleration Commercials-->
+            <li><a href="<?=base_url('Admin/manage_acc_commercials')?>"><i class="fa fa-circle-o"></i> Manage Acc Commercials</a></li>
+            <li><a href="<?=base_url('Admin/manage_accelerators')?>"><i class="fa fa-circle-o"></i> Manage Accelerators</a></li>
+            <li><a href="<?=base_url('Admin/manage_sectors')?>"><i class="fa fa-circle-o"></i> Manage Sectors</a></li>
+        </ul>
+    </li>
     <!--<li class="treeview">
         <a href="#">
             <i class="fa fa-files-o"></i>
