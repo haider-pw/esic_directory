@@ -106,6 +106,8 @@ class Admin extends MY_Controller{
                     ESEC.sector as sector,
                     EQA.Solution as solution,
                     EQ.Question as Question,
+                    EQS.SolVal as solval,
+                    EQS.Points as points,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
             ',false);
             $where = "user.id =".$userID;
@@ -129,12 +131,23 @@ class Admin extends MY_Controller{
                     'table' => 'esic_questions EQ',
                     'condition' => 'EQ.id = EQA.questionID',
                     'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_questions_score EQS',
+                    'condition' => 'EQA.questionID = EQS.questionID',
+                    'type' => 'LEFT'
                 )
             );
             $data = array();
             $returnedData = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
 
+
             if(!empty($returnedData) and is_array($returnedData)){
+
+                $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
+                $ScorePercentage = $returnedData[0]->Score/$TotalPoints*100;
+
+
                 $data['userProfile'] = array(
                     'FullName' => $returnedData[0]->FullName,
                     'Email' => $returnedData[0]->Email,
@@ -148,6 +161,8 @@ class Admin extends MY_Controller{
                     'corporate_date' => $returnedData[0]->corporate_date,
                     'added_date' => $returnedData[0]->added_date,
                     'Status' => $returnedData[0]->Status,
+                    'Score' => $returnedData[0]->Score,
+                    'ScorePercentage' => $ScorePercentage,
                     'sector' => $returnedData[0]->sector
                 );
 
@@ -155,7 +170,8 @@ class Admin extends MY_Controller{
                 foreach($returnedData as $key=>$obj){
                     $arrayToInsert = array(
                         'Question' => $obj->Question,
-                        'solution' => $obj->solution
+                        'solution' => $obj->solution,
+                        'points' => $obj->points
                     );
                     array_push($data['usersQuestionsAnswers'],$arrayToInsert);
                 }

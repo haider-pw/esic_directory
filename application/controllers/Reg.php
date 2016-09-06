@@ -67,8 +67,7 @@ class Reg extends CI_Controller {
         $cop_date = date("Y-m-d",strtotime($date_pickter_format));
         $acn = $this->input->post('acn');
         $added_date =  date('Y-m-d');
-        
-        $expiry_date =  getExpiryDate($cop_date);
+        $expiry_date =  getExpiryDate($cop_date);// expiry date calculated on baise on coprated date after 5 years
 
         $mExpense = $this->input->post('1mExpense');
         $assessableIncomeYear = $this->input->post('assessableIncomeYear');
@@ -145,16 +144,31 @@ class Reg extends CI_Controller {
                 $solutionInsertID = $this->Common_model->insert_record('esic_questions_answers',$dataArrayToInsert);
             }
         }
-
-        if ($this->db->trans_status() === FALSE)
-        {
-            $this->db->trans_rollback();
-            echo 'FAIL::Something Went Wrong';
+        //Now calculate total score 
+        $total_Score=0;
+        foreach($questions as $question){
+            if(!empty($question->solutionValue)){
+                $questions_score = $this->Common_model->select('esic_questions_score'); 
+                foreach ($questions_score as $question_score) {
+                    if($question->id==$question_score->id && $question->solutionValue==$question_score->SolVal){
+                        $total_Score+=$question_score->Points;
+                    }
+                }
+            }
         }
-        else
-        {
-            $this->db->trans_commit();
-            echo 'OK::Thank you. Your information has been submitted.::'.$insertID;
+        $scoreInsertArray = array('score' => $total_Score);
+        $whereUpdate = array( 'id' => $insertID);
+        $resultUpdate = $this->Common_model->update('user',$whereUpdate,$scoreInsertArray);
+        if($resultUpdate === true){
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                echo 'FAIL::Something Went Wrong';
+            }else{
+                $this->db->trans_commit();
+                echo 'OK::Thank you. Your information has been submitted.::'.$insertID;
+            }
+        }else{
+            echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
         }
 }
 

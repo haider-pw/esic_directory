@@ -4,13 +4,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Pre-assessment
+             Pre-assessment 
             <small>DETAILS</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Pre-Assessments</a></li>
-            <li class="active">list</li>
+            <li><a href="#">Pre-assessment </a></li>
+            <li class="active">Details</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -130,6 +130,14 @@
               <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
 
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p-->
+              <?php if(!empty($userProfile['ScorePercentage'])){ ?>
+              <strong><i class="fa fa-briefcase margin-r-5"></i> Score</strong>
+               <div class="progress md">
+                   <div class="progress-bar progress-bar-aqua" style="width: <?= round($userProfile['ScorePercentage']).'%';?>" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                      <span class=""><?= round($userProfile['ScorePercentage']).'%';?></span>
+                    </div>
+                </div>
+               <?php } ?>
             </div>
             <!-- /.box-body -->
           </div>
@@ -155,13 +163,13 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#questions" data-toggle="tab">Questions</a></li>
-              <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-              <li><a href="#settings" data-toggle="tab">Settings</a></li>
+              <li><a href="#description" data-toggle="tab">Description</a></li>
+              <!--li><a href="#settings" data-toggle="tab">Settings</a></li-->
             </ul>
             <div class="tab-content">
               <div class="active tab-pane" id="questions">
                 <!-- Post -->
-                <?php 
+               <?php 
                 foreach ($usersQuestionsAnswers as $key => $value) {
                ?>
                 
@@ -169,8 +177,12 @@
                       <div class="user-block">
                             <span class="username question-statement">
                               <a href="#"><?= $value['Question'];?></a>
+                              <?php if(!empty($value['points'])){ ?>
+		                        <span class="question-points">(<?= $value['points'];?>)</span>
+		                       <?php 
+			                   		} 
+			                   ?>
                             </span>
-                        <!---span class="description">Shared publicly - 7:30 PM today</span-->
                       </div>
                     <!-- /.user-block -->
                     <p><?= $value['solution'];?></p>
@@ -178,7 +190,7 @@
                 <? } ?>
                 </div>
               <!-- /.tab-pane -->
-              <div class="tab-pane" id="timeline">
+              <div class="tab-pane" id="description">
                 <!-- The timeline -->
                 <?php
 
@@ -206,7 +218,7 @@
               </div>
               <!-- /.tab-pane -->
 
-              <div class="tab-pane" id="settings">
+              <!--div class="tab-pane" id="settings">
                 <form class="form-horizontal">
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Name</label>
@@ -258,8 +270,8 @@
                     </div>
                   </div>
                 </form>
-              </div>
-              <!-- /.tab-pane -->
+              </div-->
+             
             </div>
             <!-- /.tab-content -->
           </div>

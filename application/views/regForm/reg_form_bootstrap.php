@@ -287,7 +287,7 @@
                         </div>
                         <!--                    Div For Selector-->
                         <div class="selectorDiv" id="acceleratorProgramme">
-                            <label for="acceleratorAcceleration">Select Acceleration Commercial</label>
+                            <label for="acceleratorAcceleration">Select Acceleration</label>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <select class="select2Style" id="selectAcceleratorProgramme" style="width:90%">
@@ -457,7 +457,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel">Institution</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -480,7 +480,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel">Entrepreneur Programme</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -531,7 +531,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel">Accelerator Programme</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -573,7 +573,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel">Industry Classification</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
