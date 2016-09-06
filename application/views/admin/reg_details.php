@@ -16,7 +16,7 @@
     <!-- Main content -->
     <section class="content">
     	<?php
-            if(isset($returnedData)){
+            if(isset($userProfile)){
             	///echo "<pre>";
                //// print_r($returnedData);
                 //echo "</pre>";
@@ -33,7 +33,7 @@
             [corporate_date] => 0000-00-00
             [added_date] => 0000-00-00
             [Status] =>  Pending */
-                foreach ($returnedData as $key => $value) {
+            //print_r($userProfile);
               
          ?>
       <div class="row">
@@ -42,36 +42,36 @@
           <!-- Profile Image -->
           <div class="box box-primary">
             <div class="box-body box-profile">
-            <?php if(!empty($value->Logo) and is_file(FCPATH.'/'.$value->Logo)){ ?>
-              <img class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$value->Logo;?>" alt="User profile picture">
+            <?php if(!empty($userProfile['Logo']) and is_file(FCPATH.'/'.$userProfile['Logo'])){ ?>
+              <img class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
 			<?php } ?>
-            <?php if(!empty($value->FullName)){ ?>
-              <h3 class="profile-username text-center"><?= $value->FullName;?></h3>
+            <?php if(!empty($userProfile['FullName'])){ ?>
+              <h3 class="profile-username text-center"><?= $userProfile['FullName'];?></h3>
 			<?php } ?>
-            <?php if(!empty($value->Company)){ ?>
-              <p class="text-muted text-center"><?= $value->Company;?></p>
+            <?php if(!empty($userProfile['Company'])){ ?>
+              <p class="text-muted text-center"><?= $userProfile['Company']?></p>
             <?php } ?>
-              <ul class="list-group list-group-unbordered">
-              	<?php if(!empty($value->expiry_date)){ ?>
-	                <li class="list-group-item">
-	                  <b>Expiry Date</b> <a class="pull-right"><?= $value->expiry_date;?></a>
+              <ul class="list-group list-group-unbordered dates">
+              	<?php if(!empty($userProfile['expiry_date'])){ ?>
+	                <li class="list-group-item ">
+	                  <b>Expiry Date</b> <a class="pull-right bg-red"><?= $userProfile['expiry_date'];?></a>
 	                </li>
                 <?php } ?>
-                <?php if(!empty($value->corporate_date)){ ?>
+                <?php if(!empty($userProfile['corporate_date'])){ ?>
                 <li class="list-group-item">
-                  <b>Corporate Date</b> <a class="pull-right"><?= $value->corporate_date;?></a>
+                  <b>Corporate Date</b> <a class="pull-right bg-aqua"><?= $userProfile['corporate_date'];?></a>
                 </li>
                 <?php } ?>
-                <?php if(!empty($value->added_date)){ ?>
+                <?php if(!empty($userProfile['added_date'])){ ?>
                 <li class="list-group-item">
-                  <b>Added Date</b> <a class="pull-right"><?= $value->added_date;?></a>
+                  <b>Added Date</b> <a class="pull-right bg-green"><?= $userProfile['added_date'];?></a>
                 </li>
                 <?php } ?>
               </ul>
               <?php 
-              	if(!empty($value->Web)){
+              	if(!empty($userProfile['Web'])){
               ?>
-              <a href="http://<?= $value->Web;?>" class="btn btn-primary btn-block" target="_blank"><b><?= $value->Web;?></b></a>
+              <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block" target="_blank"><b><?= $userProfile['Web'];?></b></a>
               <?php
               	}
               ?>
@@ -83,25 +83,39 @@
           <!-- About Me Box -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
+              <h3 class="box-title">About Company</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+            <?php 
+                if(!empty($userProfile['Email'])){
+            ?>
+              <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
 
               <p class="text-muted">
-                B.S. in Computer Science from the University of Tennessee at Knoxville
+                 <?= $userProfile['Email'];?>
               </p>
-
               <hr>
+            <?php } ?>
+              
+            <?php 
+                if(!empty($userProfile['sector'])){
+            ?>
+              <strong><i class="fa fa-industry margin-r-5"></i> Sector</strong>
 
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-
-              <p class="text-muted">Malibu, California</p>
-
+              <p class="text-muted"> <?= $userProfile['sector'];?></p>
               <hr>
+            <?php } 
 
-              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+                if(!empty($userProfile['business'])){
+            ?>
+              <strong><i class="fa fa-briefcase margin-r-5"></i> Business</strong>
+
+              <p class="text-muted"> <?= $userProfile['business'];?></p>
+              <hr>
+            <?php } ?>
+
+              <!--strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
 
               <p>
                 <span class="label label-danger">UI Design</span>
@@ -115,229 +129,80 @@
 
               <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
 
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p-->
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
+        <style>
+        .dates a{
+          padding: 1px 5px;
+        }
+        .post.question-post{
+          margin-left: 20px;
+          padding-bottom: 5px;
+        }
+        .question-post .user-block .question-statement{
+          margin-left: 0px;
+        }
+        .post .user-block {
+          margin-bottom: 5px;
+        }
+        </style>
         <!-- /.col -->
         <div class="col-md-9">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
+              <li class="active"><a href="#questions" data-toggle="tab">Questions</a></li>
               <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
               <li><a href="#settings" data-toggle="tab">Settings</a></li>
             </ul>
             <div class="tab-content">
-              <div class="active tab-pane" id="activity">
+              <div class="active tab-pane" id="questions">
                 <!-- Post -->
-                <div class="post">
-                  <div class="user-block">
-                    <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
-                        <span class="username">
-                          <a href="#">Jonathan Burke Jr.</a>
-                          <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-                        </span>
-                    <span class="description">Shared publicly - 7:30 PM today</span>
-                  </div>
-                  <!-- /.user-block -->
-                  <p>
-                    Lorem ipsum represents a long-held tradition for designers,
-                    typographers and the like. Some people hate it and argue for
-                    its demise, but others ignore the hate as they create awesome
-                    tools to help create filler text for everyone from bacon lovers
-                    to Charlie Sheen fans.
-                  </p>
-                  <ul class="list-inline">
-                    <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
-                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
-                    </li>
-                    <li class="pull-right">
-                      <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
-                        (5)</a></li>
-                  </ul>
-
-                  <input class="form-control input-sm" type="text" placeholder="Type a comment">
-                </div>
-                <!-- /.post -->
-
-                <!-- Post -->
-                <div class="post clearfix">
-                  <div class="user-block">
-                    <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg" alt="User Image">
-                        <span class="username">
-                          <a href="#">Sarah Ross</a>
-                          <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-                        </span>
-                    <span class="description">Sent you a message - 3 days ago</span>
-                  </div>
-                  <!-- /.user-block -->
-                  <p>
-                    Lorem ipsum represents a long-held tradition for designers,
-                    typographers and the like. Some people hate it and argue for
-                    its demise, but others ignore the hate as they create awesome
-                    tools to help create filler text for everyone from bacon lovers
-                    to Charlie Sheen fans.
-                  </p>
-
-                  <form class="form-horizontal">
-                    <div class="form-group margin-bottom-none">
-                      <div class="col-sm-9">
-                        <input class="form-control input-sm" placeholder="Response">
+                <?php 
+                foreach ($usersQuestionsAnswers as $key => $value) {
+               ?>
+                
+                  <div class="post question-post">
+                      <div class="user-block">
+                            <span class="username question-statement">
+                              <a href="#"><?= $value['Question'];?></a>
+                            </span>
+                        <!---span class="description">Shared publicly - 7:30 PM today</span-->
                       </div>
-                      <div class="col-sm-3">
-                        <button type="submit" class="btn btn-danger pull-right btn-block btn-sm">Send</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <!-- /.post -->
-
-                <!-- Post -->
-                <div class="post">
-                  <div class="user-block">
-                    <img class="img-circle img-bordered-sm" src="../../dist/img/user6-128x128.jpg" alt="User Image">
-                        <span class="username">
-                          <a href="#">Adam Jones</a>
-                          <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-                        </span>
-                    <span class="description">Posted 5 photos - 5 days ago</span>
+                    <!-- /.user-block -->
+                    <p><?= $value['solution'];?></p>
                   </div>
-                  <!-- /.user-block -->
-                  <div class="row margin-bottom">
-                    <div class="col-sm-6">
-                      <img class="img-responsive" src="../../dist/img/photo1.png" alt="Photo">
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-6">
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <img class="img-responsive" src="../../dist/img/photo2.png" alt="Photo">
-                          <br>
-                          <img class="img-responsive" src="../../dist/img/photo3.jpg" alt="Photo">
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-sm-6">
-                          <img class="img-responsive" src="../../dist/img/photo4.jpg" alt="Photo">
-                          <br>
-                          <img class="img-responsive" src="../../dist/img/photo1.png" alt="Photo">
-                        </div>
-                        <!-- /.col -->
-                      </div>
-                      <!-- /.row -->
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
-
-                  <ul class="list-inline">
-                    <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
-                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
-                    </li>
-                    <li class="pull-right">
-                      <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
-                        (5)</a></li>
-                  </ul>
-
-                  <input class="form-control input-sm" type="text" placeholder="Type a comment">
+                <? } ?>
                 </div>
-                <!-- /.post -->
-              </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="timeline">
                 <!-- The timeline -->
+                <?php
+
+                if(!empty($userProfile['BusinessShortDesc'])){
+                ?>
                 <ul class="timeline timeline-inverse">
-                  <!-- timeline time label -->
-                  <li class="time-label">
-                        <span class="bg-red">
-                          10 Feb. 2014
-                        </span>
-                  </li>
-                  <!-- /.timeline-label -->
                   <!-- timeline item -->
                   <li>
-                    <i class="fa fa-envelope bg-blue"></i>
 
                     <div class="timeline-item">
-                      <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
 
-                      <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
+                      <h3 class="timeline-header">Brief Description</h3>
 
                       <div class="timeline-body">
-                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                        weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                        jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                        quora plaxo ideeli hulu weebly balihoo...
+                      <?= $userProfile['BusinessShortDesc'];?>
                       </div>
-                      <div class="timeline-footer">
+                      <!--div class="timeline-footer">
                         <a class="btn btn-primary btn-xs">Read more</a>
                         <a class="btn btn-danger btn-xs">Delete</a>
-                      </div>
+                      </div-->
                     </div>
-                  </li>
-                  <!-- END timeline item -->
-                  <!-- timeline item -->
-                  <li>
-                    <i class="fa fa-user bg-aqua"></i>
-
-                    <div class="timeline-item">
-                      <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                      <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                      </h3>
-                    </div>
-                  </li>
-                  <!-- END timeline item -->
-                  <!-- timeline item -->
-                  <li>
-                    <i class="fa fa-comments bg-yellow"></i>
-
-                    <div class="timeline-item">
-                      <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                      <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                      <div class="timeline-body">
-                        Take me to your leader!
-                        Switzerland is small and neutral!
-                        We are more like Germany, ambitious and misunderstood!
-                      </div>
-                      <div class="timeline-footer">
-                        <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- END timeline item -->
-                  <!-- timeline time label -->
-                  <li class="time-label">
-                        <span class="bg-green">
-                          3 Jan. 2014
-                        </span>
-                  </li>
-                  <!-- /.timeline-label -->
-                  <!-- timeline item -->
-                  <li>
-                    <i class="fa fa-camera bg-purple"></i>
-
-                    <div class="timeline-item">
-                      <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                      <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                      <div class="timeline-body">
-                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                      </div>
-                    </div>
-                  </li>
-                  <!-- END timeline item -->
-                  <li>
-                    <i class="fa fa-clock-o bg-gray"></i>
-                  </li>
+                  </li>      
                 </ul>
+                <?php } ?>
               </div>
               <!-- /.tab-pane -->
 
@@ -404,7 +269,7 @@
       </div>
       <!-- /.row -->
 <?php
-}
+//}
    }
 ?>
     </section>

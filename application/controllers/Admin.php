@@ -99,9 +99,11 @@ class Admin extends MY_Controller{
                     score as Score,
                     logo as Logo,
                     website as Web,
+                    business as business,
                     expiry_date as expiry_date,
                     corporate_date as corporate_date,
                     added_date as added_date,
+                    ESEC.sector as sector,
                     EQA.Solution as solution,
                     EQ.Question as Question,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
@@ -111,6 +113,11 @@ class Admin extends MY_Controller{
                 array(
                     'table' => 'esic_status ES',
                     'condition' => 'ES.id = user.status',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_sectors ESEC',
+                    'condition' => 'ESEC.id = user.sectorID',
                     'type' => 'LEFT'
                 ),
                 array(
@@ -132,6 +139,7 @@ class Admin extends MY_Controller{
                     'FullName' => $returnedData[0]->FullName,
                     'Email' => $returnedData[0]->Email,
                     'Company' => $returnedData[0]->Company,
+                    'business' => $returnedData[0]->business,
                     'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc,
                     'Score' => $returnedData[0]->Score,
                     'Logo' => $returnedData[0]->Logo,
@@ -139,7 +147,8 @@ class Admin extends MY_Controller{
                     'expiry_date' => $returnedData[0]->expiry_date,
                     'corporate_date' => $returnedData[0]->corporate_date,
                     'added_date' => $returnedData[0]->added_date,
-                    'Status' => $returnedData[0]->Status
+                    'Status' => $returnedData[0]->Status,
+                    'sector' => $returnedData[0]->sector
                 );
 
                 $data['usersQuestionsAnswers'] = array();
@@ -152,9 +161,8 @@ class Admin extends MY_Controller{
                 }
             }
             //echo $this->db->last_query();
-/*            echo $this->db->last_query();
-            print_r($data['returnedData']);
-            exit;*/
+            //print_r($data);
+           // exit;
         $this->show_admin("admin/reg_details",$data);
     }
 
