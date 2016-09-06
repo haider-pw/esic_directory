@@ -154,4 +154,22 @@ class Admin extends MY_Controller{
             exit;*/
         $this->show_admin("admin/reg_details",$data);
     }
+
+    public function manage_universities(){
+        echo "manage_universities";
+    }
+    public function manage_sectors(){
+        echo "manage_sectors";
+    }
+    //R&D
+    public function manage_rd(){
+        echo "manage_rd";
+    }
+    public function accelerators(){
+        echo "accelerators";
+    }
+    public function manage_acc_commercials(){
+        echo "manage_acc_commercials";
+    }
+
 }
