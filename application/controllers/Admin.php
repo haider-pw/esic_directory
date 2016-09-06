@@ -121,8 +121,8 @@ class Admin extends MY_Controller{
 
         $this->show_admin("admin/reg_details",$data);
     }
-        public function details(){
-            $userID = $this->input->post('id');
+        public function details($userID){
+//            $userID = $this->input->post('id');
             $status = $this->input->post('value');
             $selectData = array('
                     CONCAT(`firstName`," ",`lastName`) AS FullName,
@@ -146,13 +146,12 @@ class Admin extends MY_Controller{
                     'type' => 'LEFT'
                 )
             );
-            $addColumns = array(
-               'ViewEditActionButtons' => '<a href="#"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a>'
-            );
-            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'user',$joins,'','','','',$addColumns);
+            $data['returnedData'] = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
             //print_r($returnedData);
             //return NULL;
-
-        $this->show_admin("admin/reg_details",$returnedData);
+/*            echo $this->db->last_query();
+            print_r($data['returnedData']);
+            exit;*/
+        $this->show_admin("admin/reg_details",$data);
     }
 }

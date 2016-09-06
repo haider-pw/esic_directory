@@ -16,7 +16,11 @@
 
     <!-- Main content -->
     <section class="content">
-
+        <?php
+            if(isset($returnedData)){
+                print_r($returnedData);
+            }
+        ?>
     </section>
     <!-- /.content -->
 </div>
