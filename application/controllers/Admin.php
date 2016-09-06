@@ -115,18 +115,42 @@ class Admin extends MY_Controller{
                 ),
                 array(
                     'table' => 'esic_questions_answers EQA',
-                    'condition' => 'EQA.userID = user.status',
-                    'type' => 'INNER'
+                    'condition' => 'EQA.userID = user.id',
+                    'type' => 'LEFT'
                 ),
                 array(
                     'table' => 'esic_questions EQ',
                     'condition' => 'EQ.id = EQA.questionID',
-                    'type' => 'INNER'
+                    'type' => 'LEFT'
                 )
             );
-            $data['returnedData'] = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
-            //print_r($returnedData);
-            //return NULL;
+            $data = array();
+            $returnedData = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
+
+            if(!empty($returnedData) and is_array($returnedData)){
+                $data['userProfile'] = array(
+                    'FullName' => $returnedData[0]->FullName,
+                    'Email' => $returnedData[0]->Email,
+                    'Company' => $returnedData[0]->Company,
+                    'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc,
+                    'Score' => $returnedData[0]->Score,
+                    'Logo' => $returnedData[0]->Logo,
+                    'Web' => $returnedData[0]->Web,
+                    'expiry_date' => $returnedData[0]->expiry_date,
+                    'corporate_date' => $returnedData[0]->corporate_date,
+                    'added_date' => $returnedData[0]->added_date,
+                    'Status' => $returnedData[0]->Status
+                );
+
+                $data['usersQuestionsAnswers'] = array();
+                foreach($returnedData as $key=>$obj){
+                    $arrayToInsert = array(
+                        'Question' => $obj->Question,
+                        'solution' => $obj->solution
+                    );
+                    array_push($data['usersQuestionsAnswers'],$arrayToInsert);
+                }
+            }
             //echo $this->db->last_query();
 /*            echo $this->db->last_query();
             print_r($data['returnedData']);
