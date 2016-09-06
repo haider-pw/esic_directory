@@ -93,7 +93,7 @@ if(isset($alertMsg) && !empty($alertMsg)){
 </div><!-- /.login-box -->
 
 <!-- jQuery 2.1.4 -->
-<script src="<?php echo base_url(); ?>assets/vendors/jQuery/jQuery-2.2.3.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/vendors/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
 <script src="<?php echo base_url(); ?>assets/vendors/bootstrap/js/bootstrap.min.js"></script>
 <!-- iCheck -->
