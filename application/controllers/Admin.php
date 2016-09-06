@@ -102,6 +102,8 @@ class Admin extends MY_Controller{
                     expiry_date as expiry_date,
                     corporate_date as corporate_date,
                     added_date as added_date,
+                    EQA.Solution as solution,
+                    EQ.Question as Question,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
             ',false);
             $where = "user.id =".$userID;
@@ -110,11 +112,22 @@ class Admin extends MY_Controller{
                     'table' => 'esic_status ES',
                     'condition' => 'ES.id = user.status',
                     'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_questions_answers EQA',
+                    'condition' => 'EQA.userID = user.status',
+                    'type' => 'INNER'
+                ),
+                array(
+                    'table' => 'esic_questions EQ',
+                    'condition' => 'EQ.id = EQA.questionID',
+                    'type' => 'INNER'
                 )
             );
             $data['returnedData'] = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
             //print_r($returnedData);
             //return NULL;
+            //echo $this->db->last_query();
 /*            echo $this->db->last_query();
             print_r($data['returnedData']);
             exit;*/
