@@ -87,40 +87,6 @@ class Admin extends MY_Controller{
         $this->Common_model->update('user',$whereUpdate,$updateArray);
         echo 'OK::';
     }
-    public function details1(){
-            $userID = $this->input->post('id');
-            $status = $this->input->post('value');
-            $selectData = array('
-                    CONCAT(`firstName`," ",`lastName`) AS FullName,
-                    email as Email,
-                    company as Company,
-                    business as Business,
-                    businessShortDescription as BusinessShortDesc,
-                    score as Score,
-                    logo as Logo,
-                    website as Web,
-                    expiry_date as expiry_date,
-                    corporate_date as corporate_date,
-                    added_date as added_date,
-                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
-            ',false);
-            $where = "user.id =".$userID;
-            $joins = array(
-                array(
-                    'table' => 'esic_status ES',
-                    'condition' => 'ES.id = user.status',
-                    'type' => 'LEFT'
-                )
-            );
-            $addColumns = array(
-               'ViewEditActionButtons' => '<a href="#"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a>'
-            );
-            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'user',$joins,'','','','',$addColumns);
-            print_r($returnedData);
-            return NULL;
-
-        $this->show_admin("admin/reg_details",$data);
-    }
         public function details($userID){
 //            $userID = $this->input->post('id');
             $status = $this->input->post('value');
