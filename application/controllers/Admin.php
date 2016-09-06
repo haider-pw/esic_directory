@@ -156,20 +156,20 @@ class Admin extends MY_Controller{
     }
 
     public function manage_universities(){
-        echo "manage_universities";
+        $this->show_admin('admin/configuration/universities');
     }
     public function manage_sectors(){
-        echo "manage_sectors";
+        $this->show_admin('admin/configuration/sectors');
     }
     //R&D
     public function manage_rd(){
-        echo "manage_rd";
+        $this->show_admin('admin/configuration/rd');
     }
-    public function accelerators(){
-        echo "accelerators";
+    public function manage_accelerators(){
+        $this->show_admin('admin/configuration/accelerators');
     }
     public function manage_acc_commercials(){
-        echo "manage_acc_commercials";
+        $this->show_admin('admin/configuration/acc_commercials');
     }
 
 }
