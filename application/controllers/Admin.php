@@ -145,9 +145,12 @@ class Admin extends MY_Controller{
 
 
             if(!empty($returnedData) and is_array($returnedData)){
-
-                $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
-                $ScorePercentage = $returnedData[0]->Score/$TotalPoints*100;
+                if($returnedData[0]->Score>0){
+                    $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
+                    $ScorePercentage = $returnedData[0]->Score/$TotalPoints*100;
+                }else{
+                    $TotalPoints = 0;
+                }
 
 
                 $data['userProfile'] = array(
