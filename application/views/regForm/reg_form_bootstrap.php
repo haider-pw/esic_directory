@@ -37,6 +37,22 @@
   box-shadow: 0 0 9px rgba(0,0,0,0.3);
   background-image: url(uploads/8/4/3/6/84367404/background-images/561993498.jpg) !important;
 }
+#loading-submit{
+    display: none;
+    background: rgba(0,0,0,0.50);
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
+#loading-submit img{
+    padding-top: 20%;
+}
     </style>
 </head>
 
@@ -589,6 +605,10 @@
     </div>
 </div>
 
+<div id="loading-submit">
+    <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
+</div>
+
 <script type="text/javascript">
     $(function(){
         $("input[name='incorporatedAus']").on("change",function(){
@@ -846,6 +866,9 @@
         var $form = $('#SignupForm');
         $("#SubmitForm").on("click",function(e){
             e.preventDefault();
+            $('error-box')
+            $('#error-box').remove();
+            $('#loading-submit').show();
             var formData = new FormData();
                     $.ajax({
                             crossOrigin: true,
@@ -874,13 +897,16 @@
                                 }).done(function (response) {
                                     var data = response.split("::");
                                     if(data[0] === 'OK'){
-                                        $("#mainFormDiv").html('<span style="padding: 5px; color: green; font-weight: bold; border: 2px dotted green;">Thank you, Your Record have been successfully Updated</span>');
+                                        $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(0,0,0,0.8); padding: 5px; color: white; font-weight: bold; border: 2px dotted black; width: 100%;display: block;">Thank you, Your Record have been successfully Updated</span>');
+                                         $('#loading-submit').hide();
                                     }else if(data[0] === 'FAIL'){
-
+                                        $('#loading-submit').hide();
                                     }
                                 });
                             }else{
                                 console.log(response);
+                                $("#mainFormDiv").append('<span id="error-box" style="background: rgba(0,0,0,0.8);padding: 5px;color: white;font-weight: bold; border: 2px dotted black;width: 100%;display: block;">There are Errors, Please Fill All Fields</span>');
+                                $('#loading-submit').hide();
                             }
 
                         });

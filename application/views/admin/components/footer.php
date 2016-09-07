@@ -226,6 +226,79 @@
 
 ?>
 
+<?php
+
+    if($this->router->fetch_method() === 'details'){
+        ?>
+
+        <script>
+            $(function () {
+
+                $(".save-answer").on("click",function(event){
+                    event.preventDefault();
+                    var id = $(this).attr('data-id');
+                    var Answervalue = $(this).parent().children('select').val();
+                    var ansDiv = $(this).parent().parent();
+                    var dataQuestionId = $(this).attr('data-question-id');
+
+
+                    var postData = {
+                        id: id,
+                        dataQuestionId: dataQuestionId,
+                        Answervalue,Answervalue
+                    };
+                    $.ajax({
+                        url:"<?= base_url() ?>Admin/saveanswer",
+                        data:postData,
+                        type:"POST",
+                        success:function(output){
+                         var data = output.split("::");
+                         if(data[0] === "OK"){
+                            ansDiv.hide();
+                         }else{
+
+                         }
+                        }
+                    });
+                });
+                
+                $(".question-edit").on("click",function(event){
+                    event.preventDefault();
+                    var id = $(this).attr('data-id');
+                    var parent = $(this).parent().parent().parent().children().children().children('select');
+                    var ansDiv = $(this).parent().parent().parent().children('.edit-question');
+                    var dataQuestionId = $(this).attr('data-question-id');
+
+
+                    var postData = {
+                        id: id,
+                        dataQuestionId: dataQuestionId
+                    };
+                    $.ajax({
+                        url:"<?= base_url() ?>Admin/getanswers",
+                        data:postData,
+                        type:"POST",
+                        success:function(output){
+                          var data = $.parseJSON(output);
+                           parent.html('');
+                            $.each(data, function (index, value) {
+                                parent.append('<option value="'+value.solution+'">'+value.solution+'</option>');
+                                console.log(value.solution);
+                            });
+                            parent.parent().append('<button class="save-answer" dataQuestionId="'+dataQuestionId+'" data-id="'+id+'">Save</button>');
+                            ansDiv.show();
+                        }
+                    });
+                });
+            });
+
+
+        </script>
+
+<?php
+    }
+
+?>
 
 
 </body>

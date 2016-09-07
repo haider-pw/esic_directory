@@ -143,7 +143,6 @@ class Admin extends MY_Controller{
             $data = array();
             $returnedData = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
 
-
             if(!empty($returnedData) and is_array($returnedData)){
                 if($returnedData[0]->Score>0){
                     $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
@@ -152,7 +151,6 @@ class Admin extends MY_Controller{
                     $TotalPoints = '';
                     $ScorePercentage='';
                 }
-
 
                 $data['userProfile'] = array(
                     'FullName' => $returnedData[0]->FullName,
@@ -188,6 +186,21 @@ class Admin extends MY_Controller{
             //print_r($data);
            // exit;
         $this->show_admin("admin/reg_details",$data);
+    }
+    public function getanswers(){
+                    $questionID = $this->input->post('dataQuestionId');
+                    $selectData = array('
+                    Solution as solution
+                    ',false);
+                   $where = "questionID =".$questionID;
+                   $data = array();
+                   $returnedData = $this->Common_model->select_fields_where_like_join('esic_solutions',$selectData,'',$where,FALSE,'','');
+                   echo json_encode($returnedData );
+                   exit();
+    }
+    public function saveanswer(){
+                   echo 'OK:: More work to do here';
+                   exit();
     }
 
     public function manage_universities($param = NULL){

@@ -104,6 +104,9 @@
         .post .user-block {
           margin-bottom: 5px;
         }
+        .edit-question{
+          display: none;
+        }
         </style>
         <!-- /.col -->
         <div class="col-md-9">
@@ -120,12 +123,20 @@
                       <div class="user-block">
                           <span class="username question-statement">
                           <a href="#"><?= $value['Question'];?></a>
+                          <a href="#" class="pull-right btn-box-tool question-edit" data-id="<?= $value['EQAID'];?>"  data-question-id="<?= $value['questionID'];?>"><i class="fa fa-pencil"></i></a>
                           <?php if(!empty($value['points'])){ ?>
 		                          <span class="question-points">(<?= $value['points'];?>)</span>
 		                       <?php } ?>
                           </span>
                       </div>
                     <p><?= $value['solution'];?></p>
+                    <div class="edit-question">
+                      <div class="form-group">
+                        <label>Please Select Answer</label>
+                        <select class="form-control">
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 <? } ?>
                 </div>
@@ -390,4 +401,5 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- /.End Edit Ward Modal --><!-- /.modal -->
+
 
