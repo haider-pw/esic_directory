@@ -104,6 +104,8 @@ class Admin extends MY_Controller{
                     corporate_date as corporate_date,
                     added_date as added_date,
                     ESEC.sector as sector,
+                    EQA.id as EQAID,
+                    EQA.questionID as questionID,
                     EQA.Solution as solution,
                     EQ.Question as Question,
                     EQS.SolVal as solval,
@@ -171,7 +173,9 @@ class Admin extends MY_Controller{
                     $arrayToInsert = array(
                         'Question' => $obj->Question,
                         'solution' => $obj->solution,
-                        'points' => $obj->points
+                        'points' => $obj->points,
+                        'questionID' => $obj->questionID,
+                        'EQAID' => $obj->EQAID
                     );
                     array_push($data['usersQuestionsAnswers'],$arrayToInsert);
                 }
