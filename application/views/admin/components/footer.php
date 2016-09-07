@@ -62,10 +62,7 @@
                 $("#search-input").on("keyup",function (e) {
                     oTable.fnFilter( $(this).val());
                 });
-            });
-        </script>
-        <script type="text/javascript">
-            $(function(){
+
                 //Some Action To Perform When Modal Is Shown.
                 $(".approval-modal").on("shown.bs.modal", function (e) {
                     var button = $(e.relatedTarget); // Button that triggered the modal
@@ -88,42 +85,8 @@
                         success:function (output) {
                             var data = output.split("::");
                             if(data[0]=='OK'){
-                                oTable ="";
-                                //Initialize Select2 Elements
-                                var regTableSelector = $("#regList");
-                                var url_DT = "<?=base_url();?>Admin/assessments_list/listing";
-                                var aoColumns_DT = [
-                                    /* User ID */ {
-                                        "mData": "UserID",
-                                        "bVisible": true,
-                                        "bSortable": true,
-                                        "bSearchable": true
-                                    },
-                                    /* Full Name */ {
-                                        "mData" : "FullName"
-                                    },
-                                    /* Email */ {
-                                        "mData" : "Email"
-                                    },
-                                    /* Company */ {
-                                        "mData" : "Company"
-                                    },
-                                    /*  Buisness */ {
-                                        "mData" : "Business"
-                                    },
-                                    /* Last User Login */ {
-                                        "mData": "Status"
-                                    },
-                                    /* Action Buttons */ {
-                                        "mData" : "ViewEditActionButtons"
-                                    }
-                                ];
-                                var HiddenColumnID_DT = "UserID";
-                                var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
-                                commonDataTables(regTableSelector,url_DT,aoColumns_DT,sDom_DT,HiddenColumnID_DT);
-                                $('.approval-modal').modal().hide();
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
+                                oTable.fnDraw();
+                                $('.approval-modal').modal('hide');
                             }
                         }
                     });
@@ -143,42 +106,8 @@
                         success:function (output) {
                             var data = output.split("::");
                             if(data[0]=='OK'){
-                                oTable ="";
-                                //Initialize Select2 Elements
-                                var regTableSelector = $("#regList");
-                                var url_DT = "<?=base_url();?>Admin/assessments_list/listing";
-                                var aoColumns_DT = [
-                                    /* User ID */ {
-                                        "mData": "UserID",
-                                        "bVisible": true,
-                                        "bSortable": true,
-                                        "bSearchable": true
-                                    },
-                                    /* Full Name */ {
-                                        "mData" : "FullName"
-                                    },
-                                    /* Email */ {
-                                        "mData" : "Email"
-                                    },
-                                    /* Company */ {
-                                        "mData" : "Company"
-                                    },
-                                    /*  Buisness */ {
-                                        "mData" : "Business"
-                                    },
-                                    /* Last User Login */ {
-                                        "mData": "Status"
-                                    },
-                                    /* Action Buttons */ {
-                                        "mData" : "ViewEditActionButtons"
-                                    }
-                                ];
-                                var HiddenColumnID_DT = "UserID";
-                                var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
-                                commonDataTables(regTableSelector,url_DT,aoColumns_DT,sDom_DT,HiddenColumnID_DT);
-                                $('.approval-modal').modal().hide();
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
+                                oTable.fnDraw();
+                                $('.approval-modal').modal('hide');
                             }
                         }
                     });
