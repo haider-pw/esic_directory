@@ -87,7 +87,7 @@ class Admin extends MY_Controller{
         $this->Common_model->update('user',$whereUpdate,$updateArray);
         echo 'OK::';
     }
-        public function details($userID){
+    public function details($userID){
 //            $userID = $this->input->post('id');
             $status = $this->input->post('value');
             $selectData = array('
@@ -186,11 +186,123 @@ class Admin extends MY_Controller{
         $this->show_admin("admin/reg_details",$data);
     }
 
-    public function manage_universities(){
+    public function manage_universities($param = NULL){
+        if($param === 'listing'){
+            $selectData = array('
+            id AS ID,
+            sector AS Sector
+            ',false);
+
+            $addColumns = array(
+                'ViewEditActionButtons' => array('<a href="'.base_url("Admin/details/$1").'"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a>','UserID')
+            );
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_sectors','','','','','',$addColumns);
+            print_r($returnedData);
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+            return NULL;
+        }
         $this->show_admin('admin/configuration/universities');
     }
-    public function manage_sectors(){
+    public function manage_sectors($param = NULL){
+        if($param === 'listing'){
+            $selectData = array('
+            id AS ID,
+            sector AS Sector,
+            CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
+            ',false);
+
+            $addColumns = array(
+                'ViewEditActionButtons' => array('<a href="#" data-target="#editSectorModal" data-toggle="modal"><span data-toggle="tooltip" title="Edit" data-placement="left" aria-hidden="true" class="fa fa-pencil text-blue"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i data-toggle="tooltip" title="Trash" data-placement="right"  class="fa fa-trash-o text-red"></i></a>','UserID')
+            );
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_sectors','','','','','',$addColumns);
+            print_r($returnedData);
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value) or $value !== 'approve'){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            $updateData = array(
+                'trashed' => 1
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_sectors',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully Trashed";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'update'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('sector');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $updateData = array(
+                'sector' => $value
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $updateResult = $this->Common_model->update('esic_sectors',$whereUpdate,$updateData);
+            if($updateResult === true){
+                echo "OK::Record Successfully Updated";
+            }else{
+                if($updateResult['code'] == 0){
+                    echo "OK::Record Already Exist";
+                }else{
+                    echo $updateResult['message'];
+                }
+            }
+            return NULL;
+        }
         $this->show_admin('admin/configuration/sectors');
+        return NULL;
     }
     //R&D
     public function manage_rd(){

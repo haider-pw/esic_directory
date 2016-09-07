@@ -16,7 +16,42 @@
 
     <!-- Main content -->
     <section class="content">
-
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Manage Sectors</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="sectorsList" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sector</th>
+                                <th>Trashed</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sector</th>
+                                <th>Trashed</th>
+                                <th>Action</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
     </section>
     <!-- /.content -->
 </div>
@@ -226,27 +261,58 @@
 <!-- ./wrapper -->
 
 
-<!--Edit Ward Modal-->
+<!--Trash Sector Modal-->
 <div class="modal approval-modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Update Approval Status</h4>
+                <h4 class="modal-title">Trash Record?</h4>
             </div>
 
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" id="hiddenUserID">
                     <div class="col-md-12">
-                        <p>Update the Pre-Assessment Approval Status?</p>
+                        <p>Are you sure you want to delete <strong></strong> sector ?</p>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger mright" id="noPending">Pending</button>
-                <button type="button" class="btn btn-success" id="yesApprove">Approve</button>
+                <button type="button" class="btn btn-danger mright"  data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" id="yesDelete">Yes</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Trash Sector Modal --><!-- /.modal -->
+
+<!--Edit Sector Modal-->
+<div class="modal" id="editSectorModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit Sector</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenSectorID">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="editSectorTextBox">Sector</label>
+                            <input type="text" id="editSectorTextBox" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright"  data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="updateSectorBtn">Update</button>
             </div>
 
         </div><!-- /.modal-content -->
