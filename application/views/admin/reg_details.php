@@ -15,27 +15,7 @@
     </section>
     <!-- Main content -->
     <section class="content">
-    	<?php
-            if(isset($userProfile)){
-            	///echo "<pre>";
-               //// print_r($returnedData);
-                //echo "</pre>";
-                /*
-                [FullName] => Soilkee Pty Ltd 
-            [Email] => be11112st@gmail.ocm
-            [Company] => Education and Training
-            [Business] => 
-            [BusinessShortDesc] => Soilkee Pty Ltd will commercialise a novel tilling machine that improves pasture productivity to provide feed for dairy and beef cattle herds. Use of the machine also reduces the need for herbicide and fertilizer application. Australian Government commercialisation support will enable Soilkee to access market research, business planning and IP protection. It will also allow Soilkee to access specialist agronomist advice to plan a subsequent trial that will provide independent agronomic data to encourage market adoption.    
-            [Score] => 0
-            [Logo] => uploads/users/17/Logo_17_1472554389.jpg
-            [Web] => www.soilkee.com.au
-            [expiry_date] => 0000-00-00
-            [corporate_date] => 0000-00-00
-            [added_date] => 0000-00-00
-            [Status] =>  Pending */
-            //print_r($userProfile);
-              
-         ?>
+    	<?php if(isset($userProfile)){ ?>
       <div class="row">
         <div class="col-md-3">
 
@@ -56,8 +36,7 @@
 	                <li class="list-group-item ">
 	                  <b>Expiry Date</b> <a class="pull-right bg-red"><?= $userProfile['expiry_date'];?></a>
 	                </li>
-                <?php } ?>
-                <?php if(!empty($userProfile['corporate_date'])){ ?>
+                <?php } if(!empty($userProfile['corporate_date'])){ ?>
                 <li class="list-group-item">
                   <b>Corporate Date</b> <a class="pull-right bg-aqua"><?= $userProfile['corporate_date'];?></a>
                 </li>
@@ -68,13 +47,9 @@
                 </li>
                 <?php } ?>
               </ul>
-              <?php 
-              	if(!empty($userProfile['Web'])){
-              ?>
+              <?php if(!empty($userProfile['Web'])){ ?>
               <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block" target="_blank"><b><?= $userProfile['Web'];?></b></a>
-              <?php
-              	}
-              ?>
+              <?php } ?>
             </div>
             <!-- /.box-body -->
           </div>
@@ -87,57 +62,29 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-            <?php 
-                if(!empty($userProfile['Email'])){
-            ?>
+            <?php if(!empty($userProfile['Email'])){ ?>
               <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
 
               <p class="text-muted">
                  <?= $userProfile['Email'];?>
               </p>
               <hr>
-            <?php } ?>
-              
-            <?php 
-                if(!empty($userProfile['sector'])){
-            ?>
+            <?php }  if(!empty($userProfile['sector'])){ ?>
               <strong><i class="fa fa-industry margin-r-5"></i> Sector</strong>
-
               <p class="text-muted"> <?= $userProfile['sector'];?></p>
               <hr>
-            <?php } 
-
-                if(!empty($userProfile['business'])){
-            ?>
+            <?php }  if(!empty($userProfile['business'])){ ?>
               <strong><i class="fa fa-briefcase margin-r-5"></i> Business</strong>
-
               <p class="text-muted"> <?= $userProfile['business'];?></p>
               <hr>
-            <?php } ?>
-
-              <!--strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-              <p>
-                <span class="label label-danger">UI Design</span>
-                <span class="label label-success">Coding</span>
-                <span class="label label-info">Javascript</span>
-                <span class="label label-warning">PHP</span>
-                <span class="label label-primary">Node.js</span>
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p-->
-              <?php if(!empty($userProfile['ScorePercentage'])){ ?>
+            <?php }  if(!empty($userProfile['ScorePercentage'])){ ?>
               <strong><i class="fa fa-briefcase margin-r-5"></i> Score</strong>
                <div class="progress md">
                    <div class="progress-bar progress-bar-aqua" style="width: <?= round($userProfile['ScorePercentage']).'%';?>" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                       <span class=""><?= round($userProfile['ScorePercentage']).'%';?></span>
                     </div>
                 </div>
-               <?php } ?>
+            <?php } ?>
             </div>
             <!-- /.box-body -->
           </div>
@@ -164,27 +111,20 @@
             <ul class="nav nav-tabs">
               <li class="active"><a href="#questions" data-toggle="tab">Questions</a></li>
               <li><a href="#description" data-toggle="tab">Description</a></li>
-              <!--li><a href="#settings" data-toggle="tab">Settings</a></li-->
             </ul>
             <div class="tab-content">
               <div class="active tab-pane" id="questions">
                 <!-- Post -->
-               <?php 
-                foreach ($usersQuestionsAnswers as $key => $value) {
-               ?>
-                
+               <?php foreach ($usersQuestionsAnswers as $key => $value) { ?>
                   <div class="post question-post">
                       <div class="user-block">
-                            <span class="username question-statement">
-                              <a href="#"><?= $value['Question'];?></a>
-                              <?php if(!empty($value['points'])){ ?>
-		                        <span class="question-points">(<?= $value['points'];?>)</span>
-		                       <?php 
-			                   		} 
-			                   ?>
-                            </span>
+                          <span class="username question-statement">
+                          <a href="#"><?= $value['Question'];?></a>
+                          <?php if(!empty($value['points'])){ ?>
+		                          <span class="question-points">(<?= $value['points'];?>)</span>
+		                       <?php } ?>
+                          </span>
                       </div>
-                    <!-- /.user-block -->
                     <p><?= $value['solution'];?></p>
                   </div>
                 <? } ?>
@@ -192,86 +132,19 @@
               <!-- /.tab-pane -->
               <div class="tab-pane" id="description">
                 <!-- The timeline -->
-                <?php
-
-                if(!empty($userProfile['BusinessShortDesc'])){
-                ?>
+              <?php if(!empty($userProfile['BusinessShortDesc'])){ ?>
                 <ul class="timeline timeline-inverse">
-                  <!-- timeline item -->
                   <li>
-
                     <div class="timeline-item">
-
                       <h3 class="timeline-header">Brief Description</h3>
-
                       <div class="timeline-body">
                       <?= $userProfile['BusinessShortDesc'];?>
                       </div>
-                      <!--div class="timeline-footer">
-                        <a class="btn btn-primary btn-xs">Read more</a>
-                        <a class="btn btn-danger btn-xs">Delete</a>
-                      </div-->
                     </div>
                   </li>      
                 </ul>
-                <?php } ?>
+              <?php } ?>
               </div>
-              <!-- /.tab-pane -->
-
-              <!--div class="tab-pane" id="settings">
-                <form class="form-horizontal">
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputName" placeholder="Name">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputName" placeholder="Name">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-
-                    <div class="col-sm-10">
-                      <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger">Submit</button>
-                    </div>
-                  </div>
-                </form>
-              </div-->
-             
             </div>
             <!-- /.tab-content -->
           </div>
@@ -280,10 +153,7 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
-<?php
-//}
-   }
-?>
+<?php } ?>
     </section>
     <!-- /.content -->
 </div>

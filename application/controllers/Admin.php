@@ -149,7 +149,8 @@ class Admin extends MY_Controller{
                     $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
                     $ScorePercentage = $returnedData[0]->Score/$TotalPoints*100;
                 }else{
-                    $TotalPoints = 0;
+                    $TotalPoints = '';
+                    $ScorePercentage='';
                 }
 
 
