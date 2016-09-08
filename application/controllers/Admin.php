@@ -126,7 +126,7 @@ class Admin extends MY_Controller{
                 ),
                 array(
                     'table' => 'esic_questions_answers EQA',
-                    'condition' => 'EQA.userID = user.id',
+                    'condition' => 'EQA.userID = '.$userID.'',
                     'type' => 'LEFT'
                 ),
                 array(
@@ -153,6 +153,7 @@ class Admin extends MY_Controller{
                 }
 
                 $data['userProfile'] = array(
+                    'userID' => $userID,
                     'FullName' => $returnedData[0]->FullName,
                     'Email' => $returnedData[0]->Email,
                     'Company' => $returnedData[0]->Company,
@@ -188,19 +189,44 @@ class Admin extends MY_Controller{
         $this->show_admin("admin/reg_details",$data);
     }
     public function getanswers(){
-                    $questionID = $this->input->post('dataQuestionId');
-                    $selectData = array('
+                $questionID = $this->input->post('dataQuestionId');
+                $selectData = array('
                     Solution as solution
                     ',false);
-                   $where = "questionID =".$questionID;
-                   $data = array();
-                   $returnedData = $this->Common_model->select_fields_where_like_join('esic_solutions',$selectData,'',$where,FALSE,'','');
-                   echo json_encode($returnedData );
-                   exit();
+                $where = "questionID =".$questionID;
+                $data = array();
+                $returnedData = $this->Common_model->select_fields_where_like_join('esic_solutions',$selectData,'',$where,FALSE,'','');
+                echo json_encode($returnedData );
+                exit();
     }
     public function saveanswer(){
-                   echo 'OK:: More work to do here';
-                   exit();
+                $id = $this->input->post('id');
+                $userID = $this->input->post('userID');
+                $Answervalue = $this->input->post('Answervalue');
+                $dataQuestionId = $this->input->post('dataQuestionId');
+                if(!isset($userID) || empty($userID) || !isset($Answervalue) || empty($Answervalue) || !isset($dataQuestionId) || empty($dataQuestionId)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+                $selectData = array('
+                    score AS score
+                    ',false);
+                $where = array(
+                    'questionID' => $dataQuestionId
+                );
+                $returnedData = $this->Common_model->select_fields_where('esic_solutions',$selectData, $where, false, '', '', '','','',false);
+                $score = $returnedData[0]->score;
+                //UpdateData
+                $updateArray = array();
+                $updateArray['Solution'] = $Answervalue;
+                $whereUpdate = array(
+                    'userID' => $userID,
+                    'questionID' => $dataQuestionId
+
+                );
+                $this->Common_model->update('esic_questions_answers',$whereUpdate,$updateArray);
+                echo 'OK::'.$score.'';
+            exit();
     }
 
     public function manage_universities($param = NULL){

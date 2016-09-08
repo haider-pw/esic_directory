@@ -22,9 +22,9 @@ class Esic_model extends CI_Model
     public function getlist($page){
         $offset = 3*$page;
         $pagelimit = 3;
-        //header("Access-Control-Allow-Origin: *");
-        //header("Access-Control-Allow-Methods: PUT, GET, POST");
-        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: PUT, GET, POST");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         
         $total_results = $this->db->count_all("user");
         if($offset < $total_results){
@@ -133,9 +133,6 @@ class Esic_model extends CI_Model
     public function getfilterlist($page,$search,$secSelect,$comSelect,$OrderSelect,$OrderSelectValue){
         $offset = 3*$page;
         $pagelimit = 3;
-        //header("Access-Control-Allow-Origin: *");
-        //header("Access-Control-Allow-Methods: PUT, GET, POST");
-        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         
         $total_results = $this->db->count_all("user");
         if($offset < $total_results){
@@ -276,9 +273,7 @@ class Esic_model extends CI_Model
 		return $result;//.$this->db->last_query();
     }
     public function getdetails($id){
-       // header("Access-Control-Allow-Origin: *");
-        //header("Access-Control-Allow-Methods: PUT, GET, POST");
-        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+  
  
             $selectData = array(
                 '

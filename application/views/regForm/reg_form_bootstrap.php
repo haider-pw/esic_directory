@@ -394,7 +394,7 @@
                     </div>
                    </fieldset>
                 <div class="button-container">
-                    <button id="SaveAccount" class="btn btn-primary submit">Submit form</button>
+                    <button type="button" id="SaveAccount" class="btn btn-primary">Submit form</button>
                 </div>
               </div>
             <div class="clear"></div>

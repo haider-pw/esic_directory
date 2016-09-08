@@ -48,8 +48,6 @@ class Reg extends CI_Controller {
         $data['userID'] = $this->input->get('id');
         $data['sectors'] = $this->Common_model->select('esic_sectors');
 
-
-
         $this->load->view('regForm/reg_form_bootstrap',$data);
     }
 

@@ -21,7 +21,7 @@
 
           <!-- Profile Image -->
           <div class="box box-primary">
-            <div class="box-body box-profile">
+            <div class="box-body box-profile" id="profile-box-container" data-user-id="<?= $userProfile['userID']?>">
             <?php if(!empty($userProfile['Logo']) and is_file(FCPATH.'/'.$userProfile['Logo'])){ ?>
               <img class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
 			<?php } ?>
@@ -107,6 +107,17 @@
         .edit-question{
           display: none;
         }
+        .question-action-buttons{
+        	text-align: right;
+        }
+        .save-answer{
+        	margin-top: 10px;
+        	background: #3c8dbc;
+		    color: #fff;
+		    border: none;
+		    width: 80px;
+		    height: 25px;
+        }
         </style>
         <!-- /.col -->
         <div class="col-md-9">
@@ -119,17 +130,17 @@
               <div class="active tab-pane" id="questions">
                 <!-- Post -->
                <?php foreach ($usersQuestionsAnswers as $key => $value) { ?>
-                  <div class="post question-post">
+                  <div class="post question-post <?= 'question-'.$value['EQAID'];?>" data-id="<?= 'question-'.$value['EQAID'];?>">
                       <div class="user-block">
                           <span class="username question-statement">
                           <a href="#"><?= $value['Question'];?></a>
-                          <a href="#" class="pull-right btn-box-tool question-edit" data-id="<?= $value['EQAID'];?>"  data-question-id="<?= $value['questionID'];?>"><i class="fa fa-pencil"></i></a>
+                          <a href="#" class="pull-right btn-box-tool question-edit" data-id="<?= 'question-'.$value['EQAID'];?>"  data-question-id="<?= $value['questionID'];?>"><i class="fa fa-pencil"></i></a>
                           <?php if(!empty($value['points'])){ ?>
 		                          <span class="question-points">(<?= $value['points'];?>)</span>
 		                       <?php } ?>
                           </span>
                       </div>
-                    <p><?= $value['solution'];?></p>
+                    <p class="answer-solution"><?= $value['solution'];?></p>
                     <div class="edit-question">
                       <div class="form-group">
                         <label>Please Select Answer</label>

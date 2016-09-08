@@ -17,6 +17,10 @@ class Esic2 extends CI_Controller{
     public function __construct()
     {
         parent::__construct();
+		header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: PUT, GET, POST");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
         $this->load->model("Common_model");
         $this->load->model("Esic_model");
 
@@ -33,12 +37,8 @@ class Esic2 extends CI_Controller{
 
     public function index($uriSegment = NULL){
 
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: PUT, GET, POST");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
-
-         $data['sectors'] = $this->Common_model->select('esic_sectors');
-         $data['company'] = $this->Common_model->select('user');
+        $data['sectors'] = $this->Common_model->select('esic_sectors');
+        $data['company'] = $this->Common_model->select('user');
 
         $config = array();
         $config['target']      = '#regList';
@@ -88,9 +88,7 @@ class Esic2 extends CI_Controller{
     }
 
     public function ajaxPaginationData(){
-        //header("Access-Control-Allow-Origin: *");
-        //header("Access-Control-Allow-Methods: PUT, GET, POST");
-        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+
 
         $page = $this->input->post('page');
         if(!$page){

@@ -131,7 +131,7 @@ echo "</pre>";
         $('#dateAddedOrderSelect').change(function(){
             OrderSelect = 'added_date';
             var selectvalue = $(this).val();
-            $(".module select").val($("module #sort-filters select option:first").val());
+            $(".module #sort-filters select").val($(".module #sort-filters select option:first").val());
             $(this).val(selectvalue);
             var selectstring = JSON.stringify(selectvalue);
             if(selectstring == '"asc"'){
@@ -143,7 +143,7 @@ echo "</pre>";
         $('#assessmentOrderSelect').change(function(){
             OrderSelect = 'corporate_date';
             var selectvalue = $(this).val();
-            $(".module select").val($("module #sort-filters select option:first").val());
+            $(".module #sort-filters select").val($(".module #sort-filters select option:first").val());
             $(this).val(selectvalue);
             var selectstring = JSON.stringify(selectvalue);
             if(selectstring == '"asc"'){
@@ -155,7 +155,7 @@ echo "</pre>";
         $('#expiryOrderSelect').change(function(){
             OrderSelect = 'expiry_date';
             var selectvalue = $(this).val();
-            $(".module select").val($("module #sort-filters select option:first").val());
+            $(".module #sort-filters select").val($(".module #sort-filters select option:first").val());
             $(this).val(selectvalue);
             var selectstring = JSON.stringify(selectvalue);
             if(selectstring == '"asc"'){
