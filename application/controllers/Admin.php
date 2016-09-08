@@ -92,26 +92,22 @@ class Admin extends MY_Controller{
             $status = $this->input->post('value');
             $selectData = array('
                     CONCAT(`firstName`," ",`lastName`) AS FullName,
-                    email as Email,
-                    company as Company,
-                    business as Business,
-                    businessShortDescription as BusinessShortDesc,
-                    score as Score,
-                    logo as Logo,
-                    website as Web,
-                    business as business,
-                    expiry_date as expiry_date,
-                    corporate_date as corporate_date,
-                    added_date as added_date,
+                    user.email as Email,
+                    user.company as Company,
+                    user.business as Business,
+                    user.businessShortDescription as BusinessShortDesc,
+                    user.score as Score,
+                    user.logo as Logo,
+                    user.website as Web,
+                    user.business as business,
+                    user.expiry_date as expiry_date,
+                    user.corporate_date as corporate_date,
+                    user.added_date as added_date,
                     ESEC.sector as sector,
-                    EQA.id as EQAID,
-                    EQA.questionID as questionID,
-                    EQA.Solution as solution,
-                    EQ.Question as Question,
-                    EQS.SolVal as solval,
-                    EQS.Points as points,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
             ',false);
+            //EQS.SolVal as solval,
+              //      EQS.Points as points,
             $where = "user.id =".$userID;
             $joins = array(
                 array(
@@ -123,25 +119,31 @@ class Admin extends MY_Controller{
                     'table' => 'esic_sectors ESEC',
                     'condition' => 'ESEC.id = user.sectorID',
                     'type' => 'LEFT'
-                ),
-                array(
-                    'table' => 'esic_questions_answers EQA',
-                    'condition' => 'EQA.userID = '.$userID.'',
-                    'type' => 'LEFT'
-                ),
-                array(
-                    'table' => 'esic_questions EQ',
-                    'condition' => 'EQ.id = EQA.questionID',
-                    'type' => 'LEFT'
-                ),
-                array(
-                    'table' => 'esic_questions_score EQS',
-                    'condition' => 'EQA.questionID = EQS.questionID',
-                    'type' => 'LEFT'
                 )
             );
             $data = array();
             $returnedData = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','');
+            $selectData2 = array('
+                    esic_questions_answers.questionID as questionID,
+                    esic_questions_answers.Solution as solution,
+                    EQ.Question as Question,
+                    ES.score as score
+            ',false);//ES.Score as points
+            $where2 = "userID =".$userID;
+            $joins2 = array(
+                array(
+                    'table' => 'esic_questions EQ',
+                    'condition' => 'EQ.id = esic_questions_answers.questionID',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_solutions ES',
+                    'condition' => 'ES.questionID = esic_questions_answers.questionID AND ES.solution = esic_questions_answers.solution',
+                    'type' => 'LEFT'
+                )
+            );
+            $data2 = array();
+            $returnedData2 = $this->Common_model->select_fields_where_like_join('esic_questions_answers',$selectData2,$joins2,$where2,FALSE,'','');
 
             if(!empty($returnedData) and is_array($returnedData)){
                 if($returnedData[0]->Score>0){
@@ -159,26 +161,24 @@ class Admin extends MY_Controller{
                     'Company' => $returnedData[0]->Company,
                     'business' => $returnedData[0]->business,
                     'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc,
-                    'Score' => $returnedData[0]->Score,
                     'Logo' => $returnedData[0]->Logo,
                     'Web' => $returnedData[0]->Web,
                     'expiry_date' => $returnedData[0]->expiry_date,
                     'corporate_date' => $returnedData[0]->corporate_date,
                     'added_date' => $returnedData[0]->added_date,
                     'Status' => $returnedData[0]->Status,
-                    'Score' => $returnedData[0]->Score,
                     'ScorePercentage' => $ScorePercentage,
+                    'Score' => $returnedData[0]->Score,
                     'sector' => $returnedData[0]->sector
                 );
 
                 $data['usersQuestionsAnswers'] = array();
-                foreach($returnedData as $key=>$obj){
+                foreach($returnedData2 as $key=>$obj){
                     $arrayToInsert = array(
                         'Question' => $obj->Question,
                         'solution' => $obj->solution,
-                        'points' => $obj->points,
-                        'questionID' => $obj->questionID,
-                        'EQAID' => $obj->EQAID
+                        'points' => $obj->score,
+                        'questionID' => $obj->questionID
                     );
                     array_push($data['usersQuestionsAnswers'],$arrayToInsert);
                 }
@@ -212,7 +212,8 @@ class Admin extends MY_Controller{
                     score AS score
                     ',false);
                 $where = array(
-                    'questionID' => $dataQuestionId
+                    'questionID' => $dataQuestionId,
+                    'solution' => $Answervalue
                 );
                 $returnedData = $this->Common_model->select_fields_where('esic_solutions',$selectData, $where, false, '', '', '','','',false);
                 $score = $returnedData[0]->score;
@@ -225,7 +226,22 @@ class Admin extends MY_Controller{
 
                 );
                 $this->Common_model->update('esic_questions_answers',$whereUpdate,$updateArray);
-                echo 'OK::'.$score.'';
+                $selectData2 = array('
+                    score AS score
+                    ',false);
+                $where2 = array(
+                    'id' => $userID
+                );
+                $returnedData2 = $this->Common_model->select_fields_where('user',$selectData2, $where2, false, '', '', '','','',false);
+                $Totalscore = $returnedData[0]->score;
+                $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
+                    $ScorePercentage = $Totalscore/$TotalPoints*100;
+                if($score<=0){
+                    $score='';
+                }else{
+                    $score='('.$score.')';
+                }
+                echo 'OK::'.$score.'::'.$ScorePercentage;
             exit();
     }
 

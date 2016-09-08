@@ -80,7 +80,7 @@
             <?php }  if(!empty($userProfile['ScorePercentage'])){ ?>
               <strong><i class="fa fa-briefcase margin-r-5"></i> Score</strong>
                <div class="progress md">
-                   <div class="progress-bar progress-bar-aqua" style="width: <?= round($userProfile['ScorePercentage']).'%';?>" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                   <div class="question-bar progress-bar progress-bar-aqua" style="width: <?= round($userProfile['ScorePercentage']).'%';?>" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                       <span class=""><?= round($userProfile['ScorePercentage']).'%';?></span>
                     </div>
                 </div>
@@ -130,11 +130,11 @@
               <div class="active tab-pane" id="questions">
                 <!-- Post -->
                <?php foreach ($usersQuestionsAnswers as $key => $value) { ?>
-                  <div class="post question-post <?= 'question-'.$value['EQAID'];?>" data-id="<?= 'question-'.$value['EQAID'];?>">
+                  <div class="post question-post <?= 'question-'.$value['questionID'];?>" data-id="<?= 'question-'.$value['questionID'];?>">
                       <div class="user-block">
                           <span class="username question-statement">
                           <a href="#"><?= $value['Question'];?></a>
-                          <a href="#" class="pull-right btn-box-tool question-edit" data-id="<?= 'question-'.$value['EQAID'];?>"  data-question-id="<?= $value['questionID'];?>"><i class="fa fa-pencil"></i></a>
+                          <a href="#" class="pull-right btn-box-tool question-edit" data-id="<?= 'question-'.$value['questionID'];?>"  data-question-id="<?= $value['questionID'];?>"><i class="fa fa-pencil"></i></a>
                           <?php if(!empty($value['points'])){ ?>
 		                          <span class="question-points">(<?= $value['points'];?>)</span>
 		                       <?php } ?>

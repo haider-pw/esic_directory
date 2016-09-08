@@ -233,17 +233,21 @@
 
         <script>
             $(function () {
+                $("body").on("click",".save-answer",function(e){
 
-                $(".save-answer").on("click",function(event){
-                    event.preventDefault();
+                    e.preventDefault();
                     var id = $(this).attr('data-id');
-                    var Answervalue = $(this).parent().children('select').val();
-                    var ansDiv = $(this).parent().parent();
+                    var Answervalue = $('.'+id+' select').val();
+                    var ansDiv = $('.'+id+' .edit-question');
                     var dataQuestionId = $(this).attr('data-question-id');
-
+                    var userID = $('#profile-box-container').attr('data-user-id');
+                    var answerDiv = $('.'+id+' .answer-solution');
+                    var scoreDiv = $('.'+id+' .question-points');
+                    var barDiv = $('.progress .question-bar span')
 
                     var postData = {
                         id: id,
+                        userID:userID,
                         dataQuestionId: dataQuestionId,
                         Answervalue,Answervalue
                     };
@@ -255,8 +259,10 @@
                          var data = output.split("::");
                          if(data[0] === "OK"){
                             ansDiv.hide();
-                         }else{
-
+                            answerDiv.text(Answervalue);
+                            scoreDiv.text(data[1]);
+                            barDiv.text(data[2]);
+                            barDiv.parent().css('width', data[2]+'%');
                          }
                         }
                     });
@@ -265,27 +271,29 @@
                 $(".question-edit").on("click",function(event){
                     event.preventDefault();
                     var id = $(this).attr('data-id');
-                    var parent = $(this).parent().parent().parent().children().children().children('select');
-                    var ansDiv = $(this).parent().parent().parent().children('.edit-question');
+                    var select = $('.'+id+' select');
+                    var ansDiv = $('.'+id+' .edit-question');
                     var dataQuestionId = $(this).attr('data-question-id');
+                    var saveBtn = $('.'+id+' .save-answer');
 
 
                     var postData = {
                         id: id,
                         dataQuestionId: dataQuestionId
                     };
+                    saveBtn.parent().remove();
                     $.ajax({
                         url:"<?= base_url() ?>Admin/getanswers",
                         data:postData,
                         type:"POST",
                         success:function(output){
                           var data = $.parseJSON(output);
-                           parent.html('');
+                           select.html('');
                             $.each(data, function (index, value) {
-                                parent.append('<option value="'+value.solution+'">'+value.solution+'</option>');
+                                select.append('<option value="'+value.solution+'">'+value.solution+'</option>');
                                 console.log(value.solution);
                             });
-                            parent.parent().append('<button class="save-answer" dataQuestionId="'+dataQuestionId+'" data-id="'+id+'">Save</button>');
+                            select.parent().append('<div class="question-action-buttons"><button class="save-answer" data-question-id="'+dataQuestionId+'" data-id="'+id+'">Save</button></div>');
                             ansDiv.show();
                         }
                     });
