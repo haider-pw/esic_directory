@@ -43,9 +43,9 @@ class Admin extends MY_Controller{
             ',false);
             $joins = array(
                 array(
-                    'table' => 'esic_status ES',
+                    'table' 	=> 'esic_status ES',
                     'condition' => 'ES.id = user.status',
-                    'type' => 'LEFT'
+                    'type' 		=> 'LEFT'
                 )
             );
             //$addColumns = array(
@@ -111,14 +111,14 @@ class Admin extends MY_Controller{
             $where = "user.id =".$userID;
             $joins = array(
                 array(
-                    'table' => 'esic_status ES',
+                    'table' 	=> 'esic_status ES',
                     'condition' => 'ES.id = user.status',
-                    'type' => 'LEFT'
+                    'type' 		=> 'LEFT'
                 ),
                 array(
-                    'table' => 'esic_sectors ESEC',
+                    'table' 	=> 'esic_sectors ESEC',
                     'condition' => 'ESEC.id = user.sectorID',
-                    'type' => 'LEFT'
+                    'type' 		=> 'LEFT'
                 )
             );
             $data = array();
@@ -132,14 +132,14 @@ class Admin extends MY_Controller{
             $where2 = "userID =".$userID;
             $joins2 = array(
                 array(
-                    'table' => 'esic_questions EQ',
+                    'table' 	=> 'esic_questions EQ',
                     'condition' => 'EQ.id = esic_questions_answers.questionID',
-                    'type' => 'LEFT'
+                    'type' 		=> 'LEFT'
                 ),
                 array(
-                    'table' => 'esic_solutions ES',
+                    'table' 	=> 'esic_solutions ES',
                     'condition' => 'ES.questionID = esic_questions_answers.questionID AND ES.solution = esic_questions_answers.solution',
-                    'type' => 'LEFT'
+                    'type' 		=> 'LEFT'
                 )
             );
             $data2 = array();
@@ -155,93 +155,92 @@ class Admin extends MY_Controller{
                 }
 
                 $data['userProfile'] = array(
-                    'userID' => $userID,
-                    'FullName' => $returnedData[0]->FullName,
-                    'Email' => $returnedData[0]->Email,
-                    'Company' => $returnedData[0]->Company,
-                    'business' => $returnedData[0]->business,
-                    'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc,
-                    'Logo' => $returnedData[0]->Logo,
-                    'Web' => $returnedData[0]->Web,
-                    'expiry_date' => $returnedData[0]->expiry_date,
-                    'corporate_date' => $returnedData[0]->corporate_date,
-                    'added_date' => $returnedData[0]->added_date,
-                    'Status' => $returnedData[0]->Status,
-                    'ScorePercentage' => $ScorePercentage,
-                    'Score' => $returnedData[0]->Score,
-                    'sector' => $returnedData[0]->sector
+                    'userID' 			=> $userID,
+                    'ScorePercentage' 	=> $ScorePercentage,
+                    'Web' 				=> $returnedData[0]->Web,
+                    'Logo' 				=> $returnedData[0]->Logo,
+                    'Email' 			=> $returnedData[0]->Email,
+                    'Score' 			=> $returnedData[0]->Score,
+                    'sector' 			=> $returnedData[0]->sector,
+                    'Status' 			=> $returnedData[0]->Status,
+                    'Company'			=> $returnedData[0]->Company,
+                    'business' 			=> $returnedData[0]->business,
+                    'FullName' 			=> $returnedData[0]->FullName,
+                    'added_date' 		=> $returnedData[0]->added_date,
+                    'expiry_date' 		=> $returnedData[0]->expiry_date,
+                    'corporate_date' 	=> $returnedData[0]->corporate_date,
+                    'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc
                 );
-
-                $data['usersQuestionsAnswers'] = array();
-                foreach($returnedData2 as $key=>$obj){
-                    $arrayToInsert = array(
-                        'Question' => $obj->Question,
-                        'solution' => $obj->solution,
-                        'points' => $obj->score,
-                        'questionID' => $obj->questionID
-                    );
-                    array_push($data['usersQuestionsAnswers'],$arrayToInsert);
-                }
+                if(!empty($returnedData2) and is_array($returnedData2)){
+	                $data['usersQuestionsAnswers'] = array();
+	                foreach($returnedData2 as $key=>$obj){
+    	                    $arrayToInsert = array(
+    	                    	'points' 		=> $obj->score,
+    	                        'Question' 		=> $obj->Question,
+    	                        'solution' 		=> $obj->solution,
+    	                        'questionID' 	=> $obj->questionID
+    	                    );
+    	                    array_push($data['usersQuestionsAnswers'],$arrayToInsert);
+	                }
+	            }
             }
-            //echo $this->db->last_query();
-            //print_r($data);
-           // exit;
         $this->show_admin("admin/reg_details",$data);
     }
     public function getanswers(){
-                $questionID = $this->input->post('dataQuestionId');
-                $selectData = array('
-                    Solution as solution
-                    ',false);
-                $where = "questionID =".$questionID;
-                $data = array();
-                $returnedData = $this->Common_model->select_fields_where_like_join('esic_solutions',$selectData,'',$where,FALSE,'','');
+    			$questionID 	= $this->input->post('dataQuestionId');
+    			$where 			= "questionID =".$questionID;
+                $data  			= array();
+                $selectData 	= array('Solution as solution',false);
+                $returnedData 	= $this->Common_model->select_fields_where_like_join('esic_solutions',$selectData,'',$where,FALSE,'','');
                 echo json_encode($returnedData );
                 exit();
     }
     public function saveanswer(){
-                $id = $this->input->post('id');
-                $userID = $this->input->post('userID');
-                $Answervalue = $this->input->post('Answervalue');
+                $id 			= $this->input->post('id');
+                $userID 		= $this->input->post('userID');
+                $oldScore 		= $this->input->post('oldScore');
+                $Answervalue 	= $this->input->post('Answervalue');
                 $dataQuestionId = $this->input->post('dataQuestionId');
                 if(!isset($userID) || empty($userID) || !isset($Answervalue) || empty($Answervalue) || !isset($dataQuestionId) || empty($dataQuestionId)){
                     echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
                     return;
                 }
-                $selectData = array('
-                    score AS score
-                    ',false);
+                $selectData = array('score AS score',false);
                 $where = array(
                     'questionID' => $dataQuestionId,
-                    'solution' => $Answervalue
+                    'solution' 	 => $Answervalue
                 );
                 $returnedData = $this->Common_model->select_fields_where('esic_solutions',$selectData, $where, false, '', '', '','','',false);
                 $score = $returnedData[0]->score;
-                //UpdateData
                 $updateArray = array();
                 $updateArray['Solution'] = $Answervalue;
                 $whereUpdate = array(
                     'userID' => $userID,
                     'questionID' => $dataQuestionId
-
                 );
                 $this->Common_model->update('esic_questions_answers',$whereUpdate,$updateArray);
-                $selectData2 = array('
-                    score AS score
-                    ',false);
-                $where2 = array(
-                    'id' => $userID
-                );
+                $selectData2 = array('score AS score',false);
+                $where2 = array('id' => $userID);
                 $returnedData2 = $this->Common_model->select_fields_where('user',$selectData2, $where2, false, '', '', '','','',false);
-                $Totalscore = $returnedData[0]->score;
-                $TotalPoints = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
+                $TotalOldscore =  $returnedData[0]->score;
+                $Totalscore    = ($returnedData[0]->score-$oldScore)+$score;
+                if($Totalscore > 0){
+                	$TotalPoints   = $this->db->query('SELECT SUM(MaxPoints) AS TotalPoints FROM (SELECT id, questionID, MAX(Points) AS MaxPoints FROM esic_questions_score GROUP BY questionID) Points')->row()->TotalPoints;
                     $ScorePercentage = $Totalscore/$TotalPoints*100;
-                if($score<=0){
-                    $score='';
                 }else{
-                    $score='('.$score.')';
+                	$Totalscore = 0;
+                	$ScorePercentage = 0;
                 }
-                echo 'OK::'.$score.'::'.$ScorePercentage;
+                if($score<=0){
+                    $score ='';
+                }else{
+                    $score ='('.$score.')';
+                }
+                $updateArray2 = array();
+                $updateArray2['score'] = $Totalscore;
+                $whereUpdate2 = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate2,$updateArray2);
+                echo 'OK::'.$score.'::'.$ScorePercentage.'::'.$TotalOldscore.'::'.$Totalscore;
             exit();
     }
 
@@ -249,13 +248,13 @@ class Admin extends MY_Controller{
         if($param === 'listing'){
             $selectData = array('
             id AS ID,
-            sector AS Sector
+            institution AS University,
+            CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
-
             $addColumns = array(
-                'ViewEditActionButtons' => array('<a href="'.base_url("Admin/details/$1").'"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a>','UserID')
+                'ViewEditActionButtons' => array('<a href="#" data-target="#editUniversitiesModal" data-toggle="modal"><span data-toggle="tooltip" title="Edit" data-placement="left" aria-hidden="true" class="fa fa-pencil text-blue"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i data-toggle="tooltip" title="Trash" data-placement="right"  class="fa fa-trash-o text-red"></i></a>','ID')
             );
-            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_sectors','','','','','',$addColumns);
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_institution','','','','','',$addColumns);
             print_r($returnedData);
             return NULL;
         }
@@ -267,9 +266,74 @@ class Admin extends MY_Controller{
 
             $id = $this->input->post('id');
             $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value) or $value !== 'approve'){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+
+            $updateData = array(
+                'trashed' => 1
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_institution',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully Trashed";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'update'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('University');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $updateData = array(
+                'institution' => $value
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $updateResult = $this->Common_model->update('esic_institution',$whereUpdate,$updateData);
+            if($updateResult === true){
+                echo "OK::Record Successfully Updated";
+            }else{
+                if($updateResult['code'] == 0){
+                    echo "OK::Record Already Exist";
+                }else{
+                    echo $updateResult['message'];
+                }
+            }
             return NULL;
         }
         $this->show_admin('admin/configuration/universities');
+        return NULL;
     }
     public function manage_sectors($param = NULL){
         if($param === 'listing'){
@@ -367,11 +431,219 @@ class Admin extends MY_Controller{
     public function manage_rd(){
         $this->show_admin('admin/configuration/rd');
     }
-    public function manage_accelerators(){
-        $this->show_admin('admin/configuration/accelerators');
-    }
-    public function manage_acc_commercials(){
+
+    public function manage_acc_commercials($param= Null){
+        if($param === 'listing'){
+            $selectData = array('
+            id AS ID,
+            Member AS Member,
+            Web_Address AS Web_Address,
+            State_Territory AS State_Territory,
+            Project_Location AS Project_Location,
+            Project_Title AS Project_Title,
+            Project_Summary AS Project_Summary,
+            Project_Success AS Project_Success,
+            Market AS Market,
+            Technology AS Technology,
+            Type AS Type,
+            CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
+            ',false);
+
+            $addColumns = array(
+                'ViewEditActionButtons' => array('<a href="#" data-target="#editAccelerationModal" data-toggle="modal"><span data-toggle="tooltip" title="Edit" data-placement="left" aria-hidden="true" class="fa fa-pencil text-blue"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i data-toggle="tooltip" title="Trash" data-placement="right"  class="fa fa-trash-o text-red"></i></a>','UserID')
+            );
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_acceleration','','','','','',$addColumns);
+            print_r($returnedData);
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value) or $value !== 'approve'){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            $updateData = array(
+                'trashed' => 1
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully Trashed";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'update'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id                 = $this->input->post('id');
+            $Member             = $this->input->post('Member');
+            $Web_Address        = $this->input->post('Web_Address');
+            $State_Territory    = $this->input->post('State_Territory');
+            $Project_Location   = $this->input->post('Project_Location');
+            $Project_Title      = $this->input->post('Project_Title');
+            $Project_Summary    = $this->input->post('Project_Summary');
+            $Project_Success    = $this->input->post('Project_Success');
+            $Market             = $this->input->post('Market');
+            $Technology         = $this->input->post('Technology');
+            $Type               = $this->input->post('Type');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $updateData = array(
+                'Member'            => $Member,
+                'Web_Address'       => $Web_Address,
+                'State_Territory'   => $State_Territory,
+                'Project_Location'  => $Project_Location,
+                'Project_Title'     => $Project_Title,
+                'Project_Summary'   => $Project_Summary,
+                'Project_Success'   => $Project_Success,
+                'Market'            => $Market,
+                'Technology'        => $Technology,
+                'Type'              => $Type
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $updateResult = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
+            if($updateResult === true){
+                echo "OK::Record Successfully Updated";
+            }else{
+                if($updateResult['code'] == 0){
+                    echo "OK::Record Already Exist";
+                }else{
+                    echo $updateResult['message'];
+                }
+            }
+            return NULL;
+        }
         $this->show_admin('admin/configuration/acc_commercials');
+        return NULL;
+    }
+    public function manage_accelerators($param= Null){
+         if($param === 'listing'){
+            $selectData = array('
+            id AS ID,
+            name AS Name,
+            website AS Website,
+            CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
+            ',false);
+
+            $addColumns = array(
+                'ViewEditActionButtons' => array('<a href="#" data-target="#editAccelerationModal" data-toggle="modal"><span data-toggle="tooltip" title="Edit" data-placement="left" aria-hidden="true" class="fa fa-pencil text-blue"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i data-toggle="tooltip" title="Trash" data-placement="right"  class="fa fa-trash-o text-red"></i></a>','UserID')
+            );
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_acceleration_logo','','','','','',$addColumns);
+            print_r($returnedData);
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value) or $value !== 'approve'){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            $updateData = array(
+                'trashed' => 1
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully Trashed";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'update'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id   = $this->input->post('id');
+            $name = $this->input->post('name');
+            $Web  = $this->input->post('Web');
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($name)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $updateData = array(
+                'name'    => $name,
+                'website' => $Web
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $updateResult = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$updateData);
+            if($updateResult === true){
+                echo "OK::Record Successfully Updated";
+            }else{
+                if($updateResult['code'] == 0){
+                    echo "OK::Record Already Exist";
+                }else{
+                    echo $updateResult['message'];
+                }
+            }
+            return NULL;
+        }
+        $this->show_admin('admin/configuration/accelerators');
+        return NULL;
     }
 
 }
