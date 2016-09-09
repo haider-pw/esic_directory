@@ -52,7 +52,7 @@ class Admin extends MY_Controller{
              //  'ViewEditActionButtons' => '<a href="#"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a>'
             //);
             $addColumns = array(
-               'ViewEditActionButtons' => array('<a href="'.base_url("Admin/details/$1").'"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a>','UserID')
+               'ViewEditActionButtons' => array('<a href="'.base_url("Admin/details/$1").'"><span aria-hidden="true" class="glyphicon glyphicon-play text-green"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i class="fa fa-check"></i></a> &nbsp; <a href="#" data-target=".delete-modal" data-toggle="modal"><i class="fa fa-trash-o"></i></a>','UserID')
             );
             $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'user',$joins,'','','','',$addColumns);
             print_r($returnedData);
@@ -70,7 +70,12 @@ class Admin extends MY_Controller{
             echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
             return;
         }
-
+        if($status === 'delete'){
+        	$whereUpdate = array( 'id' 	=> $userID);
+            $this->Common_model->delete('user',$whereUpdate);
+            echo 'OK::';
+            return null;
+        }
         //UpdateData
         $updateArray = array();
         if($status === 'approve'){
@@ -79,6 +84,7 @@ class Admin extends MY_Controller{
         if($status === 'pending'){
             $updateArray['status'] = 1;
         }
+
 
         $whereUpdate = array(
             'id' => $userID

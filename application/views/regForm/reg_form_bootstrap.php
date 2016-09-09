@@ -154,7 +154,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="cop_date">Corporate Date</label>
+                                        <label for="cop_date">Incorporate Date</label>
                                         <div class="input-group date" data-provide="datepicker">
                                             <input id="cop_date" name="cop_date" type="text" class="form-control" placeholder="DD/MM/YYYY" />
                                             <div class="input-group-addon">

@@ -68,8 +68,8 @@ echo "</pre>";
                                     </select>
                                 </div>
                                 <div class="sortFilters">
-                                    <select id="assessmentOrderSelect" placeholder="Order By assessment date">
-                                        <option value="" disabled selected>Order by assessment date</option>
+                                    <select id="assessmentOrderSelect" placeholder="Order By Incoporate date">
+                                        <option value="" disabled selected>Order by Incoporate date</option>
                                         <option value="asc">Newest</option>
                                         <option value="desc">Oldest</option>
                                     </select>
@@ -319,9 +319,10 @@ echo "</pre>";
         }
      
         function scroll(){
-            $('html, body').animate({
-                scrollTop: $('#load_more').offset().top
-            }, 1000);
+            return 0;
+            //$('html, body').animate({
+              //  scrollTop: $('#load_more').offset().top
+            //}, 1000);
         }
         function redirectToLink(id){
             console.log('ID'+id);

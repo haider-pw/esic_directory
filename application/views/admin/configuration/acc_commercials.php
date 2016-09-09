@@ -29,14 +29,7 @@
                                 <th>ID</th>
                                 <th>Member</th>
                                 <th>Web_Address</th>
-                                <th>State_Territory</th>
-                                <th>Project_Location</th>
                                 <th>Project_Title</th>
-                                <th>Project_Summary</th>
-                                <th>Project_Success</th>
-                                <th>Market</th>
-                                <th>Technology</th>
-                                <th>Type</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>
@@ -48,14 +41,7 @@
                                 <th>ID</th>
                                 <th>Member</th>
                                 <th>Web_Address</th>
-                                <th>State_Territory</th>
-                                <th>Project_Location</th>
-                                <th>Project_Title</th>
-                                <th>Project_Summary</th>
-                                <th>Project_Success</th>
-                                <th>Market</th>
-                                <th>Technology</th>
-                                <th>Type</th>                             
+                                <th>Project_Title</th>                        
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>
@@ -84,7 +70,7 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <input type="hidden" id="hiddenID">
+                    <input type="hidden" id="hiddenUserID">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="editAccelerationTextBox">Acceleration</label>

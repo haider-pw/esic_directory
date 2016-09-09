@@ -30,9 +30,9 @@ class Reg extends CI_Controller {
         $this->load->model('Common_model');
         $this->load->helper('my_site_helper');
 
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: PUT, GET, POST");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        //header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: PUT, GET, POST");
+        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
     }
     public function index()
     {
@@ -42,11 +42,14 @@ class Reg extends CI_Controller {
 
         //Need to Get Data for Selectors
         //University
-        $data['institutions'] = $this->Common_model->select('esic_institution');
-        $data['accelerationCommercials'] = $this->Common_model->select('esic_acceleration');
-        $data['acceleratorProgramme'] = $this->Common_model->select('esic_acceleration_logo');
+                $selectData = array('score AS score',false);
+        $where = 'trashed != 1'; 
+        $selectData ='*';
+        $data['institutions'] = $this->Common_model->select_fields_where('esic_institution',$selectData, $where, false, '', '', '','','',false);
+        $data['accelerationCommercials'] = $this->Common_model->select('esic_acceleration',$selectData, $where, false, '', '', '','','',false);
+        $data['acceleratorProgramme'] = $this->Common_model->select('esic_acceleration_logo',$selectData, $where, false, '', '', '','','',false);
         $data['userID'] = $this->input->get('id');
-        $data['sectors'] = $this->Common_model->select('esic_sectors');
+        $data['sectors'] = $this->Common_model->select('esic_sectors',$selectData, $where, false, '', '', '','','',false);
 
         $this->load->view('regForm/reg_form_bootstrap',$data);
     }
@@ -171,6 +174,9 @@ class Reg extends CI_Controller {
 }
 
     public function step2(){
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: PUT, GET, POST");
+            header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         //step2
             $userID = $this->input->post('userID');
             $sector = $this->input->post('sector');

@@ -6,6 +6,10 @@
     reserved.
 </footer>
 
+<?php
+    if($this->router->fetch_method() === 'assessments_list'){
+?>
+
 <!--Edit Ward Modal-->
 <div class="modal approval-modal">
     <div class="modal-dialog">
@@ -33,6 +37,72 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- /.End Edit Ward Modal --><!-- /.modal -->
+
+<!--Edit Ward Modal-->
+<div class="modal delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Deleted Status</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenUserID">
+                    <div class="col-md-12">
+                        <p>Are You Sure To Delete This Entry?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="nodelete">No</button>
+                <button type="button" class="btn btn-success" id="yesDelete">Yes</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+
+
+<?php
+    }else{
+?>
+
+<!--Edit Ward Modal-->
+<div class="modal approval-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Trashed Model/h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenUserID">
+                    <div class="col-md-12">
+                        <p>Do You Want To Trash This Status?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="nodelete">No</button>
+                <button type="button" class="btn btn-success" id="yesApprove">Yes</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+
+
+<?php
+    }
+?>
 
 <!-- jQuery 2.2.3 -->
 <script src="<?= base_url()?>assets/vendors/jQuery/jquery-2.2.3.min.js"></script>
@@ -130,6 +200,25 @@ var baseUrl = "<?= base_url() ?>";
                         }
                     });
                 });
+                $("#nodelete").on("click",function () {
+                    var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    var postData = {id:hiddenModalUserID,value:"delete"};
+                    $.ajax({
+                        url:baseUrl+"Admin/assessment_list",
+                        data:{
+                            id:hiddenModalUserID,
+                            value:"delete"
+                        },
+                        type:"POST",
+                        success:function (output) {
+                            var data = output.split("::");
+                            if(data[0]=='OK'){
+                                oTable.fnDraw();
+                                $('.approval-modal').modal('hide');
+                            }
+                        }
+                    });
+                });
 
                 $("#noPending").on("click",function () {
                     var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
@@ -206,7 +295,7 @@ var baseUrl = "<?= base_url() ?>";
                 });
 
 
-                $("#yesDelete").on("click",function () {
+                $("#yesApprove").on("click",function () {
                     var hiddenModalSectorID = $(this).parents(".modal-content").find("#hiddenUserID").val();
                     var postData = {id:hiddenModalSectorID,value:"approve"};
                     $.ajax({
@@ -308,7 +397,7 @@ var baseUrl = "<?= base_url() ?>";
                 });
 
 
-                $("#yesDelete").on("click",function () {
+                $("#yesApprove").on("click",function () {
                     var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
                     var postData = {id:hiddenModalID,value:"approve"};
                     $.ajax({
@@ -468,35 +557,39 @@ var baseUrl = "<?= base_url() ?>";
                     /* Web_Address */ {
                         "mData" : "Web_Address"
                     },
-                    /* State_Territory */ {
-                        "mData" : "State_Territory"
-                    },
-                    /* Project_Location */ {
-                        "mData" : "Project_Location"
-                    },
-                    /* Project_Title */ {
+                    {
                         "mData" : "Project_Title"
                     },
-                    /* Project_Summary */ {
+                    /*
+                     {
+                        "mData" : "State_Territory"
+                    },
+                     {
+                        "mData" : "Project_Location"
+                    },
+                     {
+                        "mData" : "Project_Title"
+                    },
+                    {
                         "mData" : "Project_Summary"
                     },
-                     /* Project_Success */ {
+                      {
                         "mData" : "Project_Success"
                     },
-                     /* Market */ {
+                      {
                         "mData" : "Market"
                     },
-
-                     /* Technology */ {
+                      {
                         "mData" : "Technology"
                     },
-                     /* Type */ {
+                     {
                         "mData" : "Type"
                     },
-                    /* Trashed */ {
+                    */
+                     {
                         "mData" : "Trashed"
                     },
-                    /* Action Buttons */ {
+                     {
                         "mData" : "ViewEditActionButtons"
                     }
                 ];
@@ -528,7 +621,7 @@ var baseUrl = "<?= base_url() ?>";
                 });
 
 
-                $("#yesDelete").on("click",function () {
+                $("#yesApprove").on("click",function () {
                     var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
                     var postData = {id:hiddenModalID,value:"approve"};
                     $.ajax({
@@ -546,7 +639,7 @@ var baseUrl = "<?= base_url() ?>";
                 });
 
                 $("#updateSectorBtn").on("click",function(){
-                    var id = $(this).parents(".modal-content").find("#hiddenID").val();
+                    var id = $(this).parents(".modal-content").find("#hiddenUserID").val();
                     var sector = $(this).parents(".modal-content").find("#editAccelerationTextBox").val();
                     var postData = {
                         id: id,

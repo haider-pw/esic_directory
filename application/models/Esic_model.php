@@ -114,7 +114,7 @@ class Esic_model extends CI_Model
 			        $result .= '<div class="product-details date-container add"><label>Added Date:</label>';
                     $result .= '<p class="info-type">'.$user['added_date'].'</p>';
                     $result .= '</div>';
-                    $result .= '<div class="product-details date-container cop"><label>Coporate Date:</label>';
+                    $result .= '<div class="product-details date-container cop"><label>Incoporate Date:</label>';
                     $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
                     $result .= '</div>';
                     $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
@@ -248,7 +248,7 @@ class Esic_model extends CI_Model
 			        $result .= '</span>';
                     $result .= '<div class="description">';
                     $result .= '<p>';
-                    $result .= $OrderSelect.$desc;
+                    $result .= $desc;
                     $result .= '</p>';
                     $result .= '</div>';
 			        $result .= '<div class="product-details date-container add"><label>Added Date:</label>';
