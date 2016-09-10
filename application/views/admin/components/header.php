@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="<?= base_url()?>assets/vendors/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/vendors/datatables/responsive.bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url()?>assets/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
