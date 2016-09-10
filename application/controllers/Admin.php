@@ -264,6 +264,49 @@ class Admin extends MY_Controller{
             print_r($returnedData);
             return NULL;
         }
+        if($param === 'trash'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'trash'){
+                $data = 1;
+            }else if($value == 'untrash'){
+                $data = 0;
+            }else{
+                $data = 2;
+            }
+
+            $updateData = array(
+                'trashed' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_institution',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'delete'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -274,28 +317,25 @@ class Admin extends MY_Controller{
             $value = $this->input->post('value');
 
             if(empty($id) or !is_numeric($id)){
-                echo "FAIL::Posted values are not VALID 1";
+                echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
 
-            if(empty($value) or $value !== 'approve'){
-                echo "FAIL::Posted values are not VALID 2";
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
+            $data='';
+            if($value == 'delete'){
 
-            $updateData = array(
-                'trashed' => 1
-            );
+                $whereUpdate = array(
+                    'id' => $id
+                );
 
-            $whereUpdate = array(
-                'id' => $id
-            );
-
-            $returnedData = $this->Common_model->update('esic_institution',$whereUpdate,$updateData);
-            if($returnedData === true){
-                echo "OK::Record Successfully Trashed";
+                $returnedData = $this->Common_model->delete('esic_institution',$whereUpdate);
+                    echo "OK::Record Deleted";
             }else{
-                echo "FAIL::".$returnedData['message'];
+                    echo "FAIL::Record Not Deleted";
             }
             return NULL;
         }
@@ -338,6 +378,30 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'new'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+            $value = $this->input->post('University');
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $insertData = array(
+                'institution' => $value
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_institution',$insertData);
+            if($insertResult){
+                echo "OK::Record Successfully Entered";
+            }else{
+                echo "FAIL::Record Failed Entered";
+            }
+            return NULL;
+        }
         $this->show_admin('admin/configuration/universities');
         return NULL;
     }
@@ -356,7 +420,7 @@ class Admin extends MY_Controller{
             print_r($returnedData);
             return NULL;
         }
-        if($param === 'delete'){
+        if($param === 'trash'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
                 return false;
@@ -370,13 +434,21 @@ class Admin extends MY_Controller{
                 return NULL;
             }
 
-            if(empty($value) or $value !== 'approve'){
+            if(empty($value)){
                 echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
+            $data='';
+            if($value == 'trash'){
+                $data = 1;
+            }else if($value == 'untrash'){
+                $data = 0;
+            }else{
+                $data = 2;
+            }
 
             $updateData = array(
-                'trashed' => 1
+                'trashed' => $data
             );
 
             $whereUpdate = array(
@@ -385,7 +457,7 @@ class Admin extends MY_Controller{
 
             $returnedData = $this->Common_model->update('esic_sectors',$whereUpdate,$updateData);
             if($returnedData === true){
-                echo "OK::Record Successfully Trashed";
+                echo "OK::Record Successfully";
             }else{
                 echo "FAIL::".$returnedData['message'];
             }
@@ -427,6 +499,62 @@ class Admin extends MY_Controller{
                 }else{
                     echo $updateResult['message'];
                 }
+            }
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'delete'){
+
+                $whereUpdate = array(
+                    'id' => $id
+                );
+
+                $returnedData = $this->Common_model->delete('esic_sectors',$whereUpdate);
+                    echo "OK::Record Deleted";
+            }else{
+                    echo "FAIL::Record Not Deleted";
+            }
+            return NULL;
+        }
+        if($param === 'new'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+            $value = $this->input->post('sector');
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $insertData = array(
+                'sector' => $value
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_sectors',$insertData);
+            if($insertResult){
+                echo "OK::Record Successfully Entered";
+            }else{
+                echo "FAIL::Record Failed Entered";
             }
             return NULL;
         }

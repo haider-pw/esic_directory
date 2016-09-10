@@ -27,6 +27,17 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style type="text/css" media="screen">
+     .add-New-container{
+            text-align: right;
+            padding: 5px 0px;
+      }  
+      .addNewBtn{
+            background-color: #337ab7;
+            color: #fff;
+            padding: 5px 20px;
+      }  
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 

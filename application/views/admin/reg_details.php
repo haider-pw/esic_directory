@@ -85,6 +85,10 @@
                     </div>
                 </div>
             <?php } ?>
+            <div class="action-buttons">
+             <a href="#" data-target=".approval-modal" data-toggle="modal" class="btn-primary" data-id="<?= $userProfile['userID'];?>">Approval</a>
+             <a href="#" data-target=".delete-modal" data-toggle="modal" class="bg-red" data-id="<?= $userProfile['userID'];?>">Delete</a>
+             </div>
             </div>
             <!-- /.box-body -->
           </div>
@@ -118,6 +122,14 @@
 		    width: 80px;
 		    height: 25px;
         }
+        .action-buttons a{
+          display: block;
+          color: #fff;
+          padding: 10px 0px;
+          margin: 8px 0px;
+          text-align: center;
+        }
+            
         </style>
         <!-- /.col -->
         <div class="col-md-9">

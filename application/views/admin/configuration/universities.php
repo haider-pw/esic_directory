@@ -21,6 +21,9 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Manage Universities</h3>
+                        <div class="add-New-container">
+                    		<a href="#" data-target=".addNewModal" data-toggle="modal" class="addNewBtn">Add New</a>
+                    	</div>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -44,8 +47,12 @@
                             </tr>
                             </tfoot>
                         </table>
+                    </div> <!-- /.box-body -->
+                    <div class="box-footer">
+                    	<div class="add-New-container">
+                    		<a href="#" data-target=".addNewModal" data-toggle="modal" class="addNewBtn">Add New</a>
+                    	</div>
                     </div>
-                    <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
             </div>
@@ -87,3 +94,34 @@
 </div><!-- /.modal -->
 <!-- /.End Edit Ward Modal --><!-- /.modal -->
 
+
+<!--Edit University Modal-->
+<div class="modal addNewModal" id="addUniversity">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add University</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenID">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="addUniversityTextBox">University</label>
+                            <input type="text" id="addUniversityTextBox" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright"  data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="addUniversityBtn">Add</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->

@@ -7,7 +7,7 @@
 </footer>
 
 <?php
-    if($this->router->fetch_method() === 'assessments_list'){
+    if($this->router->fetch_method() === 'assessments_list' || $this->router->fetch_method() === 'details'){
 ?>
 
 <!--Edit Ward Modal-->
@@ -77,7 +77,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Trashed Model/h4>
+                <h4 class="modal-title">Trashed Model</h4>
             </div>
 
             <div class="modal-body">
@@ -90,8 +90,9 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="nodelete">No</button>
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" aria-label="Close" id="permanentDelete">Delete Permanent</button>
                 <button type="button" class="btn btn-success" id="yesApprove">Yes</button>
+                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="nodelete">No</button>
             </div>
 
         </div><!-- /.modal-content -->
@@ -127,7 +128,7 @@ var baseUrl = "<?= base_url() ?>";
 </script>
 
 <?php
-    if($this->router->fetch_method() === 'assessments_list'){
+    if($this->router->fetch_method() === 'assessments_list' || $this->router->fetch_method() === 'index' || $this->router->fetch_method() === 'details'){
         ?>
 
         <!-- page script -->
@@ -183,6 +184,9 @@ var baseUrl = "<?= base_url() ?>";
 
                 $("#yesApprove").on("click",function () {
                     var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    if(hiddenModalUserID ==''){
+                        hiddenModalUserID = $(this).attr('data-id');
+                    }
                     var postData = {id:hiddenModalUserID,value:"approve"};
                     $.ajax({
                         url:baseUrl+"Admin/assessment_list",
@@ -202,6 +206,9 @@ var baseUrl = "<?= base_url() ?>";
                 });
                 $("#nodelete").on("click",function () {
                     var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    if(hiddenModalUserID ==''){
+                        hiddenModalUserID = $(this).attr('data-id');
+                    }
                     var postData = {id:hiddenModalUserID,value:"delete"};
                     $.ajax({
                         url:baseUrl+"Admin/assessment_list",
@@ -222,6 +229,9 @@ var baseUrl = "<?= base_url() ?>";
 
                 $("#noPending").on("click",function () {
                     var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    if(hiddenModalUserID ==''){
+                        hiddenModalUserID = $(this).attr('data-id');
+                    }
                     var postData = {id:hiddenModalUserID,value:"pending"};
                     $.ajax({
                         url:baseUrl+"Admin/assessment_list",
@@ -297,9 +307,9 @@ var baseUrl = "<?= base_url() ?>";
 
                 $("#yesApprove").on("click",function () {
                     var hiddenModalSectorID = $(this).parents(".modal-content").find("#hiddenUserID").val();
-                    var postData = {id:hiddenModalSectorID,value:"approve"};
+                    var postData = {id:hiddenModalSectorID,value:"trash"};
                     $.ajax({
-                        url:baseUrl+"Admin/manage_sectors/delete",
+                        url:baseUrl+"Admin/manage_sectors/trash",
                         data:postData,
                         type:"POST",
                         success:function (output) {
@@ -307,6 +317,41 @@ var baseUrl = "<?= base_url() ?>";
                             if(data[0]=='OK'){
                                 $(".approval-modal").modal('hide');
                                 oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+                $("#permanentDelete").on("click",function () {
+                    var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    var postData = {id:hiddenModalID,value:"delete"};
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_sectors/delete",
+                        data: postData,
+                        type:"POST",
+                        success:function (output) {
+                            var data = output.split("::");
+                            if(data[0]=='OK'){
+                                $(".approval-modal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+                $("#nodelete").on("click",function () {
+                    var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    var postData = {id:hiddenModalUserID,value:"untrash"};
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_sectors/trash",
+                        data:{
+                            id:hiddenModalUserID,
+                            value:"untrash"
+                        },
+                        type:"POST",
+                        success:function (output) {
+                            var data = output.split("::");
+                            if(data[0]=='OK'){
+                                oTable.fnDraw();
+                                $('.approval-modal').modal('hide');
                             }
                         }
                     });
@@ -327,6 +372,25 @@ var baseUrl = "<?= base_url() ?>";
                             var data = output.split("::");
                             if(data[0] === "OK"){
                                 $("#editSectorModal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+
+                $("#addSectorBtn").on("click",function(){
+                    var sector = $(this).parents(".modal-content").find("#addSectorTextBox").val();
+                    var postData = {
+                        sector: sector
+                    };
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_sectors/new",
+                        data:postData,
+                        type:"POST",
+                        success:function(output){
+                            var data = output.split("::");
+                            if(data[0] === "OK"){
+                                $(".addNewModal").modal('hide');
                                 oTable.fnDraw();
                             }
                         }
@@ -611,7 +675,24 @@ var baseUrl = "<?= base_url() ?>";
 
                 $("#yesApprove").on("click",function () {
                     var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
-                    var postData = {id:hiddenModalID,value:"approve"};
+                    var postData = {id:hiddenModalID,value:"trash"};
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_universities/trash",
+                        data: postData,
+                        type:"POST",
+                        success:function (output) {
+                            var data = output.split("::");
+                            if(data[0]=='OK'){
+                                $(".approval-modal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+
+                $("#permanentDelete").on("click",function () {
+                    var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    var postData = {id:hiddenModalID,value:"delete"};
                     $.ajax({
                         url:baseUrl+"Admin/manage_universities/delete",
                         data: postData,
@@ -621,6 +702,26 @@ var baseUrl = "<?= base_url() ?>";
                             if(data[0]=='OK'){
                                 $(".approval-modal").modal('hide');
                                 oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+
+                $("#nodelete").on("click",function () {
+                    var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    var postData = {id:hiddenModalUserID,value:"untrash"};
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_universities/trash",
+                        data:{
+                            id:hiddenModalUserID,
+                            value:"untrash"
+                        },
+                        type:"POST",
+                        success:function (output) {
+                            var data = output.split("::");
+                            if(data[0]=='OK'){
+                                oTable.fnDraw();
+                                $('.approval-modal').modal('hide');
                             }
                         }
                     });
@@ -641,6 +742,24 @@ var baseUrl = "<?= base_url() ?>";
                             var data = output.split("::");
                             if(data[0] === "OK"){
                                 $("#editUniversitiesModal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+                 $("#addUniversityBtn").on("click",function(){
+                    var University = $(this).parents(".modal-content").find("#addUniversityTextBox").val();
+                    var postData = {
+                        University: University
+                    };
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_universities/new",
+                        data:postData,
+                        type:"POST",
+                        success:function(output){
+                            var data = output.split("::");
+                            if(data[0] === "OK"){
+                                $(".addNewModal").modal('hide');
                                 oTable.fnDraw();
                             }
                         }
