@@ -59,33 +59,34 @@ class Reg extends CI_Controller {
         header("Access-Control-Allow-Methods: PUT, GET, POST");
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         //Getting all the posted Values.
-        $firstName = $this->input->post('firstName');
-        $lastName = $this->input->post('lastName');
-        $email = $this->input->post('email');
-        $company = $this->input->post('company');
-        $business = $this->input->post('business');
-        $date_pickter_format = $this->input->post('cop_date');
-        $cop_date = date("Y-m-d",strtotime($date_pickter_format));
-        $acn = $this->input->post('acn');
-        $added_date =  date('Y-m-d');
-        $expiry_date =  getExpiryDate($cop_date);// expiry date calculated on baise on coprated date after 5 years
+        $firstName              = $this->input->post('firstName');
+        $lastName               = $this->input->post('lastName');
+        $email                  = $this->input->post('email');
+       // $website                = $this->input->post('website');
+        $company                = $this->input->post('company');
+        $business               = $this->input->post('business');
+        $date_pickter_format    = $this->input->post('cop_date');
+        $cop_date               = date("Y-m-d",strtotime($date_pickter_format));
+        $acn                    = $this->input->post('acn');
+        $added_date             =  date('Y-m-d');
+        $expiry_date            =  getExpiryDate($cop_date);// expiry date calculated on baise on coprated date after 5 years
 
-        $mExpense = $this->input->post('1mExpense');
-        $assessableIncomeYear = $this->input->post('assessableIncomeYear');
-        $listedInSExchange = $this->input->post('listedInSExchange');
-        $incorporatedAus = $this->input->post('incorporatedAus');
-        $ownedSubsidiaries = $this->input->post('ownedSubsidiaries');
-        $improvedInnovation = $this->input->post('improvedInnovation');
-        $companyScalable = $this->input->post('companyScalable');
-        $globalMarket = $this->input->post('globalMarket');
-        $competitiveAdvantage = $this->input->post('competitiveAdvantage');
-        $rdExpenses = $this->input->post('rdExpenses');
-        $EntrepreneurProgramme = $this->input->post('EntrepreneurProgramme');
-        $cohortOfEntrepreneurs = $this->input->post('cohortOfEntrepreneurs');
-        $taxIncentives = $this->input->post('taxIncentives');
-        $standardPatent = $this->input->post('standardPatent');
-        $previous2Categories = $this->input->post('previous2Categories');
-        $researchOrganization = $this->input->post('researchOrganization');
+        $mExpense               = $this->input->post('1mExpense');
+        $assessableIncomeYear   = $this->input->post('assessableIncomeYear');
+        $listedInSExchange      = $this->input->post('listedInSExchange');
+        $incorporatedAus        = $this->input->post('incorporatedAus');
+        $ownedSubsidiaries      = $this->input->post('ownedSubsidiaries');
+        $improvedInnovation     = $this->input->post('improvedInnovation');
+        $companyScalable        = $this->input->post('companyScalable');
+        $globalMarket           = $this->input->post('globalMarket');
+        $competitiveAdvantage   = $this->input->post('competitiveAdvantage');
+        $rdExpenses             = $this->input->post('rdExpenses');
+        $EntrepreneurProgramme  = $this->input->post('EntrepreneurProgramme');
+        $cohortOfEntrepreneurs  = $this->input->post('cohortOfEntrepreneurs');
+        $taxIncentives          = $this->input->post('taxIncentives');
+        $standardPatent         = $this->input->post('standardPatent');
+        $previous2Categories    = $this->input->post('previous2Categories');
+        $researchOrganization   = $this->input->post('researchOrganization');
 
         if(empty($firstName) || empty($lastName)){
             echo "FAIL::Please Enter Complete Name";
@@ -101,6 +102,7 @@ class Reg extends CI_Controller {
             'firstName'         => $firstName,
             'lastName'          => $lastName,
             'email'             => $email,
+        // 'website'            => $website,
             'company'           => $company,
             'business'          => $business,
             'acn_number'        => $acn,

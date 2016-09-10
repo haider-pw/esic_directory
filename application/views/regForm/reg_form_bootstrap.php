@@ -88,6 +88,10 @@
                         <label for="Email">Email</label>
                         <input id="Email" name="email" type="email" class="form-control" placeholder="e-g: jhon@example.com" required />
                     </div>
+                    <!--div class="form-group">
+                        <label for="Website">Website Address</label>
+                        <input id="Website" name="website" type="text" class="form-control" placeholder="e-g: www.example.com" required />
+                    </div-->
                     <div class="form-group">
                         <label for="Company">Company Name</label>
                         <input id="Company" name="company" type="text" class="form-control" placeholder="Company" />
