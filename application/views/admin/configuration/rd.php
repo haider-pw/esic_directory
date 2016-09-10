@@ -1,4 +1,3 @@
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -16,8 +15,83 @@
 
     <!-- Main content -->
     <section class="content">
-
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Manage R&D</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="RnDList" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>IDNUMBER</th>
+                                <th>AddressContact</th>
+                                <th>ANZSRC</th>
+                                <th>Trashed</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>IDNUMBER</th>
+                                <th>AddressContact</th>
+                                <th>ANZSRC</th>
+                                <th>Trashed</th>
+                                <th>Action</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
     </section>
     <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
+
+<!--Edit Acceleration Modal-->
+<div class="modal" id="editRndModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit R&D</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenID">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="editrndTextBox">R&D</label>
+                            <input type="text" id="editrndTextBox" class="form-control" />
+                            <input type="text" id="editrndTextBoxIdNumber" class="form-control" />
+                            <input type="text" id="editrndTextBoxAddressContact" class="form-control" />
+                            <input type="text" id="editrndTextBoxAnzsrc" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright"  data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="updateRnDBtn">Update</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+

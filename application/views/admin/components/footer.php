@@ -339,7 +339,123 @@ var baseUrl = "<?= base_url() ?>";
 
 <?php
     }
-       if($this->router->fetch_method() === 'manage_accelerators'){
+       if($this->router->fetch_method() === 'manage_rd'){
+?>
+         <script>
+            $(function () {
+                oTable ="";
+                var regTableSelector = $("#RnDList");
+                var url_DT = baseUrl+"Admin/manage_rd/listing";
+                var aoColumns_DT = [
+                    /* ID */ {
+                        "mData": "ID",
+                        "bVisible": true,
+                        "bSortable": true,
+                        "bSearchable": true
+                    },
+                    /* name */ {
+                        "mData" : "rndname"
+                    },
+                    /* IDNumber */ {
+                        "mData" : "IDNumber"
+                    },
+                    /* AddressContact */ {
+                        "mData" : "AddressContact"
+                    },
+                    /* ANZSRC */ {
+                        "mData" : "ANZSRC"
+                    },
+                    /* Trashed */ {
+                        "mData" : "Trashed"
+                    },
+                    /* Action Buttons */ {
+                        "mData" : "ViewEditActionButtons"
+                    }
+
+                ];
+                var HiddenColumnID_DT = "ID";
+                var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
+                commonDataTables(regTableSelector,url_DT,aoColumns_DT,sDom_DT,HiddenColumnID_DT);
+
+                //Code for search box
+                $("#search-input").on("keyup",function (e) {
+                    oTable.fnFilter( $(this).val());
+                });
+
+                $(".approval-modal").on("shown.bs.modal", function (e) {
+                    var button = $(e.relatedTarget); // Button that triggered the modal
+                    var ID = button.parents("tr").attr("data-id");
+                    var name = button.parents("tr").find('td').eq(1).text();
+                    var modal = $(this);
+                    modal.find("input#hiddenUserID").val(ID);
+                    modal.find(".modal-body").find('p > strong').text(' "'+name+'"');
+                });
+
+                $("#editRndModal").on("shown.bs.modal", function (e) {
+                    var button = $(e.relatedTarget); // Button that triggered the modal
+                    var ID = button.parents("tr").attr("data-id");
+                    var name = button.parents("tr").find('td').eq(1).text();
+                    var idNumber = button.parents("tr").find('td').eq(2).text();
+                    var addressContact = button.parents("tr").find('td').eq(3).text();
+                    var anzsrc = button.parents("tr").find('td').eq(4).text();
+                    var modal = $(this);
+                    modal.find("input#hiddenRndID").val(ID);
+                    modal.find("input#editrndTextBox").val(name);
+                    modal.find("input#editrndTextBoxIdNumber").val(idNumber);
+                    modal.find("input#editrndTextBoxAddressContact").val(addressContact);
+                    modal.find("input#editrndTextBoxAnzsrc").val(anzsrc);
+                });
+
+
+                $("#yesApprove").on("click",function () {
+                    var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                    var postData = {id:hiddenModalID,value:"approve"};
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_rd/delete",
+                        data:postData,
+                        type:"POST",
+                        success:function (output) {
+                            var data = output.split("::");
+                            if(data[0]=='OK'){
+                                $(".approval-modal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+
+                $("#updateRnDBtn").on("click",function(){
+                    var id = $(this).parents(".modal-content").find("#hiddenRndID").val();
+                    var name = $(this).parents(".modal-content").find("#editrndTextBox").val();
+                    var idNumber = $(this).parents(".modal-content").find("#editrndTextBoxIdNumber").val();
+                    var addressContact = $(this).parents(".modal-content").find("#editrndTextBoxAddressContact").val();
+                    var anzsrc = $(this).parents(".modal-content").find("#editrndTextBoxAnzsrc").val();
+                    var postData = {
+                        id: id,
+                        rndname:name,
+                        IDNumber: idNumber,
+                        AddressContact:addressContact,
+                        ANZSRC:anzsrc
+                    };
+                    $.ajax({
+                        url:baseUrl+"Admin/manage_rd/update",
+                        data:postData,
+                        type:"POST",
+                        success:function(output){
+                            var data = output.split("::");
+                            if(data[0] === "OK"){
+                                $("#editRndModal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+
+<?php
+    }
+     if($this->router->fetch_method() === 'manage_accelerators'){
 ?>
          <script>
             $(function () {
@@ -414,8 +530,8 @@ var baseUrl = "<?= base_url() ?>";
                     });
                 });
 
-                $("#updateSectorBtn").on("click",function(){
-                    var id = $(this).parents(".modal-content").find("#hiddenID").val();
+                $("#updateAccelerationBtn").on("click",function(){
+                    var id = $(this).parents(".modal-content").find("#hiddenAccelerationID").val();
                     var name = $(this).parents(".modal-content").find("#editAccelerationTextBox").val();
                     var web = $(this).parents(".modal-content").find("#editAccelerationTextBoxWeb").val();
                     var postData = {
@@ -638,8 +754,8 @@ var baseUrl = "<?= base_url() ?>";
                     });
                 });
 
-                $("#updateSectorBtn").on("click",function(){
-                    var id = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                $("#updateAccelerationBtn").on("click",function(){
+                    var id = $(this).parents(".modal-content").find("#hiddenSectorID").val();
                     var sector = $(this).parents(".modal-content").find("#editAccelerationTextBox").val();
                     var postData = {
                         id: id,

@@ -434,8 +434,101 @@ class Admin extends MY_Controller{
         return NULL;
     }
     //R&D
-    public function manage_rd(){
+    public function manage_rd($param = NULL){
+        if($param === 'listing'){
+            $selectData = array('
+            id AS ID,
+            rndname AS rndname,
+            IDNumber AS IDNumber,
+            AddressContact AS AddressContact,
+            ANZSRC AS ANZSRC,
+            CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
+            ',false);
+
+            $addColumns = array(
+                'ViewEditActionButtons' => array('<a href="#" data-target="#editRndModal" data-toggle="modal"><span data-toggle="tooltip" title="Edit" data-placement="left" aria-hidden="true" class="fa fa-pencil text-blue"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i data-toggle="tooltip" title="Trash" data-placement="right"  class="fa fa-trash-o text-red"></i></a>','UserID')
+            );
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_RnD','','','','','',$addColumns);
+            print_r($returnedData);
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value) or $value !== 'approve'){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            $updateData = array(
+                'trashed' => 1
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_RnD',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully Trashed";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'update'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id             = $this->input->post('id');
+            $rndname        = $this->input->post('rndname');
+            $IDNumber       = $this->input->post('IDNumber');
+            $AddressContact = $this->input->post('AddressContact');
+            $ANZSRC         = $this->input->post('ANZSRC');
+
+            if(empty($rndname) && empty($id)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $updateData = array(
+                'rndname'        => $rndname,
+                'IDNumber'      => $IDNumber,
+                'AddressContact'=> $AddressContact,
+                'ANZSRC'        => $ANZSRC
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $updateResult = $this->Common_model->update('esic_RnD',$whereUpdate,$updateData);
+            if($updateResult === true){
+                echo "OK::Record Successfully Updated";
+            }else{
+                if($updateResult['code'] == 0){
+                    echo "OK::Record Already Exist";
+                }else{
+                    echo $updateResult['message'];
+                }
+            }
+            return NULL;
+        }
         $this->show_admin('admin/configuration/rd');
+        return NULL;
     }
 
     public function manage_acc_commercials($param= Null){
