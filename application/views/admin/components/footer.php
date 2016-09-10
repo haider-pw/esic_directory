@@ -346,6 +346,11 @@ if ($this->router->fetch_method() === 'manage_sectors') {
             var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
             commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
 
+            new $.fn.dataTable.Responsive(oTable, {
+                details: true
+            });
+            removeWidth(oTable);
+
             //Code for search box
             $("#search-input").on("keyup", function (e) {
                 oTable.fnFilter($(this).val());
@@ -503,6 +508,12 @@ if ($this->router->fetch_method() === 'manage_rd') {
             var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
             commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
 
+
+            new $.fn.dataTable.Responsive(oTable, {
+                details: true
+            });
+            removeWidth(oTable);
+
             //Code for search box
             $("#search-input").on("keyup", function (e) {
                 oTable.fnFilter($(this).val());
@@ -613,6 +624,12 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
             var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
             commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
 
+
+            new $.fn.dataTable.Responsive(oTable, {
+                details: true
+            });
+            removeWidth(oTable);
+
             //Code for search box
             $("#search-input").on("keyup", function (e) {
                 oTable.fnFilter($(this).val());
@@ -711,6 +728,12 @@ if ($this->router->fetch_method() === 'manage_universities') {
             var HiddenColumnID_DT = "ID";
             var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
             commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
+
+
+            new $.fn.dataTable.Responsive(oTable, {
+                details: true
+            });
+            removeWidth(oTable);
 
             //Code for search box
             $("#search-input").on("keyup", function (e) {
@@ -893,6 +916,12 @@ if ($this->router->fetch_method() === 'manage_acc_commercials') {
             var HiddenColumnID_DT = "ID";
             var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
             commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
+
+
+            new $.fn.dataTable.Responsive(oTable, {
+                details: true
+            });
+            removeWidth(oTable);
 
             //Code for search box
             $("#search-input").on("keyup", function (e) {

@@ -40,13 +40,13 @@
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Company</th>
+                                    <th class="mobile tablet desktop">ID</th>
+                                    <th class="mobile tablet desktop">Name</th>
+                                    <th class="tablet desktop">Email</th>
+                                    <th class="desktop">Company</th>
                                     <th>Business</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th class="tablet-l desktop">Status</th>
+                                    <th class="mobile tablet desktop">Action</th>
                                 </tr>
                                 </tfoot>
                             </table>
