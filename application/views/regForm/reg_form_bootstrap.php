@@ -264,6 +264,26 @@
                         <div class="radio">
                             <label><input type="radio" value="Less than 15%" name="rdExpenses">Less than 15%</label>
                         </div>
+                        <div class="selectorDiv" id="RnD">
+                            <label for="selectRnD">Select R&D</label>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <select class="select2Style" id="selectRnD" style="width:90%">
+                                        <option value="0">Select...</option>
+                                        <?php
+                                        if(isset($RnDs) and !empty($RnDs)){
+                                            print_r($RnDs);
+                                            foreach($RnDs as $RnD){
+                                                echo '<option value="'.$RnD->id.'">'.$RnD->rndname.'</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                    <a></a>
+                                    <a class="btn addBtn" data-toggle="modal" data-target=".RndModal" id="addRnDModel"><span style="font-size: 12px;" class="glyphicon glyphicon-plus"></span></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -470,6 +490,41 @@
 
 <!--Working on Modals-->
 
+<div class="modal RndModal" tabindex="-1" role="dialog" aria-labelledby="R&D" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">R&D</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="rndname">R&D Name</label>
+                    <input id="rndname" name="rndname" type="text" class="form-control" placeholder="R&D Name" />
+                </div>
+                 <div class="form-group">
+                    <label for="rndIdNumber">R&D ID Number </label>
+                    <input id="rndIdNumber" name="rndIdNumber" type="text" class="form-control" placeholder="R&D ID Number" />
+                </div>
+                 <div class="form-group">
+                    <label for="rndAddress">R&D Address</label>
+                    <input id="rndAddress" name="rndAddress" type="text" class="form-control" placeholder="R&D Address" />
+                </div>
+                 <div class="form-group">
+                    <label for="ANZSRC">R&D ANZSRC</label>
+                    <input id="ANZSRC" name="ANZSRC" type="text" class="form-control" placeholder="R&D ANZSRC" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="addRnD" type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal InstitutionModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -628,7 +683,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#selectorUniversity, #selectAcceleration,#selectAcceleratorProgramme").select2();
+        $("#selectorUniversity, #selectAcceleration,#selectAcceleratorProgramme,#selectRnD").select2();
         $("input[name=EntrepreneurProgramme]").on("change",function(){
             var EntrepreneurProgramme = $(this).val();
             if(EntrepreneurProgramme === 'Yes'){
@@ -637,7 +692,6 @@
                 $("#EntrepreneurProgramme").css('display','none');
             }
         });
-
         $("input[name=researchOrganization]").on("change",function(){
             var researchOrganization = $(this).val();
             if(researchOrganization === 'Yes'){
@@ -654,14 +708,92 @@
                 $("#dateInsertDiv").css('display','block');
             }
         });
-
-
         $("input[name=cohortOfEntrepreneurs]").on("change",function(){
             var cohortOfEntrepreneurs = $(this).val();
             if(cohortOfEntrepreneurs === 'Yes'){
                 $("#acceleratorProgramme").css('display','block');
             }else{
                 $("#acceleratorProgramme").css('display','none');
+            }
+        });
+        $("input[name=rdExpenses]").on("change",function(){
+            var RnDValue = $(this).val();
+            if(RnDValue === 'Less than 15%'){
+                $("#RnD").css('display','block');
+            }else{
+                $("#RnD").css('display','none');
+            }
+        });
+        $('#addRnDModel').on("click",function(e){
+            e.preventDefault();
+             $('.RnDModal').show();
+        });
+        $("#addRnD").on("click",function(){
+            var selectRnD = $("#rndname");
+            var selectRnDValue = selectRnD.val();
+            var RndName = $("#rndname").val();
+            
+            var IDNumber   = $("#rndIdNumber").val();
+            var Address    = $("#rndAddress").val();
+            var ANZSRC     = $("#ANZSRC").val();
+            if(selectRnDValue.length === 0){
+                selectRnD.parents(".form-group").addClass('has-error');
+                return false ;
+            }else{
+                selectRnD.parents(".form-group").removeClass('has-error');
+            }
+            var RnDCheck='0';
+            var RnDFilter = $('#selectRnD option').filter(
+                function(){ 
+                    if($(this).html().toLowerCase() == selectRnDValue.toLowerCase()){  
+                        var valuecheck       = $(this).val();
+                        var selectRnD1 = $("#selectRnD").select2();
+                        selectRnD1.val(valuecheck).trigger("change");
+                        RnDCheck ='1';
+                        $('.RnDModal').modal('hide');
+                        $('.RnDModal').modal().hide();
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        $('.RnDModal').hide();
+                    }
+                });
+            if(RnDCheck=='0'){
+                $.ajax({
+                    url: "<?=base_url()?>Reg/addRnD",
+                    type:"POST",
+                    data:{
+                        rndname :RndName,
+                        IDNumber:IDNumber,
+                        Address :Address,
+                        ANZSRC  :ANZSRC
+                    },
+                    success:function(output){
+                            var  data =  output.split('::');
+                               if(data[0]== 'OK'){
+                                    console.log('RndName'+RndName);
+                                   var RnDID   = data[1];
+                                   var RnDName = data[2];
+                                   var newOption = new Option(RnDName,RnDID, true, true);
+                                    $("#selectRnD").append(newOption).trigger('change');
+                                    $('.RnDModal').modal('hide');
+                                    $('.RnDModal').modal().hide();
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    $('.RnDModal').hide();
+                                }else if(data[0]=='Existed'){
+                                    var InstitutionNameValue = $('#selectRnD option').filter(function (){ 
+                                        return $(this).html() == InstitutionValue}).val();
+                                    var selectUniversity     = $("#selectRnD").select2();
+                                    selectUniversity.val(InstitutionNameValue).trigger("change"); 
+                                    $('.RnDModal').modal('hide');
+                                    $('.RnDModal').modal().hide();
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    $('.RnDModal').hide();
+                                }
+                    }
+                });
+
             }
         });
 
@@ -688,6 +820,7 @@
                         var selectProgramme = $("#selectAcceleratorProgramme").select2();
                         selectProgramme.val(valuecheck).trigger("change"); 
                         ProgrammeNameCheck  = '1';
+                        $('.acceleratorProgrammeModal').modal('hide');
                         $('.acceleratorProgrammeModal').modal().hide();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
@@ -709,17 +842,17 @@
                             var programmeName = data[2]; 
                             var newOption = new Option(programmeName,programmeId, true, true);
                                 $("#selectAcceleratorProgramme").append(newOption).trigger('change');
-                                $('.acceleratorProgrammeModal').modal().hide();
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
+                                $('.acceleratorProgrammeModal').modal('hide');
                         }else if(data[0]=='Existed'){
                             var ProgrammeNameValue = $('#selectAcceleratorProgramme option').filter(function () { return $(this).html() == ProgrammeValue}).val();
                             var valuecheck         = $(this).val();
                             var selectProgramme    = $("#selectAcceleratorProgramme").select2();
                             selectProgramme.val(ProgrammeNameValue).trigger("change");  
+                            $('.acceleratorProgrammeModal').modal('hide');
                             $('.acceleratorProgrammeModal').modal().hide();
                             $('body').removeClass('modal-open');
                             $('.modal-backdrop').remove();
+
                         }
                     }
                 });
@@ -743,6 +876,7 @@
                         var selectUniversity = $("#selectorUniversity").select2();
                         selectUniversity.val(valuecheck).trigger("change");
                         InstitutionCheck ='1';
+                        $('.InstitutionModal').modal('hide');
                         $('.InstitutionModal').modal().hide();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
@@ -760,14 +894,13 @@
                                    var institutionName = data[2];
                                    var newOption = new Option(institutionName,institutionId, true, true);
                                     $("#selectorUniversity").append(newOption).trigger('change');
-                                    $('.InstitutionModal').modal().hide();
-                                    $('body').removeClass('modal-open');
-                                    $('.modal-backdrop').remove();
+                                    $('.InstitutionModal').modal('hide');
                                 }else if(data[0]=='Existed'){
                                     var InstitutionNameValue = $('#selectorUniversity option').filter(function (){ 
                                         return $(this).html() == InstitutionValue}).val();
                                     var selectUniversity     = $("#selectorUniversity").select2();
                                     selectUniversity.val(InstitutionNameValue).trigger("change"); 
+                                    $('.InstitutionModal').modal('hide');
                                     $('.InstitutionModal').modal().hide();
                                     $('body').removeClass('modal-open');
                                     $('.modal-backdrop').remove();
@@ -801,6 +934,7 @@
                         var selectProgramme = $("#selectAcceleration").select2();
                         selectProgramme.val(valuecheck).trigger("change"); 
                         ProgrammeNameCheck  = '1';
+                        $('.EntrepreneurProgrammeModal').modal('hide');
                         $('.EntrepreneurProgrammeModal').modal().hide();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
@@ -835,6 +969,7 @@
                             var valuecheck         = $(this).val();
                             var selectProgramme    = $("#selectAcceleration").select2();
                             selectProgramme.val(ProgrammeNameValue).trigger("change");  
+                            $('.EntrepreneurProgrammeModal').modal('hide');
                             $('.EntrepreneurProgrammeModal').modal().hide();
                             $('body').removeClass('modal-open');
                             $('.modal-backdrop').remove();
@@ -940,6 +1075,7 @@ $("#industryClassification").select2();
                         var selectIndustry  = $("#industryClassification").select2();
                         selectIndustry.val(valuecheck).trigger("change"); 
                         IndustryNameCheck='1';
+                        $('.IndustryClassificationModal').modal('hide');
                         $('.IndustryClassificationModal').modal().hide();
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
@@ -965,9 +1101,11 @@ $("#industryClassification").select2();
                             var valuecheck          = $(this).val();
                             var selectIndustry      = $("#industryClassification").select2();
                             selectIndustry.val(IndustryNameValue).trigger("change"); 
+                            $('.IndustryClassificationModal').modal('hide');
                             $('.IndustryClassificationModal').modal().hide();
                             $('body').removeClass('modal-open');
                             $('.modal-backdrop').remove();
+
                         }
                     }
                 });

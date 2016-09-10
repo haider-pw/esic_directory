@@ -30,21 +30,22 @@ class Reg extends CI_Controller {
         $this->load->model('Common_model');
         $this->load->helper('my_site_helper');
 
-        //header("Access-Control-Allow-Origin: *");
-        //header("Access-Control-Allow-Methods: PUT, GET, POST");
-        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
-    }
-    public function index()
-    {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+    }
+    public function index()
+    {
+        //header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: PUT, GET, POST");
+        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
         //Need to Get Data for Selectors
         //University
                 $selectData = array('score AS score',false);
         $where = 'trashed != 1'; 
         $selectData ='*';
+        $data['RnDs'] = $this->Common_model->select('esic_RnD',$selectData, $where, false, '', '', '','','',false);
         $data['institutions'] = $this->Common_model->select_fields_where('esic_institution',$selectData, $where, false, '', '', '','','',false);
         $data['accelerationCommercials'] = $this->Common_model->select('esic_acceleration',$selectData, $where, false, '', '', '','','',false);
         $data['acceleratorProgramme'] = $this->Common_model->select('esic_acceleration_logo',$selectData, $where, false, '', '', '','','',false);
@@ -55,9 +56,9 @@ class Reg extends CI_Controller {
     }
 
     public function submit(){
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: PUT, GET, POST");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        //header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: PUT, GET, POST");
+        //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         //Getting all the posted Values.
         $firstName              = $this->input->post('firstName');
         $lastName               = $this->input->post('lastName');
@@ -176,9 +177,9 @@ class Reg extends CI_Controller {
 }
 
     public function step2(){
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: PUT, GET, POST");
-            header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+            //header("Access-Control-Allow-Origin: *");
+            //header("Access-Control-Allow-Methods: PUT, GET, POST");
+            //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         //step2
             $userID = $this->input->post('userID');
             $sector = $this->input->post('sector');
@@ -298,6 +299,42 @@ class Reg extends CI_Controller {
 
             if($insertResult > 0){
                 echo "OK::".$insertResult."::".$institution;
+            }
+       }
+
+    }
+     public function addRnD(){
+        $rndname = $this->input->post("rndname");
+        $IDNumber = $this->input->post("IDNumber");
+        $Address = $this->input->post("Address");
+        $ANZSRC = $this->input->post("ANZSRC");
+
+        if($rndname =='' ){
+            echo "FAIL::Please Add RndName, Field Can Not be Blank During Submission.".$rndname.'/'.$IDNumber.'/'.$Address.'/'.$ANZSRC;
+            return;
+        }
+
+        $RnDCheckQuery = $this->db->get_where('esic_RnD',array('rndname'=>  $rndname));
+
+        if($RnDCheckQuery->num_rows() > 0){
+      
+            echo "Existed::".$rndname;
+
+        }else{
+           
+            $insertData = array(
+                'rndname'   => $rndname,
+                'IDNumber'  => $IDNumber,
+                'AddressContact'  => $Address,
+                'ANZSRC'    => $ANZSRC
+
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_RnD',$insertData);
+
+            if($insertResult > 0){
+                echo "OK::".$insertResult."::".$rndname;
+                return "OK::".$insertResult."::".$rndname;
             }
        }
 
