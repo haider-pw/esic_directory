@@ -51,6 +51,7 @@ class Esic_model extends CI_Model
 	            ',
 	            false
 	        );
+			$orderBy = array('user.id','DESC');
 	        $joins = array(
 	            array(
 	                'table' => 'esic_status ES',
@@ -58,7 +59,7 @@ class Esic_model extends CI_Model
 	                'type' => 'LEFT'
 	            )
 	        );
-	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','','',$limit,true);
+	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','',$orderBy,$limit,true);
 	        $result="";
 	        
 	       if(!empty($usersResult) && is_array($usersResult)){
@@ -87,16 +88,14 @@ class Esic_model extends CI_Model
 			    	}
 			       
 			    $result .= '<li class="list-item hcard-search member_level_5" '.$page.'>';
-			     $result .= '<div class="img-container">';
-			       $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
+			     $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
+			     $result .= '<div class="img-container wraptocenter"><span>';
 			         $result .= '<img src="'.$img.'" alt="" class="left">';
-			       $result .= '</a>';
+			       $result .= '</span>';
 			     $result .= '</div><div class="product-container">';
 			     $result .= '<div class="status-container">'.$status.'</div>';
 			     $result .= '<div class="name-container">';
-			        $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
 			         $result .= '<h3>'.$user['FullName'].'</h3>';
-			        $result .= '</a>';
 			     $result .= '</div><div class="clear"></div>';
 			      $result .= '<div class="product-details">';
 			      	$result .= '<p class="info-type">'.$user['Company'].'</p>';
@@ -120,7 +119,7 @@ class Esic_model extends CI_Model
                     $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
                     $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
                     $result .= '</div>';
-			        $result .= '</div></div></li>';
+			        $result .= '</div></div></a></li>';
 			       
 			    }
 			}
@@ -227,16 +226,14 @@ class Esic_model extends CI_Model
 			    	}
 			       
 			    $result .= '<li class="list-item hcard-search member_level_5">';
-			     $result .= '<div class="img-container">';
-			       $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
+			    $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
+			     $result .= '<div class="img-container wraptocenter"><span>';
 			         $result .= '<img src="'.$img.'" alt="" class="left">';
-			       $result .= '</a>';
+			       $result .= '</span>';
 			     $result .= '</div><div class="product-container">';
 			     $result .= '<div class="status-container">'.$status.'</div>';
 			     $result .= '<div class="name-container">';
-			        $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
 			         $result .= '<h3>'.$user['FullName'].'</h3>';
-			        $result .= '</a>';
 			     $result .= '</div><div class="clear"></div>';
 			      $result .= '<div class="product-details">';
 			      	$result .= '<p class="info-type">'.$user['Company'].'</p>';
@@ -260,7 +257,7 @@ class Esic_model extends CI_Model
                     $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
                     $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
                     $result .= '</div>';
-			        $result .= '</div></div></li>';
+			        $result .= '</div></div></a></li>';
 			       
 			    }
 
@@ -279,27 +276,65 @@ class Esic_model extends CI_Model
                 '
                     user.id as userID,
                     concat(firstName, " ", lastName) as FullName,
-                    email as Email,
-                    company as Company,
-                    business as Business,
-                    businessShortDescription as BusinessShortDesc,
-                    score as Score,
-                    logo as Logo,
-                    corporate_date as corporate_date,
-                    added_date as added_date,
-                    expiry_date as expiry_date,
-                    acn_number as acn_number,                    
-                    bannerImage as bannerImage,
-                    website as Web,
+                    user.email as Email,
+                    user.company as Company,
+                    user.business as Business,
+                    user.businessShortDescription as BusinessShortDesc,
+                    user.score as Score,
+                    user.logo as Logo,
+                    user.corporate_date as corporate_date,
+                    user.added_date as added_date,
+                    user.expiry_date as expiry_date,
+                    user.acn_number as acn_number,                    
+                    user.bannerImage as bannerImage,
+                    user.productImage as productImage,
+                    user.website as Web,
+                    ERnD.rndname as rndname,
+                    ERnD.IDNumber as IDNumber,
+                    ERnD.AddressContact as AddressContact,
+                    ERnD.ANZSRC as ANZSRC,
+                    EAccCo.Member as Member,
+                    EAcc.name as Accname,
+                    EAcc.logo as AccLogo,
+                    EAcc.website as AccWeb,
+                    EIn.institution as institution,
+                    ESec.sector as sectorName,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
                     ',
                 false
             );
+
+
             $where = "user.id =".$id;
             $joins = array(
                 array(
                     'table' => 'esic_status ES',
                     'condition' => 'ES.id = user.status',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => ' esic_RnD ERnD',
+                    'condition' => 'ERnD.id = user.RnDID',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_acceleration EAccCo',
+                    'condition' => 'EAccCo.id = user.AccID',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_acceleration_logo EAcc',
+                    'condition' => 'EAcc.id = user.AccID',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => 'esic_institution EIn',
+                    'condition' => 'EIn.id = user.inID',
+                    'type' => 'LEFT'
+                ),
+                array(
+                    'table' => ' esic_sectors ESec',
+                    'condition' => 'ESec.id = user.sectorID',
                     'type' => 'LEFT'
                 )
             );
@@ -314,6 +349,7 @@ class Esic_model extends CI_Model
                     $desc='';
                     $img ='';
                     $bgimg ='';
+                    $productImg = '';
                     if(!empty($user['Status'])){
                         $status = $user['Status'];
                     }
@@ -333,6 +369,16 @@ class Esic_model extends CI_Model
                     }else{
                         $bgimg = base_url('pictures/defaultBanner.jpg');
                     }
+                    if(isset($user['productImage']) and !empty($user['productImage']) and is_file(FCPATH.'/'.$user['productImage'])){
+                        $productImg = base_url($user['productImage']);
+                    }else{
+                        $productImg = base_url('pictures/defaultLogo.jpg');
+                    }
+                    if(isset($user['AccLogo']) and !empty($user['AccLogo']) and is_file(FCPATH.'/'.$user['AccLogo'])){
+                        $AccImg = base_url($user['AccLogo']);
+                    }else{
+                        $AccImg = base_url('pictures/defaultLogo.jpg');
+                    }
                    
                     $result .= '<div class="single-item list-item hcard-search member_level_5">';
                     $result .= '<div class="container">';
@@ -344,35 +390,81 @@ class Esic_model extends CI_Model
                     $result .= '</a>';
                     $result .= '</div>';
                     $result .= '<div class="detail-container">';
-                    $result .= '<div class="product-details"><label>Name:</label>';
-                    $result .= '<a href="#" class="permalink" >';
-                    $result .= '<h3>'.$user['FullName'].'</h3>';
-                    $result .= '</a>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details"><label>Sector:</label>';
-                    $result .= '<p class="info-type">'.$user['Company'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details status-container"><label>Status:</label>'.$status.'</div>';
-                    $result .= '<div class="product-details"><label>Corporate Date:</label>';
-                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details"><label>Added Date:</label>';
-                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details"><label>Expiry Date:</label>';
-                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details"><label>ACN Number:</label>';
-                    $result .= '<p class="info-type">'.$user['acn_number'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details website-address"><label>Website:</label><p>';
-                    $result .= $web;
-                    $result .= '</p></div>';
-                    $result .= '<div class="description">';
-                    $result .= '<label>Overview:</label><p>';
-                    $result .= $desc ;
-                    $result .= '</p>';
-                    $result .= '</div>';
+                    if($user['FullName']!=''){
+	                    $result .= '<div class="product-details"><label>Name:</label>';
+	                    $result .= '<a href="#" class="permalink" >';
+	                    $result .= '<h3>'.$user['FullName'].'</h3>';
+	                    $result .= '</a>';
+	                    $result .= '</div>';
+	                }
+	                if($user['Company']!=''){
+	                    $result .= '<div class="product-details"><label>Company:</label>';
+	                    $result .= '<p class="info-type">'.$user['Company'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($web!=''){
+	                    $result .= '<div class="product-details website-address"><label>Website:</label><p>';
+	                    $result .= $web;
+	                    $result .= '</p></div>';
+	                }
+                    $result .= '<div class="product-di-container">';
+                    $result .= '<div class="small-details-container">';
+                    $result .= '<div class="product-details status-container small-details"><label>Status:</label>'.$status.'</div>';
+                    if($user['corporate_date']!=''){
+	                    $result .= '<div class="product-details small-details"><label>Corporate Date:</label>';
+	                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($user['added_date']!=''){
+	                    $result .= '<div class="product-details small-details"><label>Added Date:</label>';
+	                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
+	                    $result .= '</div>';
+	                }
+                	if($user['expiry_date']!=''){
+	                    $result .= '<div class="product-details small-details"><label>Expiry Date:</label>';
+	                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($user['acn_number']!=''){
+	                    $result .= '<div class="product-details small-details"><label>ACN Number:</label>';
+	                    $result .= '<p class="info-type">'.$user['acn_number'].'</p>';
+	                    $result .= '</div>';
+	                }
+                    $result .= '</div><div class="img-container product-img-container">';
+                    $result .= '<img src="'.$productImg.'" alt="" class="left">';
+                    $result .= '</div></div>';
+                    if($user['institution']!=''){
+	                    $result .= '<div class="product-details other-details"><label>Institution:</label>';
+	                    $result .= '<p class="info-type">'.$user['institution'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($user['sectorName']!=''){
+	                    $result .= '<div class="product-details other-details"><label>Sector:</label>';
+	                    $result .= '<p class="info-type">'.$user['sectorName'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($user['rndname']!=''){
+	                    $result .= '<div class="product-details other-details"><label>R&D Name:</label>';
+	                    $result .= '<p class="info-type">'.$user['rndname'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($user['Member']!=''){
+	                    $result .= '<div class="product-details other-details"><label>Acceleration Commercial:</label>';
+	                    $result .= '<p class="info-type">'.$user['Member'].'</p>';
+	                    $result .= '</div>';
+	                }
+                	if($user['Accname']!=''){
+	                    $result .= '<div class="product-details other-details"><label>Acceleration:</label>';
+	                    $result .= '<p class="info-type">'.$user['Accname'].'</p>';
+	                    $result .= '</div>';
+	                }
+	                if($desc !=''){
+	                    $result .= '<div class="description">';
+	                    $result .= '<label>Overview:</label><p>';
+	                    $result .= $desc ;
+	                    $result .= '</p>';
+	                    $result .= '</div>';
+	                }
                     $result .= "<br />";
                     $result .= '</div></div></div>';
                     $result .= '</div></div>';

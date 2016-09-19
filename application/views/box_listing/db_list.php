@@ -111,7 +111,9 @@ echo "</pre>";
 </div>
 
 
-
+<div id="loading-submit">
+    <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
+</div>
  
 <script>
     jQuery(document).ready(function($){
@@ -325,16 +327,20 @@ echo "</pre>";
             //}, 1000);
         }
         function redirectToLink(id){
-            console.log('ID'+id);
+            //console.log('ID'+id);
+            $('#loading-submit').show();
             $.ajax({
                 url:"<?php echo base_url() ?>Esicdetails/getdetails",
                 type:'GET',
                 data: {id:id}
             }).done(function(response){
+                $('.content-shell #wrap .single-item.list-item').remove();
+                $('.content-shell #wrap .btn-back').remove();
                 $('.content-shell #wrap .content').slideUp('slow');
                 $('.content-shell #wrap').css('min-height', '500px');
                 $('.content-shell #wrap').append(response);          
                 $('.content-shell #wrap').append('<div class="btn-back container"><button id="back"  class="btn">Back</button></div>');
+                $('#loading-submit').hide();
             });
         }
     });

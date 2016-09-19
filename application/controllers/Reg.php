@@ -63,9 +63,10 @@ class Reg extends CI_Controller {
         $firstName              = $this->input->post('firstName');
         $lastName               = $this->input->post('lastName');
         $email                  = $this->input->post('email');
-       // $website                = $this->input->post('website');
+        $website                = $this->input->post('website');
         $company                = $this->input->post('company');
         $business               = $this->input->post('business');
+        $shortDescription       = $this->input->post('shortDescription');
         $date_pickter_format    = $this->input->post('cop_date');
         $cop_date               = date("Y-m-d",strtotime($date_pickter_format));
         $acn                    = $this->input->post('acn');
@@ -89,6 +90,15 @@ class Reg extends CI_Controller {
         $previous2Categories    = $this->input->post('previous2Categories');
         $researchOrganization   = $this->input->post('researchOrganization');
 
+
+        $RnDID                  = $this->input->post('selectRnD');
+        $AccCoID                = $this->input->post('selectAcceleration');
+        $AccID                  = $this->input->post('selectAcceleratorProgramme');
+        $inID                   = $this->input->post('selectorUniversity');
+
+
+        
+
         if(empty($firstName) || empty($lastName)){
             echo "FAIL::Please Enter Complete Name";
             exit;
@@ -103,15 +113,21 @@ class Reg extends CI_Controller {
             'firstName'         => $firstName,
             'lastName'          => $lastName,
             'email'             => $email,
-        // 'website'            => $website,
+            'website'           => $website,
             'company'           => $company,
             'business'          => $business,
             'acn_number'        => $acn,
             'added_date'        => $added_date,
             'expiry_date'       => $expiry_date,
             'corporate_date'    => $cop_date,
+            'businessShortDescription'  => $shortDescription,
+            'RnDID'             => $RnDID,
+            'AccID'             => $AccID,
+            'AccCoID'           => $AccCoID,
+            'inID'              => $inID,
             'score'             => 0
-        );
+        ); 
+
 
         $this->db->trans_begin();
 
