@@ -1057,6 +1057,11 @@ if ($this->router->fetch_method() === 'details') {
                     }
                 });
             });
+            $(".desc-edit").on("click", function (event) {
+                event.preventDefault();
+
+               
+            });
         });
 
 

@@ -129,6 +129,18 @@
           margin: 8px 0px;
           text-align: center;
         }
+        .timeline-item.edit-desc{
+          display: none;
+        }
+        .timeline-item.edit-desc label{
+            display: block;
+            margin: 10px;
+        }
+        .timeline-item.edit-desc textarea{
+            display: block;
+            padding: 10px;
+            margin: 10px;
+         }
             
         </style>
         <!-- /.col -->
@@ -174,11 +186,18 @@
                 <ul class="timeline timeline-inverse">
                   <li>
                     <div class="timeline-item">
-                      <h3 class="timeline-header">Brief Description</h3>
+                      <h3 class="timeline-header">Brief Description  <a href="#" class="pull-right btn-box-tool desc-edit"><i class="fa fa-pencil"></i></a></h3>
                       <div class="timeline-body">
                       <?= $userProfile['BusinessShortDesc'];?>
                       </div>
                     </div>
+                    <div class="timeline-item edit-desc">
+                      <div class="form-group">
+                        <label>Please Edit The Description Here</label>
+                        <textarea name="desc"></textarea>
+                      </div>
+                    </div>
+                  </div>
                   </li>      
                 </ul>
               <?php } ?>
