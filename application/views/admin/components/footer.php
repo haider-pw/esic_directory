@@ -2,8 +2,7 @@
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
     </div>
-    <strong>Copyright &copy; 2000-2016 <a href="http://creativetech-solutions.com/">Creativetech-Solutions/</a>.</strong> All rights
-    reserved.
+    <strong>Powered By <a href="http://creativetech-solutions.com/" target="_blank">Creativetech-Solutions</a>.</strong>
 </footer>
 
 <?php
@@ -122,6 +121,11 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url()?>assets/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/customScripting.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <script>
 
 var baseUrl = "<?= base_url() ?>";
@@ -1057,12 +1061,107 @@ if ($this->router->fetch_method() === 'details') {
                     }
                 });
             });
-            $(".desc-edit").on("click", function (event) {
+            $("#desc-edit").on("click", function (event) {
                 event.preventDefault();
-
-               
+                var userId = $(this).attr('data-user-id');
+                var textArea = $('#desc-textarea');
+                var ansDiv = $('.edit-desc');
+                var saveBtn = $('#save-desc');
+                var descText = $('#desc-text pre');
+                ansDiv.show();
+                descText.hide();
+                var descDataText = descText.text();
+                descText.text('');
+                textArea.val($.trim(descDataText));
+                ansDiv.children('.form-group').append('<div class="question-action-buttons"><button id="save-desc" data-user-id="'+userId+'" class="save-desc">Save</button></div>');
+                $(this).hide();
+                
+              
             });
+            $("body").on("click", ".save-desc", function (e) {
+                e.preventDefault();
+                var userId = $(this).attr('data-user-id');
+                var textArea = $('#desc-textarea');
+                var ansDiv = $('.edit-desc');
+                var saveBtn = $('#save-desc');
+                var descText = $('#desc-text pre');
+                var descDataText = $.trim(textArea.val());
+                var postData = {
+                    userID: userId,
+                    descDataText: descDataText
+                };
+                saveBtn.parent().remove();
+                $.ajax({
+                    url: baseUrl + "Admin/savedesc",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if (data[0] === "OK") {
+	                        console.log(output);
+	                        descText.text(data[1]);
+	                        ansDiv.hide();
+	                        $('#desc-edit').show();
+	                        descText.show();
+	                    }
+                    }
+                });
+              
+            });
+            $("body").on("click", ".date-edit", function (e) {
+                e.preventDefault();
+                var userId = $('#profile-box-container').attr('data-user-id');
+                var dateType = $(this).attr('data-date-type');
+                var dateValue = $(this).attr('data-date-value');
+                // DateEditModal
+                
+              
+            });
+
+            $('.DateEditModal').on('shown.bs.modal',function(e){
+            	var relatedPencil = e.relatedTarget;
+            	var userId = $('#profile-box-container').attr('data-user-id');
+                var dateType = $(relatedPencil).attr('data-date-type');
+                var dateTitle = $(relatedPencil).attr('data-date-title');
+                var dateValue = $(relatedPencil).attr('data-date-value');
+            	$(this).find('#myModalLabel').text(dateTitle);
+            	$(this).find('#dateType').val(dateType);
+            	$(this).find('#edit_date').val(dateValue);
+            	//$('#edit_date').datepicker("setDate", new Date(dateValue));
+
+            });
+            $("body").on("click", "#saveDate", function (e) {
+                e.preventDefault();
+                var EditedDate = $(this).parents('.modal-content').find('#edit_date').val();
+                var dateType = $(this).parents('.modal-content').find('#dateType').val();
+                var userId = $('#profile-box-container').attr('data-user-id');
+                var postData = {
+                    userID: userId,
+                    dateType: dateType,
+                    EditedDate: EditedDate
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/savedate",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+	                         location.reload();
+	                    }
+                    }
+                });
+              
+            });            
         });
+		$(function() {
+		    $("#edit_date").daterangepicker({
+		    	singleDatePicker: true,
+		        locale: {
+		            format: 'DD-MM-YYYY',
+		        }
+		    });
+		});
 
 
     </script>

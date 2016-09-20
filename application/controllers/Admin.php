@@ -172,9 +172,12 @@ class Admin extends MY_Controller{
                     'Company'			=> $returnedData[0]->Company,
                     'business' 			=> $returnedData[0]->business,
                     'FullName' 			=> $returnedData[0]->FullName,
-                    'added_date' 		=> $returnedData[0]->added_date,
-                    'expiry_date' 		=> $returnedData[0]->expiry_date,
-                    'corporate_date' 	=> $returnedData[0]->corporate_date,
+                    'added_date' 		=> date("d-M-Y", strtotime($returnedData[0]->added_date)),
+                    'expiry_date' 		=> date("d-M-Y", strtotime($returnedData[0]->expiry_date)),
+                    'corporate_date' 	=> date("d-M-Y", strtotime($returnedData[0]->corporate_date)),
+                    'added_date_value'        => date("d-m-Y", strtotime($returnedData[0]->added_date)),
+                    'expiry_date_value'       => date("d-m-Y", strtotime($returnedData[0]->expiry_date)),
+                    'corporate_date_value'    => date("d-m-Y", strtotime($returnedData[0]->corporate_date)),
                     'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc
                 );
                 if(!empty($returnedData2) and is_array($returnedData2)){
@@ -247,6 +250,37 @@ class Admin extends MY_Controller{
                 $whereUpdate2 = array('id' => $userID);
                 $this->Common_model->update('user',$whereUpdate2,$updateArray2);
                 echo 'OK::'.$score.'::'.$ScorePercentage.'::'.$TotalOldscore.'::'.$Totalscore;
+            exit();
+    }
+    public function savedate(){
+                $userID    = $this->input->post('userID');
+                $dateType  = $this->input->post('dateType');
+                $EditedDate= $this->input->post('EditedDate');
+                if(!isset($userID) || empty($userID) || !isset($EditedDate) || empty($EditedDate)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+                $EditedDate = date("Y-m-d",strtotime($EditedDate));
+                $updateArray = array();
+                $updateArray[$dateType] = $EditedDate;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$EditedDate.'';
+            exit();
+    }
+    public function savedesc(){
+                $userID        = $this->input->post('userID');
+                $descDataText  = $this->input->post('descDataText');
+                if(!isset($userID) || empty($userID) || !isset($descDataText) || empty($descDataText)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['businessShortDescription'] = $descDataText;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$descDataText.'';
             exit();
     }
 

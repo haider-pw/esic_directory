@@ -35,15 +35,18 @@
               	<?php if(!empty($userProfile['expiry_date'])){ ?>
 	                <li class="list-group-item ">
 	                  <b>Expiry Date</b> <a class="pull-right bg-red"><?= $userProfile['expiry_date'];?></a>
+	                  <a class="btn addBtn date-edit" data-date-title="Edit Expiry Date" data-date-type="expiry_date" data-date-value="<?= $userProfile['expiry_date_value'];?>" data-toggle="modal" data-target=".DateEditModal" id="addDateEditModal"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
 	                </li>
                 <?php } if(!empty($userProfile['corporate_date'])){ ?>
                 <li class="list-group-item">
                   <b>Corporate Date</b> <a class="pull-right bg-aqua"><?= $userProfile['corporate_date'];?></a>
+                  <a class="btn addBtn date-edit" data-date-title="Edit Corporate Date" data-date-type="corporate_date" data-date-value="<?= $userProfile['corporate_date_value'];?>" data-toggle="modal" data-target=".DateEditModal" id="addDateEditModal"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                 </li>
                 <?php } ?>
                 <?php if(!empty($userProfile['added_date'])){ ?>
                 <li class="list-group-item">
                   <b>Added Date</b> <a class="pull-right bg-green"><?= $userProfile['added_date'];?></a>
+                  <a class="btn addBtn date-edit" data-date-title="Edit Added Date" data-date-type="added_date" data-date-value="<?= $userProfile['added_date_value'];?>" data-toggle="modal" data-target=".DateEditModal" id="addDateEditModal"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                 </li>
                 <?php } ?>
               </ul>
@@ -114,7 +117,7 @@
         .question-action-buttons{
         	text-align: right;
         }
-        .save-answer{
+        .save-answer,.save-desc{
         	margin-top: 10px;
         	background: #3c8dbc;
 		    color: #fff;
@@ -131,17 +134,52 @@
         }
         .timeline-item.edit-desc{
           display: none;
+          padding-bottom: 20px!important;
         }
         .timeline-item.edit-desc label{
             display: block;
             margin: 10px;
         }
+        .timeline-item.edit-desc .form-group{
+			padding-right: 10px;
+    		margin-right: 2%;
+        }
         .timeline-item.edit-desc textarea{
             display: block;
-            padding: 10px;
-            margin: 10px;
+		    padding: 10px;
+		    margin: 10px;
+		    width: 98.5%;
+		    min-height: 150px;
          }
-            
+         #description .timeline-item{
+	         border-radius: 0px;
+	     }
+	     ul.dates li .date-edit{
+	     	display: none;
+	     	position: absolute;
+	     }
+	     ul.dates li:hover .date-edit{
+	     	display: inline-block;
+	     }
+
+#description pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-word;
+    word-wrap: normal;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+     white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
         </style>
         <!-- /.col -->
         <div class="col-md-9">
@@ -186,20 +224,41 @@
                 <ul class="timeline timeline-inverse">
                   <li>
                     <div class="timeline-item">
-                      <h3 class="timeline-header">Brief Description  <a href="#" class="pull-right btn-box-tool desc-edit"><i class="fa fa-pencil"></i></a></h3>
-                      <div class="timeline-body">
-                      <?= $userProfile['BusinessShortDesc'];?>
+                      <h3 class="timeline-header">Brief Description  <a href="#" id="desc-edit" data-user-id="<?= $userProfile['userID'];?>" class="pull-right btn-box-tool desc-edit"><i class="fa fa-pencil"></i></a></h3>
+                      <div id="desc-text" class="timeline-body">
+                      <pre><?= trim($userProfile['BusinessShortDesc']);?></pre>
                       </div>
                     </div>
                     <div class="timeline-item edit-desc">
                       <div class="form-group">
                         <label>Please Edit The Description Here</label>
-                        <textarea name="desc"></textarea>
+                        <textarea id="desc-textarea" name="desc"></textarea>
                       </div>
                     </div>
                   </div>
                   </li>      
                 </ul>
+              <?php }else{ ?>
+
+				<ul class="timeline timeline-inverse">
+                  <li>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header">Brief Description  <a href="#" id="desc-edit" data-user-id="<?= $userProfile['userID'];?>" class="pull-right btn-box-tool desc-edit"><i class="fa fa-plus"></i></a></h3>
+                      <div id="desc-text" class="timeline-body">
+                      <pre>
+                      </pre>
+                      </div>
+                    </div>
+                    <div class="timeline-item edit-desc">
+                      <div class="form-group">
+                        <label>Please Edit The Description Here</label>
+                        <textarea id="desc-textarea" name="desc"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  </li>      
+                </ul>
+
               <?php } ?>
               </div>
             </div>
@@ -216,3 +275,40 @@
 </div>
 <!-- /.content-wrapper -->
 
+
+<div class="modal DateEditModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Edit The Date</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="inputDiv" id="dateInsertDiv">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                   <label for="cop_date">Type Date</label>
+                                   <input id="dateType" name="dateType" type="hidden" />
+                                    <div class="input-group date">
+                                       <input id="edit_date" name="edit_date" type="text" class="form-control" placeholder="DD-MM-YYYY" />
+                                       <div class="input-group-addon">
+                                           <span class="glyphicon glyphicon-th"></span>
+                                       </div>
+                                     </div>    
+                                 </div>
+                            </div>
+                        </div>
+                   </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="saveDate" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
