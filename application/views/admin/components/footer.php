@@ -1239,7 +1239,63 @@ if ($this->router->fetch_method() === 'details') {
 	                    }
                     }
                 });
-			});                            
+			});
+			$("body").on("click", "#email-edit", function (e) {
+                e.preventDefault();
+               $('.email-text').hide();
+               $('.editable.email').show()
+               $('.editable.email input').focus();
+              
+            });
+			$("#email-input").focusout(function() {
+			   var userId = $('#profile-box-container').attr('data-user-id');
+			   $('.email-text').show();
+               $('.editable.email').hide();
+               var email = $('.editable.email input').val();
+                var postData = {
+                    userID: userId,
+                    email: email
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updateemail",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+	                       $('.email-text p').text(email);
+	                    }
+                    }
+                });
+			});                
+			$("body").on("click", "#bsName-edit", function (e) {
+                e.preventDefault();
+               $('.bsName-text').hide();
+               $('.editable.bsName').show()
+               $('.editable.bsName input').focus();
+              
+            });
+			$("#bsName-input").focusout(function() {
+			   var userId = $('#profile-box-container').attr('data-user-id');
+			   $('.bsName-text').show();
+               $('.editable.bsName').hide();
+               var bsName = $('.editable.bsName input').val();
+                var postData = {
+                    userID: userId,
+                    bsName: bsName
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updatebsName",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+	                       $('.bsName-text p').text(bsName);
+	                    }
+                    }
+                });
+			});                                        
         });
 		
 		$(function() {

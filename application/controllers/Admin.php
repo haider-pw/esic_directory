@@ -329,6 +329,36 @@ class Admin extends MY_Controller{
                 echo 'OK::'.$company.'';
             exit();
     }
+    public function updateemail(){
+                $userID    = $this->input->post('userID');
+                $email  = $this->input->post('email');
+                if(!isset($userID) || empty($userID) || !isset($email) || empty($email)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['Email'] = $email;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$email.'';
+            exit();
+    }
+    public function updatebsName(){
+                $userID    = $this->input->post('userID');
+                $bsName  = $this->input->post('bsName');
+                if(!isset($userID) || empty($userID) || !isset($bsName) || empty($bsName)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['business'] = $bsName;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$bsName.'';
+            exit();
+    }
 
     public function manage_universities($param = NULL){
         if($param === 'listing'){

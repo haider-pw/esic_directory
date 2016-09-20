@@ -90,19 +90,38 @@
             <!-- /.box-header -->
             <div class="box-body">
             <?php if(!empty($userProfile['Email'])){ ?>
-              <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
-
-              <p class="text-muted">
-                 <?= $userProfile['Email'];?>
-              </p>
+               <div class="email-container">
+                  <div class="email-text">
+                    <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
+                    <p class="text-muted">
+                       <?= $userProfile['Email'];?>
+                    </p>
+                      <a class="btn addBtn email-edit" id="email-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
+                  </div>
+                  <div class="editable email">
+                      <div class="form-group">
+                        <input type="email" name="email-input" id="email-input" placeholder="<?= $userProfile['Email'];?>"/> 
+                      </div>
+                  </div>
+                </div>
               <hr>
             <?php }  if(!empty($userProfile['sector'])){ ?>
               <strong><i class="fa fa-industry margin-r-5"></i> Sector</strong>
               <p class="text-muted"> <?= $userProfile['sector'];?></p>
               <hr>
             <?php }  if(!empty($userProfile['business'])){ ?>
-              <strong><i class="fa fa-briefcase margin-r-5"></i> Business</strong>
-              <p class="text-muted"> <?= $userProfile['business'];?></p>
+               <div class="bsName-container">
+                  <div class="bsName-text">
+                    <strong><i class="fa fa-briefcase margin-r-5"></i> Business</strong>
+                    <p class="text-muted"> <?= $userProfile['business'];?></p>
+                    <a class="btn addBtn bsName-edit" id="bsName-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
+                  </div>
+                  <div class="editable bsName">
+                    <div class="form-group">
+                        <input type="text" name="bsName-input" id="bsName-input" placeholder="<?= $userProfile['business'];?>"/> 
+                      </div>
+                  </div>
+                </div>
               <hr>
             <?php }  if(!empty($userProfile['ScorePercentage'])){ ?>
               <strong><i class="fa fa-briefcase margin-r-5"></i> Score</strong>
@@ -258,6 +277,32 @@
           display: none;
        }
        .company-container:hover #company-edit{
+          display: inline-block;
+       }
+       .email-container{
+          position: relative;
+       }
+       #email-edit{
+          position: absolute;
+          top: -5px;
+          z-index: 100;
+          right: 0;
+          display: none;
+       }
+       .email-container:hover #email-edit{
+          display: inline-block;
+       }
+      .bsName-container{
+          position: relative;
+       }
+       #bsName-edit{
+          position: absolute;
+          top: -5px;
+          z-index: 100;
+          right: 0;
+          display: none;
+       }
+       .bsName-container:hover #bsName-edit{
           display: inline-block;
        }
 
