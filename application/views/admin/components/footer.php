@@ -1152,8 +1152,96 @@ if ($this->router->fetch_method() === 'details') {
                     }
                 });
               
-            });            
+            }); 
+            $("body").on("click", "#full-edit", function (e) {
+                e.preventDefault();
+               $('.profile-username').hide();
+               $('.editable.fullname').show();
+               $('.editable.fullname input').focus();
+              
+            });
+            $( ".fullname" ).focusout(function() {
+			   var userId = $('#profile-box-container').attr('data-user-id');
+			   $('.profile-username').show();
+               $('.editable.fullname').hide();
+               var NewFullName = $('.editable.fullname input').val();
+                var postData = {
+                    userID: userId,
+                    fullName: NewFullName
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updatename",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+	                       $('.profile-username b').text(NewFullName);
+	                    }
+                    }
+                });
+			});
+			$("body").on("click", "#web-edit", function (e) {
+                e.preventDefault();
+               $('.website-text').hide();
+               $('.editable.website').show()
+               $('#web-edit').hide();
+               $('.editable.website input').focus();
+              
+            });
+            $( "#web-input" ).focusout(function() {
+			   var userId = $('#profile-box-container').attr('data-user-id');
+			   $('.website-text').show();
+			   $('#web-edit').show();
+               $('.editable.website').hide();
+               var website = $('.editable.website input').val();
+                var postData = {
+                    userID: userId,
+                    website: website
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updatewebsite",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+	                       $('.website-text').text(website);
+	                       $('.website-text').attr('href','http://'+website);
+	                    }
+                    }
+                });
+			});          
+			$("body").on("click", "#company-edit", function (e) {
+                e.preventDefault();
+               $('.company-text').hide();
+               $('.editable.company').show()
+               $('.editable.company input').focus();
+              
+            });
+            $("#company-input").focusout(function() {
+			   var userId = $('#profile-box-container').attr('data-user-id');
+			   $('.company-text').show();
+               $('.editable.company').hide();
+               var company = $('.editable.company input').val();
+                var postData = {
+                    userID: userId,
+                    company: company
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updatecompany",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+	                       $('.company-text p').text(company);
+	                    }
+                    }
+                });
+			});                            
         });
+		
 		$(function() {
 		    $("#edit_date").daterangepicker({
 		    	singleDatePicker: true,

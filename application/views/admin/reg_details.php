@@ -23,13 +23,29 @@
           <div class="box box-primary">
             <div class="box-body box-profile" id="profile-box-container" data-user-id="<?= $userProfile['userID']?>">
             <?php if(!empty($userProfile['Logo']) and is_file(FCPATH.'/'.$userProfile['Logo'])){ ?>
-              <img class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
-			<?php } ?>
+                <img class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
+  			     <?php } ?>
             <?php if(!empty($userProfile['FullName'])){ ?>
-              <h3 class="profile-username text-center"><?= $userProfile['FullName'];?></h3>
-			<?php } ?>
+              <h3 class="profile-username text-center"><b><?= $userProfile['FullName'];?></b>
+              <a class="btn addBtn full-edit" id="full-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a></h3>
+              <div class="editable fullname">
+                <div class="form-group">
+                  <input type="text" name="fullname" id="fullname" placeholder="<?= $userProfile['FullName'];?>"/> 
+                </div>
+              </div>
+			       <?php } ?>
             <?php if(!empty($userProfile['Company'])){ ?>
-              <p class="text-muted text-center"><?= $userProfile['Company']?></p>
+              <div class="company-container">
+                  <div class="company-text">
+                    <p class="text-muted text-center"><?= $userProfile['Company']?></p>
+                    <a class="btn addBtn company-edit" id="company-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
+                  </div>
+                  <div class="editable company">
+                    <div class="form-group">
+                      <input type="text" name="company" id="company-input" placeholder="<?= $userProfile['Company'];?>"/> 
+                    </div>
+                  </div>
+              </div>
             <?php } ?>
               <ul class="list-group list-group-unbordered dates">
               	<?php if(!empty($userProfile['expiry_date'])){ ?>
@@ -51,7 +67,15 @@
                 <?php } ?>
               </ul>
               <?php if(!empty($userProfile['Web'])){ ?>
-              <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block" target="_blank"><b><?= $userProfile['Web'];?></b></a>
+                <div class="web-container">
+                    <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block website-text" target="_blank"><b><?= $userProfile['Web'];?></b></a>
+                    <a class="btn addBtn web-edit" id="web-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
+                    <div class="editable website">
+                      <div class="form-group">
+                        <input type="text" name="web-input" id="web-input" placeholder="<?= $userProfile['Web'];?>"/> 
+                      </div>
+                    </div>
+                </div>
               <?php } ?>
             </div>
             <!-- /.box-body -->
@@ -120,10 +144,10 @@
         .save-answer,.save-desc{
         	margin-top: 10px;
         	background: #3c8dbc;
-		    color: #fff;
-		    border: none;
-		    width: 80px;
-		    height: 25px;
+  		    color: #fff;
+  		    border: none;
+  		    width: 80px;
+  		    height: 25px;
         }
         .action-buttons a{
           display: block;
@@ -137,49 +161,106 @@
           padding-bottom: 20px!important;
         }
         .timeline-item.edit-desc label{
-            display: block;
-            margin: 10px;
+          display: block;
+          margin: 10px;
         }
         .timeline-item.edit-desc .form-group{
-			padding-right: 10px;
-    		margin-right: 2%;
+			    padding-right: 10px;
+    		  margin-right: 2%;
         }
         .timeline-item.edit-desc textarea{
-            display: block;
-		    padding: 10px;
-		    margin: 10px;
-		    width: 98.5%;
-		    min-height: 150px;
+          display: block;
+		      padding: 10px;
+		      margin: 10px;
+		      width: 98.5%;
+		      min-height: 150px;
          }
          #description .timeline-item{
 	         border-radius: 0px;
 	     }
 	     ul.dates li .date-edit{
-	     	display: none;
-	     	position: absolute;
+	     	 display: none;
+	     	 position: absolute;
 	     }
 	     ul.dates li:hover .date-edit{
-	     	display: inline-block;
+	       	display: inline-block;
 	     }
+       .profile-username .full-edit{
+          display: none;
+          position: absolute;
+          top: -7px;
+          right: -3px;
+       }
+       .profile-username:hover .full-edit{
+          display: inline-block;
+       }
+       .profile-username{
+          position:relative;
+       }
+       .profile-username b{
+         font-weight: 500;
+       }
+       #description pre {
+            display: block;
+            padding: 9.5px;
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+            word-break: break-word;
+            word-wrap: normal;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+             white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
+        .editable{
+          width: 90%;
+          margin: 0 auto;
+          text-align: center;
+          display: none;
+        }
+        .editable input{
+          width: 99%;
+          margin: 10px 0px;
+          padding: 5px 7px;
+        }
+        .web-container{
+          position: relative;
+        }
+        #web-edit{
+          position: absolute;
+          top: 0px;
+          z-index: 100;
+          background: rgba(0,0,0,0.6);
+          right: 0;
+          display: none;
+       }
+       #web-edit span{
+         color:#fff!important;
+       }
+       .web-container:hover #web-edit{
+          display: inline-block;
+          color:#fff!important;
+       }
+       .company-container{
+          position: relative;
+        }
+        #company-edit{
+          position: absolute;
+          top: -5px;
+          z-index: 100;
+          right: 0;
+          display: none;
+       }
+       .company-container:hover #company-edit{
+          display: inline-block;
+       }
 
-#description pre {
-    display: block;
-    padding: 9.5px;
-    margin: 0 0 10px;
-    font-size: 13px;
-    line-height: 1.42857143;
-    color: #333;
-    word-break: break-word;
-    word-wrap: normal;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-     white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    word-wrap: break-word;
-}
         </style>
         <!-- /.col -->
         <div class="col-md-9">

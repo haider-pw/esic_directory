@@ -283,6 +283,52 @@ class Admin extends MY_Controller{
                 echo 'OK::'.$descDataText.'';
             exit();
     }
+    public function updatename(){
+                $userID    = $this->input->post('userID');
+                $fullName  = $this->input->post('fullName');
+                if(!isset($userID) || empty($userID) || !isset($fullName) || empty($fullName)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['firstName'] = $fullName;
+                $updateArray['lastName']  = '';
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$fullName.'';
+            exit();
+    }
+    public function updatewebsite(){
+                $userID    = $this->input->post('userID');
+                $website  = $this->input->post('website');
+                if(!isset($userID) || empty($userID) || !isset($website) || empty($website)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['website'] = $website;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$website.'';
+            exit();
+    }
+    public function updatecompany(){
+                $userID    = $this->input->post('userID');
+                $company  = $this->input->post('company');
+                if(!isset($userID) || empty($userID) || !isset($company) || empty($company)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['Company'] = $company;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$company.'';
+            exit();
+    }
 
     public function manage_universities($param = NULL){
         if($param === 'listing'){
