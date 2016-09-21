@@ -1687,7 +1687,22 @@ if ($this->router->fetch_method() === 'details') {
         });
 		
 		$(function() {
-			//$('.fileupload').fileupload();
+                
+		   $('#edit-logo').change(function(event) {
+            var input = $(this);
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#User-Logo')
+                            .attr('src', e.target.result)
+                            .width(150)
+                            .height(200);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+
 		    $("#edit_date").daterangepicker({
 		    	singleDatePicker: true,
 		        locale: {

@@ -209,19 +209,17 @@
     	<?php if(isset($userProfile)){ ?>
       <div class="row">
         <div class="col-md-3">
-
           <!-- Profile Image -->
           <div class="box box-primary">
             <div class="box-body box-profile" id="profile-box-container" data-user-id="<?= $userProfile['userID']?>">
             <?php if(!empty($userProfile['Logo']) and is_file(FCPATH.'/'.$userProfile['Logo'])){ ?>
-                <img class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
-                <!--div class="fileupload fileupload-new" data-provides="fileupload">
-                  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-                  <div>
-                    <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+                <img id="User-Logo" class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>
+                    <input id="edit-logo" type="file" name="logo" />
+                    </span>
                     <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                  </div>
-                </div-->
+                </div>
   			     <?php } ?>
             <?php if(!empty($userProfile['FullName'])){ ?>
               <h3 class="profile-username text-center"><b><?= $userProfile['FullName'];?></b>
@@ -355,6 +353,7 @@
             <ul class="nav nav-tabs">
               <li class="active"><a href="#questions" data-toggle="tab">Questions</a></li>
               <li><a href="#description" data-toggle="tab">Description</a></li>
+              <li><a href="#otherDetail" data-toggle="tab">Detail</a></li>
             </ul>
             <div class="tab-content">
               <div class="active tab-pane" id="questions">
@@ -385,6 +384,25 @@
                   }
               ?>
                 </div>
+              <div class="tab-pane" id="otherDetail">
+                <ul class="timeline timeline-inverse">
+                  <li>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header">Brief Description  <a href="#" id="desc-edit" data-user-id="<?= $userProfile['userID'];?>" class="pull-right btn-box-tool desc-edit"><i class="fa fa-plus"></i></a></h3>
+                      <div id="desc-text" class="timeline-body">
+                      <pre>
+                      </pre>
+                      </div>
+                    </div>
+                    <div class="timeline-item edit-desc">
+                      <div class="form-group">
+                        <label>Please Edit The Description Here</label>
+                        <textarea id="desc-textarea" name="desc"></textarea>
+                      </div>
+                    </div> 
+                  </li>      
+                </ul>
+              </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="description">
                 <!-- The timeline -->
@@ -422,8 +440,7 @@
                         <label>Please Edit The Description Here</label>
                         <textarea id="desc-textarea" name="desc"></textarea>
                       </div>
-                    </div>
-                  </div>
+                    </div> 
                   </li>      
                 </ul>
 
