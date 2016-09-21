@@ -217,6 +217,37 @@
             color: #fff;
         }
 
+                .user-imgs-container{
+    padding: 10px 20px;
+    border-bottom: 2px solid #eee;
+                }
+                .user-imgs-container h3{
+margin: 10px 0px;
+    font-size: 20px;
+
+                }
+                .user-imgs-container .img-container{
+
+                }
+                .user-imgs-container .edit-button{
+
+                }
+             .user-imgs-container .btn.btn-file{
+               margin-top: 10px;
+                   padding-top: 3px;
+          background: #3c8dbc;
+          color: #fff;
+          border: none;
+          width: 80px;
+          height: 25px;
+             } 
+.user-imgs{
+  margin: 0 auto;
+  max-width: 500px;
+  padding: 3px;
+  border: 3px solid #d2d6de;
+  }
+
 
         </style>
 
@@ -433,23 +464,48 @@
               ?>
                 </div>
               <div class="tab-pane" id="otherDetail">
-                <ul class="timeline timeline-inverse">
-                  <li>
-                    <div class="timeline-item">
-                      <h3 class="timeline-header">Brief Description  <a href="#" id="desc-edit" data-user-id="<?= $userProfile['userID'];?>" class="pull-right btn-box-tool desc-edit"><i class="fa fa-plus"></i></a></h3>
-                      <div id="desc-text" class="timeline-body">
-                      <pre>
-                      </pre>
-                      </div>
-                    </div>
-                    <div class="timeline-item edit-desc">
-                      <div class="form-group">
-                        <label>Please Edit The Description Here</label>
-                        <textarea id="desc-textarea" name="desc"></textarea>
-                      </div>
-                    </div> 
-                  </li>      
-                </ul>
+                <?php 
+                      $productImage= '';
+                      if(!empty($userProfile['productImage']) and is_file(FCPATH.'/'.$userProfile['productImage'])){ 
+                        $productImage = base_url().'/'.$userProfile['productImage'];
+                      }else{
+                         $productImage = base_url('pictures/defaultBanner.png');
+                      }
+
+                ?>
+                <div class="user-product-container user-imgs-container">
+                  <h3>User Product Image</h3>
+                  <div class="img-container">
+                    <img id="User-product" class="user-imgs img-responsive" src="<?= $productImage; ?>" alt="Product Picture">
+                  </div>
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <span class="btn btn-file"><span class="fileupload-new">Edit</span><span class="fileupload-exists"></span>
+                      <input id="edit-product" class="edit-button" type="file" name="product" />
+                      </span>
+                      <!--a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a-->
+                  </div>
+                </div>
+                 <?php 
+                      $BannerImage= '';
+                      if(!empty($userProfile['bannerImage']) and is_file(FCPATH.'/'.$userProfile['bannerImage'])){ 
+                        $BannerImage = base_url().'/'.$userProfile['bannerImage'];
+                      }else{
+                         $BannerImage = base_url('pictures/defaultBanner.png');
+                      }
+
+                ?>
+                <div class="user-banner-container user-imgs-container">
+                  <h3>User Banner Image</h3>
+                  <div class="img-container">
+                    <img id="User-banner" class="user-imgs img-responsive" src="<?= $BannerImage; ?>" alt="Banner Picture">
+                  </div>
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <span class="btn btn-file"><span class="fileupload-new">Edit</span><span class="fileupload-exists"></span>
+                      <input id="edit-banner" class="edit-button" type="file" name="Banner" />
+                      </span>
+                      <!--a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a-->
+                  </div>
+                </div>
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="description">

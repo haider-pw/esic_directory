@@ -1721,6 +1721,72 @@ if ($this->router->fetch_method() === 'details') {
                     $('#loading-image').hide();
                 }
             });
+           $('#edit-banner').change(function(event) {
+            var input = $(this)[0];
+            var userId  = $('#profile-box-container').attr('data-user-id');
+            $('#loading-image').show();
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var formData = new FormData();
+                        formData.append('bannerImage', input.files[0]);
+                        formData.append('userID', userId);
+                        $.ajax({       
+                                crossOrigin: true,
+                                type: 'POST',
+                                url: baseUrl + "Admin/saveBannerImage",
+                                data: formData,
+                                processData: false,
+                                contentType: false
+                        }).done(function (response) {
+                            var data = response.split("::");
+                            if(data[0] === 'OK'){
+                                $('#loading-image').hide();
+                                $('#User-banner').attr('src', e.target.result);
+                            }else if(data[0] === 'FAIL'){
+                                $('#loading-image').hide();
+                            }
+                       });
+                    
+                     }
+                    reader.readAsDataURL(input.files[0]);
+                }else{
+                    $('#loading-image').hide();
+                }
+            });
+           $('#edit-product').change(function(event) {
+            var input = $(this)[0];
+            var userId  = $('#profile-box-container').attr('data-user-id');
+            $('#loading-image').show();
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var formData = new FormData();
+                        formData.append('productImage', input.files[0]);
+                        formData.append('userID', userId);
+                        $.ajax({       
+                                crossOrigin: true,
+                                type: 'POST',
+                                url: baseUrl + "Admin/saveProductImage",
+                                data: formData,
+                                processData: false,
+                                contentType: false
+                        }).done(function (response) {
+                            var data = response.split("::");
+                            if(data[0] === 'OK'){
+                                $('#loading-image').hide();
+                                $('#User-product').attr('src', e.target.result);
+                            }else if(data[0] === 'FAIL'){
+                                $('#loading-image').hide();
+                            }
+                       });
+                    
+                     }
+                    reader.readAsDataURL(input.files[0]);
+                }else{
+                    $('#loading-image').hide();
+                }
+            });
 
 		    $("#edit_date").daterangepicker({
 		    	singleDatePicker: true,

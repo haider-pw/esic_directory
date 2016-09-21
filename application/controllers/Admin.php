@@ -104,6 +104,8 @@ class Admin extends MY_Controller{
                     user.businessShortDescription as BusinessShortDesc,
                     user.score as Score,
                     user.logo as Logo,
+                    user.productImage as productImage,
+                    user.bannerImage as bannerImage,
                     user.website as Web,
                     user.business as business,
                     user.expiry_date as expiry_date,
@@ -166,6 +168,8 @@ class Admin extends MY_Controller{
                     'ScorePercentage' 	=> $ScorePercentage,
                     'Web' 				=> $returnedData[0]->Web,
                     'Logo' 				=> $returnedData[0]->Logo,
+                    'bannerImage'       => $returnedData[0]->bannerImage,
+                    'productImage'      => $returnedData[0]->productImage,
                     'Email' 			=> $returnedData[0]->Email,
                     'Score' 			=> $returnedData[0]->Score,
                     'sector' 			=> $returnedData[0]->sector,
@@ -285,7 +289,7 @@ class Admin extends MY_Controller{
                 echo 'OK::'.$descDataText.'';
             exit();
     }
-        public function savelogo(){
+    public function savelogo(){
             $userID = $this->input->post('userID');
             $allowedExt = array('jpeg','jpg','png','gif');
             $uploadPath = './uploads/users/'.$userID.'/';
@@ -331,6 +335,114 @@ class Admin extends MY_Controller{
                 $logo = $returnedData[0]->logo;
                 if(!empty($logo) && is_file(FCPATH.'/'.$logo)){
                     unlink('./'.$logo);
+                }
+                $resultUpdate = $this->Common_model->update('user',$where,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
+    }
+    public function saveBannerImage(){
+            $userID = $this->input->post('userID');
+            $allowedExt = array('jpeg','jpg','png','gif');
+            $uploadPath = './uploads/users/'.$userID.'/';
+            $uploadDirectory = './uploads/users/'.$userID;
+            $uploadDBPath = 'uploads/users/'.$userID.'/';
+            $insertDataArray = array();
+
+            //For Logo Upload
+            if(isset($_FILES['bannerImage']['name']))
+            {
+                $FileName = $_FILES['bannerImage']['name'];
+                $explodedFileName = explode('.',$FileName);
+                $ext = end($explodedFileName);
+                if(!in_array(strtolower($ext),$allowedExt))
+                {
+                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                    return;
+                }else
+                {
+
+                    $FileName = "bannerImage".$userID."_".time().".".$ext;
+                    if(!is_dir($uploadDirectory)){
+                        mkdir($uploadDirectory, 0755, true);
+                    }
+
+                    move_uploaded_file($_FILES['bannerImage']['tmp_name'],$uploadPath.$FileName);
+                    $insertDataArray['bannerImage'] = $uploadDBPath.$FileName;
+                }
+            }else{
+                echo "FAIL::Banner Image Is Required";
+                return;
+            }
+            
+            if(empty($userID)){
+                echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                exit;
+            }
+                $selectData = array('bannerImage AS bannerImage',false);
+                $where = array(
+                    'id' => $userID
+                );
+                $returnedData = $this->Common_model->select_fields_where('user',$selectData, $where, false, '', '', '','','',false);
+                $bannerImage = $returnedData[0]->bannerImage;
+                if(!empty($bannerImage) && is_file(FCPATH.'/'.$bannerImage)){
+                    unlink('./'.$bannerImage);
+                }
+                $resultUpdate = $this->Common_model->update('user',$where,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
+    }
+    public function saveProductImage(){
+            $userID = $this->input->post('userID');
+            $allowedExt = array('jpeg','jpg','png','gif');
+            $uploadPath = './uploads/users/'.$userID.'/';
+            $uploadDirectory = './uploads/users/'.$userID;
+            $uploadDBPath = 'uploads/users/'.$userID.'/';
+            $insertDataArray = array();
+
+            //For Logo Upload
+            if(isset($_FILES['productImage']['name']))
+            {
+                $FileName = $_FILES['productImage']['name'];
+                $explodedFileName = explode('.',$FileName);
+                $ext = end($explodedFileName);
+                if(!in_array(strtolower($ext),$allowedExt))
+                {
+                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                    return;
+                }else
+                {
+
+                    $FileName = "productImage".$userID."_".time().".".$ext;
+                    if(!is_dir($uploadDirectory)){
+                        mkdir($uploadDirectory, 0755, true);
+                    }
+
+                    move_uploaded_file($_FILES['productImage']['tmp_name'],$uploadPath.$FileName);
+                    $insertDataArray['productImage'] = $uploadDBPath.$FileName;
+                }
+            }else{
+                echo "FAIL::Product Image Is Required";
+                return;
+            }
+            
+            if(empty($userID)){
+                echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                exit;
+            }
+                $selectData = array('productImage AS productImage',false);
+                $where = array(
+                    'id' => $userID
+                );
+                $returnedData = $this->Common_model->select_fields_where('user',$selectData, $where, false, '', '', '','','',false);
+                $productImage = $returnedData[0]->productImage;
+                if(!empty($productImage) && is_file(FCPATH.'/'.$productImage)){
+                    unlink('./'.$productImage);
                 }
                 $resultUpdate = $this->Common_model->update('user',$where,$insertDataArray);
                 if($resultUpdate === true){
