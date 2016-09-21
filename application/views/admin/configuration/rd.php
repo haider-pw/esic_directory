@@ -31,12 +31,13 @@
                                 <th>IDNUMBER</th>
                                 <th>AddressContact</th>
                                 <th>ANZSRC</th>
+                                <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            </tbody>
+                            </tbody> 
                             <tfoot>
                             <tr>
                                 <th>ID</th>
@@ -44,6 +45,7 @@
                                 <th>IDNUMBER</th>
                                 <th>AddressContact</th>
                                 <th>ANZSRC</th>
+                                <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>

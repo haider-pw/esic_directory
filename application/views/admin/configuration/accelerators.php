@@ -30,6 +30,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Website</th>
+                                <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>
@@ -41,6 +42,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Website</th>
+                                <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>

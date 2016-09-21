@@ -388,6 +388,7 @@ class Admin extends MY_Controller{
             $selectData = array('
             id AS ID,
             institution AS University,
+            CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
             $addColumns = array(
@@ -492,7 +493,8 @@ class Admin extends MY_Controller{
             }
 
             $updateData = array(
-                'institution' => $value
+                'institution' => $value,
+                'insertionType' => 1
             );
 
             $whereUpdate = array(
@@ -511,6 +513,49 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'permanent'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data='';
+            if($value == 'Permanent'){
+                $data = 1;
+            }else if($value == 'noPermanent'){
+                $data = 2;
+            }else{
+                $data = 0;
+            }
+
+            $updateData = array(
+                'insertionType' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_institution',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'new'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -524,7 +569,8 @@ class Admin extends MY_Controller{
             }
 
             $insertData = array(
-                'institution' => $value
+                'institution' => $value,
+                'insertionType' => 1
             );
 
             $insertResult = $this->Common_model->insert_record('esic_institution',$insertData);
@@ -543,6 +589,7 @@ class Admin extends MY_Controller{
             $selectData = array('
             id AS ID,
             sector AS Sector,
+            CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
 
@@ -592,7 +639,7 @@ class Admin extends MY_Controller{
             if($returnedData === true){
                 echo "OK::Record Successfully";
             }else{
-                echo "FAIL::".$returnedData['message'];
+                echo "OK::FAIL::".$returnedData['message'];
             }
             return NULL;
         }
@@ -616,7 +663,8 @@ class Admin extends MY_Controller{
             }
 
             $updateData = array(
-                'sector' => $value
+                'sector' => $value,
+                'insertionType' => 1
             );
 
             $whereUpdate = array(
@@ -667,6 +715,49 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'permanent'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data='';
+            if($value == 'Permanent'){
+                $data = 1;
+            }else if($value == 'noPermanent'){
+                $data = 2;
+            }else{
+                $data = 0;
+            }
+
+            $updateData = array(
+                'insertionType' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_sectors',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'new'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -680,7 +771,8 @@ class Admin extends MY_Controller{
             }
 
             $insertData = array(
-                'sector' => $value
+                'sector' => $value,
+                'insertionType' => 1
             );
 
             $insertResult = $this->Common_model->insert_record('esic_sectors',$insertData);
@@ -703,6 +795,7 @@ class Admin extends MY_Controller{
             IDNumber AS IDNumber,
             AddressContact AS AddressContact,
             ANZSRC AS ANZSRC,
+            CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
 
@@ -711,41 +804,6 @@ class Admin extends MY_Controller{
             );
             $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_RnD','','','','','',$addColumns);
             print_r($returnedData);
-            return NULL;
-        }
-        if($param === 'delete'){
-            if(!$this->input->post()){
-                echo "FAIL::No Value Posted";
-                return false;
-            }
-
-            $id = $this->input->post('id');
-            $value = $this->input->post('value');
-
-            if(empty($id) or !is_numeric($id)){
-                echo "FAIL::Posted values are not VALID";
-                return NULL;
-            }
-
-            if(empty($value) or $value !== 'approve'){
-                echo "FAIL::Posted values are not VALID";
-                return NULL;
-            }
-
-            $updateData = array(
-                'trashed' => 1
-            );
-
-            $whereUpdate = array(
-                'id' => $id
-            );
-
-            $returnedData = $this->Common_model->update('esic_RnD',$whereUpdate,$updateData);
-            if($returnedData === true){
-                echo "OK::Record Successfully Trashed";
-            }else{
-                echo "FAIL::".$returnedData['message'];
-            }
             return NULL;
         }
         if($param === 'update'){
@@ -769,7 +827,8 @@ class Admin extends MY_Controller{
                 'rndname'        => $rndname,
                 'IDNumber'      => $IDNumber,
                 'AddressContact'=> $AddressContact,
-                'ANZSRC'        => $ANZSRC
+                'ANZSRC'        => $ANZSRC,
+                'insertionType' => 1
             );
 
             $whereUpdate = array(
@@ -785,6 +844,124 @@ class Admin extends MY_Controller{
                 }else{
                     echo $updateResult['message'];
                 }
+            }
+            return NULL;
+        }
+        if($param === 'trash'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'trash'){
+                $data = 1;
+            }else if($value == 'untrash'){
+                $data = 0;
+            }else{
+                $data = 2;
+            }
+
+            $updateData = array(
+                'trashed' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $returnedData = $this->Common_model->update('esic_RnD',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'permanent'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data='';
+            if($value == 'Permanent'){
+                $data = 1;
+            }else if($value == 'noPermanent'){
+                $data = 2;
+            }else{
+                $data = 0;
+            }
+
+            $updateData = array(
+                'insertionType' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_RnD',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'delete'){
+
+                $whereUpdate = array(
+                    'id' => $id
+                );
+
+                $returnedData = $this->Common_model->delete('esic_RnD',$whereUpdate);
+                    echo "OK::Record Deleted";
+            }else{
+                    echo "FAIL::Record Not Deleted";
             }
             return NULL;
         }
@@ -806,6 +983,7 @@ class Admin extends MY_Controller{
             Market AS Market,
             Technology AS Technology,
             Type AS Type,
+            CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
 
@@ -851,6 +1029,49 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'permanent'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data='';
+            if($value == 'Permanent'){
+                $data = 1;
+            }else if($value == 'noPermanent'){
+                $data = 2;
+            }else{
+                $data = 0;
+            }
+
+            $updateData = array(
+                'insertionType' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'update'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -889,7 +1110,8 @@ class Admin extends MY_Controller{
                 'Project_Success'   => $Project_Success,
                 'Market'            => $Market,
                 'Technology'        => $Technology,
-                'Type'              => $Type
+                'Type'              => $Type,
+                'insertionType' => 1
             );
 
             $whereUpdate = array(
@@ -917,6 +1139,7 @@ class Admin extends MY_Controller{
             id AS ID,
             name AS Name,
             website AS Website,
+            CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
 
@@ -962,6 +1185,49 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'permanent'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data='';
+            if($value == 'Permanent'){
+                $data = 1;
+            }else if($value == 'noPermanent'){
+                $data = 2;
+            }else{
+                $data = 0;
+            }
+
+            $updateData = array(
+                'insertionType' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'update'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -983,7 +1249,8 @@ class Admin extends MY_Controller{
 
             $updateData = array(
                 'name'    => $name,
-                'website' => $Web
+                'website' => $Web,
+                'insertionType' => 1
             );
 
             $whereUpdate = array(

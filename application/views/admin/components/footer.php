@@ -99,6 +99,37 @@
 </div><!-- /.modal -->
 <!-- /.End Edit Ward Modal --><!-- /.modal -->
 
+<!--Edit Acceleration Modal-->
+<div class="modal permanent-modal" id="permanent-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Permanent Model</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenID">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="hidden" id="hiddenUserID">
+                            <label for="editrndTextBox">Are You Sure you want to make it Permanent?</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="yesPermanent">Yes</button>
+                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="noPermanent">No</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+
 
 <?php
     }
@@ -348,6 +379,9 @@ if ($this->router->fetch_method() === 'manage_sectors') {
                 /* Sector */ {
                     "mData": "Sector"
                 },
+                {
+                    "mData": "Permanent"
+                },
                 /* Trashed */ {
                     "mData": "Trashed"
                 },
@@ -460,6 +494,54 @@ if ($this->router->fetch_method() === 'manage_sectors') {
                     }
                 });
             });
+                        $("#permanent-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var name = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+
+            $("#yesPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "Permanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_sectors/permanent",
+                   data: {
+                        id: hiddenModalID,
+                        value: "Permanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $('#permanent-modal').modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });    
+
+            $("#noPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "noPermanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_sectors/permanent",
+                    data: {
+                        id: hiddenModalID,
+                        value: "noPermanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            oTable.fnDraw();
+                            $('#permanent-modal').modal('hide');
+                        }
+                    }
+                });
+            });
 
             $("#addSectorBtn").on("click", function () {
                 var sector = $(this).parents(".modal-content").find("#addSectorTextBox").val();
@@ -509,6 +591,9 @@ if ($this->router->fetch_method() === 'manage_rd') {
                 /* ANZSRC */ {
                     "mData": "ANZSRC"
                 },
+                /* Permanent */ {
+                    "mData": "Permanent"
+                },
                 /* Trashed */ {
                     "mData": "Trashed"
                 },
@@ -540,7 +625,7 @@ if ($this->router->fetch_method() === 'manage_rd') {
                 modal.find("input#hiddenUserID").val(ID);
                 modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
             });
-
+            
             $("#editRndModal").on("shown.bs.modal", function (e) {
                 var button = $(e.relatedTarget); // Button that triggered the modal
                 var ID = button.parents("tr").attr("data-id");
@@ -559,7 +644,24 @@ if ($this->router->fetch_method() === 'manage_rd') {
 
             $("#yesApprove").on("click", function () {
                 var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
-                var postData = {id: hiddenModalID, value: "approve"};
+                var postData = {id: hiddenModalID, value: "trash"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_rd/trash",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $(".approval-modal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });     
+
+            $("#permanentDelete").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "delete"};
                 $.ajax({
                     url: baseUrl + "Admin/manage_rd/delete",
                     data: postData,
@@ -569,6 +671,75 @@ if ($this->router->fetch_method() === 'manage_rd') {
                         if (data[0] == 'OK') {
                             $(".approval-modal").modal('hide');
                             oTable.fnDraw();
+                        }
+                    }
+                });
+            });
+
+            $("#nodelete").on("click", function () {
+                var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalUserID, value: "untrash"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_rd/trash",
+                    data: {
+                        id: hiddenModalUserID,
+                        value: "untrash"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            oTable.fnDraw();
+                            $('.approval-modal').modal('hide');
+                        }
+                    }
+                });
+            });
+
+            $("#permanent-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var name = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+
+            $("#yesPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "Permanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_rd/permanent",
+                   data: {
+                        id: hiddenModalID,
+                        value: "Permanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $('#permanent-modal').modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });    
+
+            $("#noPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "noPermanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_rd/permanent",
+                    data: {
+                        id: hiddenModalID,
+                        value: "noPermanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            oTable.fnDraw();
+                            $('#permanent-modal').modal('hide');
                         }
                     }
                 });
@@ -624,6 +795,9 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
                 },
                 /* website */ {
                     "mData": "Website"
+                },
+                /* Permanent */ {
+                    "mData": "Permanent"
                 },
                 /* Trashed */ {
                     "mData": "Trashed"
@@ -686,6 +860,55 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
                 });
             });
 
+            $("#permanent-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var name = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+
+            $("#yesPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "Permanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_accelerators/permanent",
+                   data: {
+                        id: hiddenModalID,
+                        value: "Permanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $('#permanent-modal').modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });    
+
+            $("#noPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "noPermanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_accelerators/permanent",
+                    data: {
+                        id: hiddenModalID,
+                        value: "noPermanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            oTable.fnDraw();
+                            $('#permanent-modal').modal('hide');
+                        }
+                    }
+                });
+            });
+
             $("#updateAccelerationBtn").on("click", function () {
                 var id = $(this).parents(".modal-content").find("#hiddenAccelerationID").val();
                 var name = $(this).parents(".modal-content").find("#editAccelerationTextBox").val();
@@ -730,6 +953,9 @@ if ($this->router->fetch_method() === 'manage_universities') {
                 },
                 /* University */ {
                     "mData": "University"
+                },
+                /* Permanent */ {
+                    "mData": "Permanent"
                 },
                 /* Trashed */ {
                     "mData": "Trashed"
@@ -845,6 +1071,54 @@ if ($this->router->fetch_method() === 'manage_universities') {
                     }
                 });
             });
+                        $("#permanent-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var name = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+
+            $("#yesPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "Permanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_universities/permanent",
+                   data: {
+                        id: hiddenModalID,
+                        value: "Permanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $('#permanent-modal').modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });    
+
+            $("#noPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "noPermanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_universities/permanent",
+                    data: {
+                        id: hiddenModalID,
+                        value: "noPermanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            oTable.fnDraw();
+                            $('#permanent-modal').modal('hide');
+                        }
+                    }
+                });
+            });
             $("#addUniversityBtn").on("click", function () {
                 var University = $(this).parents(".modal-content").find("#addUniversityTextBox").val();
                 var postData = {
@@ -919,6 +1193,9 @@ if ($this->router->fetch_method() === 'manage_acc_commercials') {
                  "mData" : "Type"
                  },
                  */
+                 /* Permanent */ {
+                    "mData": "Permanent"
+                },
                 {
                     "mData": "Trashed"
                 },
@@ -972,6 +1249,54 @@ if ($this->router->fetch_method() === 'manage_acc_commercials') {
                         if (data[0] == 'OK') {
                             $(".approval-modal").modal('hide');
                             oTable.fnDraw();
+                        }
+                    }
+                });
+            });
+                        $("#permanent-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var name = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+
+            $("#yesPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "Permanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_acc_commercials/permanent",
+                   data: {
+                        id: hiddenModalID,
+                        value: "Permanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $('#permanent-modal').modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });    
+
+            $("#noPermanent").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "noPermanent"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_acc_commercials/permanent",
+                    data: {
+                        id: hiddenModalID,
+                        value: "noPermanent"
+                    },
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            oTable.fnDraw();
+                            $('#permanent-modal').modal('hide');
                         }
                     }
                 });

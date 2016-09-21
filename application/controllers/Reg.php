@@ -43,14 +43,18 @@ class Reg extends CI_Controller {
         //Need to Get Data for Selectors
         //University
                 $selectData = array('score AS score',false);
-        $where = 'trashed != 1'; 
+        $where = array(
+                'trashed !=' => 1,
+                'insertionType !=' => 2
+            );
+
         $selectData ='*';
-        $data['RnDs'] = $this->Common_model->select('esic_RnD',$selectData, $where, false, '', '', '','','',false);
-        $data['institutions'] = $this->Common_model->select_fields_where('esic_institution',$selectData, $where, false, '', '', '','','',false);
-        $data['accelerationCommercials'] = $this->Common_model->select('esic_acceleration',$selectData, $where, false, '', '', '','','',false);
-        $data['acceleratorProgramme'] = $this->Common_model->select('esic_acceleration_logo',$selectData, $where, false, '', '', '','','',false);
         $data['userID'] = $this->input->get('id');
-        $data['sectors'] = $this->Common_model->select('esic_sectors',$selectData, $where, false, '', '', '','','',false);
+        $data['RnDs'] = $this->Common_model->select_fields_where('esic_RnD',$selectData, $where);
+        $data['institutions'] = $this->Common_model->select_fields_where('esic_institution',$selectData, $where, false, '', '', '','','',false);
+        $data['accelerationCommercials'] = $this->Common_model->select_fields_where('esic_acceleration',$selectData, $where, false, '', '', '','','',false);
+        $data['acceleratorProgramme'] = $this->Common_model->select_fields_where('esic_acceleration_logo',$selectData, $where, false, '', '', '','','',false);
+        $data['sectors'] = $this->Common_model->select_fields_where('esic_sectors',$selectData, $where, false, '', '', '','','',false);
 
         $this->load->view('regForm/reg_form_bootstrap',$data);
     }
@@ -308,7 +312,8 @@ class Reg extends CI_Controller {
         }else{
            
             $insertData = array(
-                'institution' => $institution
+                'institution' => $institution,
+                'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_institution',$insertData);
@@ -342,7 +347,8 @@ class Reg extends CI_Controller {
                 'rndname'   => $rndname,
                 'IDNumber'  => $IDNumber,
                 'AddressContact'  => $Address,
-                'ANZSRC'    => $ANZSRC
+                'ANZSRC'    => $ANZSRC,
+                'insertionType' => 2
 
             );
 
@@ -374,7 +380,8 @@ class Reg extends CI_Controller {
         }else{
            
             $insertData = array(
-                'sector' => $Industry
+                'sector' => $Industry,
+                'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_sectors',$insertData);
@@ -415,7 +422,8 @@ class Reg extends CI_Controller {
                 'Project_Title'     => $Project_Title,
                 'State_Territory'   => $State_Territory,
                 'Project_Summary'   => $Project_Summary,
-                'Project_Location'  => $Project_Location
+                'Project_Location'  => $Project_Location,
+                'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_acceleration',$insertData);
@@ -446,7 +454,8 @@ class Reg extends CI_Controller {
            
             $insertData = array(
                 'name'    => $name,
-                'website'  => $Programme_Web_Address
+                'website'  => $Programme_Web_Address,
+                'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_acceleration_logo',$insertData);

@@ -30,6 +30,7 @@
                                 <th>Member</th>
                                 <th>Web_Address</th>
                                 <th>Project_Title</th>
+                                <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>
@@ -41,7 +42,8 @@
                                 <th>ID</th>
                                 <th>Member</th>
                                 <th>Web_Address</th>
-                                <th>Project_Title</th>                        
+                                <th>Project_Title</th>
+                                <th>Permanent</th>                        
                                 <th>Trashed</th>
                                 <th>Action</th>
                             </tr>
