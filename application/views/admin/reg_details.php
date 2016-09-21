@@ -187,6 +187,37 @@
         .edit-sector{
           display:none;
         }
+        .user-logo-container{
+          position: relative;
+          text-align: center;
+        }
+        .user-logo-container .profile-user-img {
+            margin: 0 auto;
+            min-width: 100px;
+            max-width: 250px;
+            min-height: 100px;
+            width: 100%;
+            padding: 3px;
+            border: 3px solid #d2d6de;
+        }
+        .user-logo-container:hover .btn-file{
+          display: block;
+        } 
+        #edit-logo{
+          cursor: pointer;
+        }
+        .user-logo-container .btn-file{
+            display:none;
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+        }
+
+
         </style>
 
 
@@ -212,15 +243,24 @@
           <!-- Profile Image -->
           <div class="box box-primary">
             <div class="box-body box-profile" id="profile-box-container" data-user-id="<?= $userProfile['userID']?>">
-            <?php if(!empty($userProfile['Logo']) and is_file(FCPATH.'/'.$userProfile['Logo'])){ ?>
-                <img id="User-Logo" class="profile-user-img img-responsive img-circle" src="<?= base_url().'/'.$userProfile['Logo'];?>" alt="User profile picture">
-                <div class="fileupload fileupload-new" data-provides="fileupload">
-                    <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>
-                    <input id="edit-logo" type="file" name="logo" />
-                    </span>
-                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+            <?php 
+                    $logoImage= '';
+                    if(!empty($userProfile['Logo']) and is_file(FCPATH.'/'.$userProfile['Logo'])){ 
+                      $logoImage = base_url().'/'.$userProfile['Logo'];
+                    }else{
+                       $logoImage = base_url('pictures/defaultLogo.png');
+                    }
+
+              ?>
+                <div class="user-logo-container">
+                  <img id="User-Logo" class="profile-user-img img-responsive" src="<?= $logoImage; ?>" alt="User profile picture">
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <span class="btn btn-file"><span class="fileupload-new">Click To</span><span class="fileupload-exists"> Edit</span>
+                      <input id="edit-logo" type="file" name="logo" />
+                      </span>
+                      <!--a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a-->
+                  </div>
                 </div>
-  			     <?php } ?>
             <?php if(!empty($userProfile['FullName'])){ ?>
               <h3 class="profile-username text-center"><b><?= $userProfile['FullName'];?></b>
               <a class="btn addBtn full-edit" id="full-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a></h3>
@@ -330,6 +370,14 @@
                   </div>
                 </div>
               <hr>
+            <?php }  if(!empty($userProfile['ipAddress'])){ ?>
+               <div class="ipAddress-container">
+                  <div class="ipAddress-text">
+                    <strong><i class="fa fa-globe margin-r-5"></i>IP Address</strong>
+                    <p class="text-muted"> <?= $userProfile['ipAddress'];?></p>
+                  </div>
+               </div>
+               <hr>
             <?php }  if(!empty($userProfile['ScorePercentage'])){ ?>
               <strong><i class="fa fa-briefcase margin-r-5"></i> Score</strong>
                <div class="progress md">

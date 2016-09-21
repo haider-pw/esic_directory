@@ -109,6 +109,7 @@ class Admin extends MY_Controller{
                     user.expiry_date as expiry_date,
                     user.corporate_date as corporate_date,
                     user.added_date as added_date,
+                    user.ipAddress as ipAddress,
                     ESEC.sector as sector,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
             ',false);
@@ -172,6 +173,7 @@ class Admin extends MY_Controller{
                     'Company'			=> $returnedData[0]->Company,
                     'business' 			=> $returnedData[0]->business,
                     'FullName' 			=> $returnedData[0]->FullName,
+                    'ipAddress'         => $returnedData[0]->ipAddress,
                     'added_date' 		=> date("d-M-Y", strtotime($returnedData[0]->added_date)),
                     'expiry_date' 		=> date("d-M-Y", strtotime($returnedData[0]->expiry_date)),
                     'corporate_date' 	=> date("d-M-Y", strtotime($returnedData[0]->corporate_date)),
@@ -282,6 +284,60 @@ class Admin extends MY_Controller{
                 $this->Common_model->update('user',$whereUpdate,$updateArray);
                 echo 'OK::'.$descDataText.'';
             exit();
+    }
+        public function savelogo(){
+            $userID = $this->input->post('userID');
+            $allowedExt = array('jpeg','jpg','png','gif');
+            $uploadPath = './uploads/users/'.$userID.'/';
+            $uploadDirectory = './uploads/users/'.$userID;
+            $uploadDBPath = 'uploads/users/'.$userID.'/';
+            $insertDataArray = array();
+
+            //For Logo Upload
+            if(isset($_FILES['logo']['name']))
+            {
+                $FileName = $_FILES['logo']['name'];
+                $explodedFileName = explode('.',$FileName);
+                $ext = end($explodedFileName);
+                if(!in_array(strtolower($ext),$allowedExt))
+                {
+                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                    return;
+                }else
+                {
+
+                    $FileName = "Logo_".$userID."_".time().".".$ext;
+                    if(!is_dir($uploadDirectory)){
+                        mkdir($uploadDirectory, 0755, true);
+                    }
+
+                    move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
+                    $insertDataArray['logo'] = $uploadDBPath.$FileName;
+                }
+            }else{
+                echo "FAIL::Logo Image Is Required";
+                return;
+            }
+            
+            if(empty($userID)){
+                echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                exit;
+            }
+                $selectData = array('logo AS logo',false);
+                $where = array(
+                    'id' => $userID
+                );
+                $returnedData = $this->Common_model->select_fields_where('user',$selectData, $where, false, '', '', '','','',false);
+                $logo = $returnedData[0]->logo;
+                if(!empty($logo) && is_file(FCPATH.'/'.$logo)){
+                    unlink('./'.$logo);
+                }
+                $resultUpdate = $this->Common_model->update('user',$where,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
     }
     public function updatename(){
                 $userID    = $this->input->post('userID');

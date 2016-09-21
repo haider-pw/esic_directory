@@ -1689,17 +1689,36 @@ if ($this->router->fetch_method() === 'details') {
 		$(function() {
                 
 		   $('#edit-logo').change(function(event) {
-            var input = $(this);
+            var input = $(this)[0];
+            var userId  = $('#profile-box-container').attr('data-user-id');
+            $('#loading-image').show();
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
-                        $('#User-Logo')
-                            .attr('src', e.target.result)
-                            .width(150)
-                            .height(200);
-                    };
-
+                        var formData = new FormData();
+                        formData.append('logo', input.files[0]);
+                        formData.append('userID', userId);
+                        $.ajax({       
+                                crossOrigin: true,
+                                type: 'POST',
+                                url: baseUrl + "Admin/savelogo",
+                                data: formData,
+                                processData: false,
+                                contentType: false
+                        }).done(function (response) {
+                            var data = response.split("::");
+                            if(data[0] === 'OK'){
+                                $('#loading-image').hide();
+                                $('#User-Logo').attr('src', e.target.result);
+                            }else if(data[0] === 'FAIL'){
+                                $('#loading-image').hide();
+                            }
+                       });
+                    
+                     }
                     reader.readAsDataURL(input.files[0]);
+                }else{
+                    $('#loading-image').hide();
                 }
             });
 
