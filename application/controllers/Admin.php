@@ -359,6 +359,29 @@ class Admin extends MY_Controller{
                 echo 'OK::'.$bsName.'';
             exit();
     }
+    public function getsectors(){
+                $userID     = $this->input->post('userID');
+                $where = 'id != 0';
+                $data           = array();
+                $selectData     = array('id as id, sector as sector',false);
+                $returnedData   = $this->Common_model->select_fields_where_like_join('esic_sectors',$selectData,'',$where,FALSE,'','');
+                echo json_encode($returnedData );
+                exit();
+    }
+    public function savesector(){
+                $userID    = $this->input->post('userID');
+                $sectorID  = $this->input->post('answer');
+                if(!isset($userID) || empty($userID) || !isset($sectorID) || empty($sectorID)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['sectorID'] = $sectorID;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$sectorID.'';
+    }
 
     public function manage_universities($param = NULL){
         if($param === 'listing'){

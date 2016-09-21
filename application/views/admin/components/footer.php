@@ -104,6 +104,14 @@
     }
 ?>
 
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+
+
 <!-- jQuery 2.2.3 -->
 <script src="<?= base_url()?>assets/vendors/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
@@ -122,10 +130,11 @@
 <script src="<?= base_url()?>assets/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/customScripting.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/js/jasny-bootstrap.min.js"></script>
+<!--script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.fileupload/9.9.0/js/jquery.fileupload.js"></script-->
+
 <script>
 
 var baseUrl = "<?= base_url() ?>";
@@ -1295,10 +1304,65 @@ if ($this->router->fetch_method() === 'details') {
 	                    }
                     }
                 });
-			});                                        
+			});
+
+			$("body").on("click", ".save-sector", function (e) {
+                e.preventDefault();
+                var userId 	= $('#profile-box-container').attr('data-user-id');
+                var select  = $('.edit-sector select');
+                var ansDiv  = $('.edit-sector');
+                var answer  = $('.edit-sector select').val();
+                var editText= $('.sector-text p');
+                
+                var postData = {
+                    userID: userId,
+                    answer: answer
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/savesector",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] === "OK") {
+                            ansDiv.slideUp('slow');
+                            var newanswer  = $(".edit-sector select option:selected").text();
+                            editText.text(newanswer);
+
+                        }
+                    }
+                });
+            });
+
+            $("#sector-edit").on("click", function (event) {
+                event.preventDefault();
+                var saveBtn = $('.save-sector');
+                var userId  = $('#profile-box-container').attr('data-user-id');
+                var select  = $('.edit-sector select');
+                var ansDiv  = $('.edit-sector');
+                var postData = {
+                    userID: userId
+                };
+                saveBtn.parent().remove();
+                $.ajax({
+                    url: baseUrl + "Admin/getsectors",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = $.parseJSON(output);
+                        select.html('');
+                        $.each(data, function (index, value) {
+                            select.append('<option value="' + value.id + '">' + value.sector + '</option>');
+                        });
+                        select.parent().append('<div class="sector-action-buttons"><button class="save-sector">Save</button></div>');
+                        ansDiv.slideDown('slow');
+                    }
+                });
+            });                                        
         });
 		
 		$(function() {
+			//$('.fileupload').fileupload();
 		    $("#edit_date").daterangepicker({
 		    	singleDatePicker: true,
 		        locale: {
