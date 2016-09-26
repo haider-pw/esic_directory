@@ -6,13 +6,12 @@
     <title>Form to Wizard with jQuery Validation plugin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
     <link href="<?=base_url();?>assets/css/form.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
     <link href="<?=base_url();?>assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
     <script type="text/javascript" src="<?=base_url();?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
     <script type="text/javascript" src="<?=base_url();?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
@@ -33,26 +32,34 @@
     </script>
     <style type="text/css">
         #mainFormDiv {
-/*background-color: #424242;*/
-  box-shadow: 0 0 9px rgba(0,0,0,0.3);
-  background-image: url(uploads/8/4/3/6/84367404/background-images/561993498.jpg) !important;
-}
-#loading-submit{
-    display: none;
-    background: rgba(0,0,0,0.50);
-    z-index: 9999;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    text-align: center;
-}
-#loading-submit img{
-    padding-top: 20%;
-}
+        /*background-color: #424242;*/
+          box-shadow: 0 0 9px rgba(0,0,0,0.3);
+          background-image: url(uploads/8/4/3/6/84367404/background-images/561993498.jpg) !important;
+        }
+        #loading-submit{
+            display: none;
+            background: rgba(0,0,0,0.50);
+            z-index: 9999;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            text-align: center;
+        }
+        #loading-submit img{
+            padding-top: 20%;
+        }
+        #form1 legend{
+        	color:#fff;
+        }
+        .modal select{
+        	min-height: 25px;
+		    max-width: 300px;
+		    display: block;
+        }
     </style>
 </head>
 
@@ -88,13 +95,17 @@
                         <label for="Email">Email</label>
                         <input id="Email" name="email" type="email" class="form-control" placeholder="e-g: jhon@example.com" required />
                     </div>
-                    <!--div class="form-group">
+                    <div class="form-group">
                         <label for="Website">Website Address</label>
                         <input id="Website" name="website" type="text" class="form-control" placeholder="e-g: www.example.com" required />
-                    </div-->
+                    </div>
                     <div class="form-group">
                         <label for="Company">Company Name</label>
                         <input id="Company" name="company" type="text" class="form-control" placeholder="Company" />
+                    </div>
+                     <div class="form-group">
+                        <label for="Address">Address</label>
+                        <input id="Address" name="address" type="text" class="form-control" placeholder="Address" />
                     </div>
                     <div class="form-group">
                         <label for="Business">Business Name (if different)</label>
@@ -159,8 +170,8 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="cop_date">Incorporate Date</label>
-                                        <div class="input-group date" data-provide="datepicker">
-                                            <input id="cop_date" name="cop_date" type="text" class="form-control" placeholder="DD/MM/YYYY" />
+                                        <div class="input-group date">
+                                            <input id="cop_date" name="cop_date" type="text" class="form-control" placeholder="DD-MM-YYYY" />
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -268,11 +279,11 @@
                             <label for="selectRnD">Select R&D</label>
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <select class="select2Style" id="selectRnD" style="width:90%">
+                                    <select class="select2Style" id="selectRnD" name="selectRnD" style="width:90%">
                                         <option value="0">Select...</option>
                                         <?php
                                         if(isset($RnDs) and !empty($RnDs)){
-                                            print_r($RnDs);
+                                            ///print_r($RnDs);
                                             foreach($RnDs as $RnD){
                                                 echo '<option value="'.$RnD->id.'">'.$RnD->rndname.'</option>';
                                             }
@@ -299,7 +310,7 @@
                             <label for="selectAcceleration">Select Acceleration Commercial</label>
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <select class="select2Style" id="selectAcceleration" style="width:90%">
+                                    <select class="select2Style" id="selectAcceleration" name="selectAcceleration" style="width:90%">
                                         <option value="0">Select...</option>
                                         <?php
                                         if(isset($accelerationCommercials) and !empty($accelerationCommercials)){
@@ -330,7 +341,7 @@
                             <label for="acceleratorAcceleration">Select Acceleration</label>
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <select class="select2Style" id="selectAcceleratorProgramme" style="width:90%">
+                                    <select class="select2Style" id="selectAcceleratorProgramme"  name="selectAcceleratorProgramme" style="width:90%">
                                         <option value="0">Select...</option>
                                         <?php
                                         if(isset($acceleratorProgramme) and !empty($acceleratorProgramme)){
@@ -400,7 +411,7 @@
                             <label for="selectorUniversity">Select University</label>
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <select class="select2Style" id="selectorUniversity" style="width: 90%">
+                                    <select class="select2Style" id="selectorUniversity" name="selectorUniversity"  style="width: 90%">
                                         <option value="0">Select...</option>
                                         <?php
                                         if(isset($institutions) and !empty($institutions)){
@@ -516,6 +527,31 @@
                     <label for="ANZSRC">R&D ANZSRC</label>
                     <input id="ANZSRC" name="ANZSRC" type="text" class="form-control" placeholder="R&D ANZSRC" />
                 </div>
+                <div class="form-group">
+                   <label for="rndLogoImage">Logo Image</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i> 
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                        <span class="fileinput-new">Select file</span>
+                        <span class="fileinput-exists">Change</span>
+                                <input type="file" id="rndLogoImage" name="rndLogoImage"/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rndAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
+                    <select id="rndAppStatus" name="rndAppStatus" style="width: 80%;">
+                            <option value="0">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Lodged">Application Lodged</option>
+                                 
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -538,6 +574,31 @@
                 <div class="form-group">
                     <label for="Institution">Institution Name</label>
                     <input id="Institution" name="institution" type="text" class="form-control" placeholder="Institution" />
+                </div>
+                <div class="form-group">
+                   <label for="institutionLogoImage">Logo Image</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i> 
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                        <span class="fileinput-new">Select file</span>
+                        <span class="fileinput-exists">Change</span>
+                                <input type="file" id="institutionLogoImage" name="institutionLogoImage"/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="institutionAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
+                    <select id="institutionAppStatus" name="institutionAppStatus" style="width: 80%;">
+                            <option value="0">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Lodged">Application Lodged</option>
+                                 
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -590,6 +651,31 @@
                     <label for="Technology">Technology</label>
                     <input id="Technology" name="Technology" type="text" class="form-control" placeholder="Technology" />
                 </div>
+                <div class="form-group">
+                   <label for="accLogoImage">Logo Image</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i> 
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                        <span class="fileinput-new">Select file</span>
+                        <span class="fileinput-exists">Change</span>
+                                <input type="file" id="accLogoImage" name="accLogoImage"/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="EntrepreneurProgrammeAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
+                    <select id="EntrepreneurProgrammeAppStatus" name="EntrepreneurProgrammeAppStatus" style="width: 80%;">
+                            <option value="0">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Lodged">Application Lodged</option>
+                                 
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -632,6 +718,15 @@
                         <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="acceleratorProgrammeAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
+                    <select id="acceleratorProgrammeAppStatus" name="acceleratorProgrammeAppStatus" style="width: 80%;">
+                            <option value="0">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Lodged">Application Lodged</option>     
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -655,6 +750,30 @@
                     <label for="Industry">Industry Classification Name</label>
                     <input id="Industry" name="Industry" type="text" class="form-control" placeholder="Industry Classification" />
                 </div>
+                <div class="form-group">
+                   <label for="secLogoImage">Logo Image</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i> 
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                        <span class="fileinput-new">Select file</span>
+                        <span class="fileinput-exists">Change</span>
+                                <input type="file" id="secLogoImage" name="secLogoImage"/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="industryAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
+                    <select id="industryAppStatus" name="industryAppStatus" style="width: 80%;">
+                            <option value="0">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Lodged">Application Lodged</option>     
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -670,20 +789,20 @@
 
 <script type="text/javascript">
     $(function(){
+    	function zIndex($){
+	    	$('#main-wrap').css('z-index', 'initial');
+	    	$('#main-content').css('z-index', 'initial');
+	    }
         $("input[name='incorporatedAus']").on("change",function(){
             if($(this).val() === 'Between six and three years ago'){
                 $("#whollyOwned").show();
-                console.log("show");
+                //console.log("show");
             }else{
                 $("#whollyOwned").hide();
             }
         });
-    });
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#selectorUniversity, #selectAcceleration,#selectAcceleratorProgramme,#selectRnD").select2();
+    	zIndex($);
+        $("#industryClassification, #selectorUniversity, #selectAcceleration, #selectAcceleratorProgramme, #selectRnD").select2();
         $("input[name=EntrepreneurProgramme]").on("change",function(){
             var EntrepreneurProgramme = $(this).val();
             if(EntrepreneurProgramme === 'Yes'){
@@ -724,11 +843,71 @@
                 $("#RnD").css('display','none');
             }
         });
+            var $signupForm = $( '#SignupForm' );
+    var ipAddress;
+    $.getJSON("//jsonip.com/?callback=?", function (data) {
+            //console.log(data);// alert(data.ip);
+            ipAddress = data.ip;
+    });
+
+    	zIndex($);
+        var $form = $('#SignupForm');
+        $("#SubmitForm").on("click",function(e){
+            e.preventDefault();
+           
+            //$('error-box');
+            $('#error-box').remove();
+            $('#loading-submit').show();
+
+            var formData = new FormData();
+                    $.ajax({
+                            crossOrigin: true,
+                            type: $form.attr('method'),
+                            url: $form.attr('action'),
+                            data: $form.serialize()
+                    }).done(function (response) {
+                            var data = response.split("::");
+                            if(data[0] === "OK"){
+                                //Run another Ajax To Get Another Form.
+                               //console.log(response);
+                                formData.append('logo', $('#Logo')[0].files[0]);
+                                formData.append('banner', $('#BannerImage')[0].files[0]);
+                                formData.append('product', $('#productImage')[0].files[0]);
+                                formData.append('sector', $('#industryClassification').val());
+                                formData.append('ipAddress', ipAddress);
+                                formData.append('userID', data[2]);
+
+                                $.ajax({       
+                                    crossOrigin: true,
+                                    type: $form.attr('method'),
+                                    url: "<?=base_url()?>Reg/step2",
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false
+                                }).done(function (response) {
+                                    var data = response.split("::");
+                                    if(data[0] === 'OK'){
+                                        $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(255, 255, 255, 0.8); padding: 5px; color: #333; font-weight: bold; border: 2px solid #333; width: 100%;display: block;">Thank you, Your Record have been successfully Updated</span>');
+                                         $('#loading-submit').hide();
+                                    }else if(data[0] === 'FAIL'){
+                                        $('#loading-submit').hide();
+                                    }
+                                });
+                            }else{
+                                console.log(response);
+                                $("#mainFormDiv").append('<span id="error-box" style="background: rgba(255, 255, 255, 0.8);padding: 5px;color: #333;font-weight: bold; border: 2px solid #333;width: 100%;display: block;">There are Errors, Please Fill All Fields</span>');
+                                $('#loading-submit').hide();
+                            }
+
+                    });
+            
+       });
         $('#addRnDModel').on("click",function(e){
             e.preventDefault();
              $('.RnDModal').show();
         });
         $("#addRnD").on("click",function(){
+        	zIndex($);
             var selectRnD = $("#rndname");
             var selectRnDValue = selectRnD.val();
             var RndName = $("#rndname").val();
@@ -736,6 +915,7 @@
             var IDNumber   = $("#rndIdNumber").val();
             var Address    = $("#rndAddress").val();
             var ANZSRC     = $("#ANZSRC").val();
+            var rndAppStatus = $('#rndAppStatus').val();
             if(selectRnDValue.length === 0){
                 selectRnD.parents(".form-group").addClass('has-error');
                 return false ;
@@ -757,16 +937,21 @@
                         $('.RnDModal').hide();
                     }
                 });
+            var formData = new FormData();
+            formData.append('rndLogoImage', $('#rndLogoImage')[0].files[0]);
+            formData.append('rndname',RndName);
+            formData.append('IDNumber',IDNumber);
+            formData.append('Address',Address);
+            formData.append('ANZSRC',ANZSRC);
+            formData.append('rndAppStatus',rndAppStatus);
             if(RnDCheck=='0'){
                 $.ajax({
                     url: "<?=base_url()?>Reg/addRnD",
+        			crossOrigin: true,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     type:"POST",
-                    data:{
-                        rndname :RndName,
-                        IDNumber:IDNumber,
-                        Address :Address,
-                        ANZSRC  :ANZSRC
-                    },
                     success:function(output){
                             var  data =  output.split('::');
                                if(data[0]== 'OK'){
@@ -798,8 +983,10 @@
         });
 
         $("#addAcceleratorProgramme").on("click",function(){
+        	zIndex($);
             var  AcceleratorProgrammeName = $("#AcceleratorProgrammeName");  
             var AcceleratorProgrammeNameValue = AcceleratorProgrammeName.val();
+            var acceleratorProgrammeAppStatus = $("#acceleratorProgrammeAppStatus").val();
             if(AcceleratorProgrammeNameValue.length === 0){
                 AcceleratorProgrammeName.parents(".form-group").addClass('has-error');
                 return false ;
@@ -811,6 +998,7 @@
             formData.append('ProgrammeLogoImage', $('#ProgrammeLogoImage')[0].files[0]);
             formData.append('AcceleratorProgrammeName',AcceleratorProgrammeNameValue);
             formData.append('Programme_Web_Address',Programme_Web_Address);
+            formData.append('acceleratorProgrammeAppStatus',acceleratorProgrammeAppStatus);
 
             var ProgrammeNameCheck = '0';
             var ProgrammeFilter  = $('#selectAcceleratorProgramme option').filter(
@@ -843,6 +1031,9 @@
                             var newOption = new Option(programmeName,programmeId, true, true);
                                 $("#selectAcceleratorProgramme").append(newOption).trigger('change');
                                 $('.acceleratorProgrammeModal').modal('hide');
+                                $('.acceleratorProgrammeModal').modal().hide();
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
                         }else if(data[0]=='Existed'){
                             var ProgrammeNameValue = $('#selectAcceleratorProgramme option').filter(function () { return $(this).html() == ProgrammeValue}).val();
                             var valuecheck         = $(this).val();
@@ -860,8 +1051,11 @@
         });
 
         $("#addInstitution").on("click",function(){
+        	zIndex($);
             var Institution = $("#Institution");
             var InstitutionValue = Institution.val();
+            var institutionAppStatus = $("#institutionAppStatus").val();
+
             if(InstitutionValue.length === 0){
                 Institution.parents(".form-group").addClass('has-error');
                 return false ;
@@ -882,11 +1076,18 @@
                         $('.modal-backdrop').remove();
                     }
                 });
+            var formData = new FormData();
+            formData.append('institutionLogoImage', $('#institutionLogoImage')[0].files[0]);
+            formData.append('institution',InstitutionValue);
+            formData.append('institutionAppStatus',institutionAppStatus);
             if(InstitutionCheck=='0'){
                 $.ajax({
                     url: "<?=base_url()?>Reg/addInstitution",
+                    crossOrigin: true,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     type:"POST",
-                    data:{institution:InstitutionValue},
                     success:function(output){
                             var  data =  output.split('::');
                                if(data[0]=='OK'){
@@ -895,6 +1096,9 @@
                                    var newOption = new Option(institutionName,institutionId, true, true);
                                     $("#selectorUniversity").append(newOption).trigger('change');
                                     $('.InstitutionModal').modal('hide');
+                                    $('.InstitutionModal').modal().hide();
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
                                 }else if(data[0]=='Existed'){
                                     var InstitutionNameValue = $('#selectorUniversity option').filter(function (){ 
                                         return $(this).html() == InstitutionValue}).val();
@@ -911,6 +1115,7 @@
             }
         });
         $("#addEntrepreneurProgramme").on("click",function(){
+        	zIndex($);
             var Member = $("#Member");  
             var MemberValue = Member.val();
             if(MemberValue.length === 0){
@@ -927,6 +1132,7 @@
             var Market              = $("#Market").val();
             var Technology          = $("#Technology").val();
             var ProgrammeNameCheck  = '0';
+            var EntrepreneurProgrammeAppStatus = $("#EntrepreneurProgrammeAppStatus").val();
             var ProgrammeFilter  = $('#selectAcceleration option').filter(
                 function(){ 
                     if($(this).html() == MemberValue){
@@ -940,20 +1146,25 @@
                         $('.modal-backdrop').remove();
                     }
                 });
+            var formData = new FormData();
+            formData.append('accLogoImage', $('#accLogoImage')[0].files[0]);
+            formData.append('Market',Market);
+            formData.append('Member',MemberValue);
+            formData.append('Technology',Technology);
+            formData.append('Web_Address',Web_Address);
+            formData.append('Project_Title',Project_Title);
+            formData.append('State_Territory',State_Territory);
+            formData.append('Project_Summary',Project_Summary);
+            formData.append('Project_Location',Project_Location);
+            formData.append('EntrepreneurProgrammeAppStatus',EntrepreneurProgrammeAppStatus);
             if(ProgrammeNameCheck=='0'){
                 $.ajax({
                     url: "<?=base_url()?>Reg/addEntrepreneurProgramme",
+					crossOrigin: true,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     type:"POST",
-                    data:{
-                        Market:Market,
-                        Member:MemberValue,
-                        Technology:Technology,
-                        Web_Address:Web_Address,
-                        Project_Title:Project_Title,
-                        State_Territory:State_Territory,
-                        Project_Summary:Project_Summary,
-                        Project_Location:Project_Location
-                    },
                     success:function(output){
                         var  data =  output.split('::');
                         if(data[0]=='OK'){
@@ -961,6 +1172,7 @@
                             var programmeName = data[2]; 
                             var newOption = new Option(programmeName,programmeId, true, true);
                                 $("#selectAcceleration").append(newOption).trigger('change');
+                                $('.EntrepreneurProgrammeModal').modal('hide');
                                 $('.EntrepreneurProgrammeModal').modal().hide();
                                 $('body').removeClass('modal-open');
                                 $('.modal-backdrop').remove();
@@ -978,88 +1190,20 @@
                 });
             }
         });
-    });
-</script>
-<script type="text/javascript">
-    $(function(){
         $("input[name='incorporatedAus']").on("change",function(){
             if($(this).val() === 'Between six and three years ago'){
                 $("#whollyOwned").show();
-                console.log("show");
+                //console.log("show");
             }else{
                 $("#whollyOwned").hide();
             }
         });
-    });
-      
-</script>
-
-<script type="text/javascript">
- var $signupForm = $( '#SignupForm' );
-            
-    $(document).ready(function() {
-
-    	$('#main-wrap').css('z-index', 'initial');
-    	$('#main-content').css('z-index', 'initial');
-
-        var $form = $('#SignupForm');
-        $("#SubmitForm").on("click",function(e){
-            e.preventDefault();
-            $('error-box')
-            $('#error-box').remove();
-            $('#loading-submit').show();
-            var formData = new FormData();
-                    $.ajax({
-                            crossOrigin: true,
-                            type: $form.attr('method'),
-                            url: $form.attr('action'),
-                            data: $form.serialize()
-                        })
-                        .done(function (response) {
-                            var data = response.split("::");
-                            if(data[0] === "OK"){
-                                //Run another Ajax To Get Another Form.
-                               console.log(response);
-                                formData.append('logo', $('#Logo')[0].files[0]);
-                                formData.append('banner', $('#BannerImage')[0].files[0]);
-                                formData.append('product', $('#productImage')[0].files[0]);
-                                formData.append('sector', $('#industryClassification').val());
-                                formData.append('userID', data[2]);
-
-                                $.ajax({       
-                                    crossOrigin: true,
-                                    type: $form.attr('method'),
-                                    url: "<?=base_url()?>Reg/step2",
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false
-                                }).done(function (response) {
-                                    var data = response.split("::");
-                                    if(data[0] === 'OK'){
-                                        $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(0,0,0,0.8); padding: 5px; color: white; font-weight: bold; border: 2px dotted black; width: 100%;display: block;">Thank you, Your Record have been successfully Updated</span>');
-                                         $('#loading-submit').hide();
-                                    }else if(data[0] === 'FAIL'){
-                                        $('#loading-submit').hide();
-                                    }
-                                });
-                            }else{
-                                console.log(response);
-                                $("#mainFormDiv").append('<span id="error-box" style="background: rgba(0,0,0,0.8);padding: 5px;color: white;font-weight: bold; border: 2px dotted black;width: 100%;display: block;">There are Errors, Please Fill All Fields</span>');
-                                $('#loading-submit').hide();
-                            }
-
-                        });
-            
-                    });
-        $( function() {
-        $( "#cop_date" ).datepicker({
-            format: 'dd/mm/yyyy'
-        });
-      });
-$("#industryClassification").select2();
+       
         $("#addClassification").on("click",function(){
+        	zIndex($);
             var Industry = $("#Industry");
             var IndustryValue = Industry.val();
+            var industryAppStatus = $("#industryAppStatus").val();
             
             if(IndustryValue.length === 0){
                 Industry.parents(".form-group").addClass('has-error');
@@ -1081,38 +1225,63 @@ $("#industryClassification").select2();
                         $('.modal-backdrop').remove();
                     }
                 });
-            if(IndustryNameCheck=='0'){
-                $.ajax({
-                    url: "<?=base_url()?>Reg/addIndustryClassification",
-                    type:"POST",
-                    data:{Industry:IndustryValue},
-                    success:function(output){
-                        var  data =  output.split('::');    
-                        if(data[0]=='OK'){
-                            var IndustryId   = data[1];
-                            var IndustryName = data[2]; 
-                            var newOption    = new Option(IndustryName,IndustryId, true, true);
-                                $("#industryClassification").append(newOption).trigger('change');
-                                $('.IndustryClassificationModal').modal().hide();
-                                $('body').removeClass('modal-open');
-                                $('.modal-backdrop').remove();
-                        }else if(data[0]=='Existed'){
-                            var IndustryNameValue   = $('#industryClassification option').filter(function () { return $(this).html() == IndustryValue}).val();
-                            var valuecheck          = $(this).val();
-                            var selectIndustry      = $("#industryClassification").select2();
-                            selectIndustry.val(IndustryNameValue).trigger("change"); 
-                            $('.IndustryClassificationModal').modal('hide');
-                            $('.IndustryClassificationModal').modal().hide();
-                            $('body').removeClass('modal-open');
-                            $('.modal-backdrop').remove();
+		            var formData = new FormData();
+		            formData.append('secLogoImage', $('#secLogoImage')[0].files[0]);
+		            formData.append('Industry',IndustryValue);
+		            formData.append('industryAppStatus',industryAppStatus);
+            	if(IndustryNameCheck=='0'){
+	                $.ajax({
+	                    url: "<?=base_url()?>Reg/addIndustryClassification",
+	                    crossOrigin: true,
+	                    data: formData,
+	                    processData: false,
+	                    contentType: false,
+	                    type:"POST",
+	                    success:function(output){
+	                        var  data =  output.split('::');    
+	                        if(data[0]=='OK'){
+	                            var IndustryId   = data[1];
+	                            var IndustryName = data[2]; 
+	                            var newOption    = new Option(IndustryName,IndustryId, true, true);
+	                                $("#industryClassification").append(newOption).trigger('change');
+	                                $('.IndustryClassificationModal').modal('hide');
+	                                $('.IndustryClassificationModal').modal().hide();
+	                                $('body').removeClass('modal-open');
+	                                $('.modal-backdrop').remove();
+	                        }else if(data[0]=='Existed'){
+	                            var IndustryNameValue   = $('#industryClassification option').filter(function () { return $(this).html() == IndustryValue}).val();
+	                            var valuecheck          = $(this).val();
+	                            var selectIndustry      = $("#industryClassification").select2();
+	                            selectIndustry.val(IndustryNameValue).trigger("change"); 
+	                            $('.IndustryClassificationModal').modal('hide');
+	                            $('.IndustryClassificationModal').modal().hide();
+	                            $('body').removeClass('modal-open');
+	                            $('.modal-backdrop').remove();
 
-                        }
-                    }
-                });
-            }
-            
+	                        }
+	                    }
+	                });
+            	}
         });
+
     });
+        
+</script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript">
+//$('.modal select').select2();
+	//$("#cop_date").datepicker();
+	$("#cop_date").datepicker({
+                singleDatePicker: true,
+                locale: {
+                    format: 'DD-MM-YYYY',
+                }
+        });
 </script>
 </body>
 </html>

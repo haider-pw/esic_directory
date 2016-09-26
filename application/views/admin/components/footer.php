@@ -69,7 +69,13 @@
 <?php
     }else{
 ?>
-
+<style>
+.modal select{
+    min-height: 25px;
+    max-width: 300px;
+    display: block;
+  }
+</style>
 <!--Edit Ward Modal-->
 <div class="modal approval-modal">
     <div class="modal-dialog">
@@ -130,6 +136,42 @@
 </div><!-- /.modal -->
 <!-- /.End Edit Ward Modal --><!-- /.modal -->
 
+<!--Edit ABR Modal-->
+<div class="modal abr-modal" id="abr-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Australian Business Registration (Commonwealth of Australia)</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenID">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="hidden" id="hiddenUserID">
+                            <label for="editAbrTextBox">Please Change ABR Status: </label>
+                            <select id="editAbrTextBox" name="editAbrTextBox" style="width: 80%;">
+                                    <option value="0">Select...</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Lodged">Application Lodged</option>     
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="yesSaveAbr">Yes</button>
+                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="noSaveAbr">No</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
 
 <?php
     }
@@ -276,8 +318,14 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
                     }
                 });
             });
+            $(".delete-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+            });
 
-            $("#nodelete").on("click", function () {
+            $("#yesDelete").on("click", function () {
                 var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
                 if (hiddenModalUserID == '') {
                     hiddenModalUserID = $(this).attr('data-id');
@@ -294,7 +342,7 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
                         var data = output.split("::");
                         if (data[0] == 'OK') {
                             oTable.fnDraw();
-                            $('.approval-modal').modal('hide');
+                            $('.delete-modal').modal('hide');
                         }
                     }
                 });
@@ -380,6 +428,9 @@ if ($this->router->fetch_method() === 'manage_sectors') {
                     "mData": "Sector"
                 },
                 {
+                    "mData": "ABR"
+                },
+                {
                     "mData": "Permanent"
                 },
                 /* Trashed */ {
@@ -421,7 +472,33 @@ if ($this->router->fetch_method() === 'manage_sectors') {
                 modal.find("input#editSectorTextBox").val(Sector);
             });
 
-
+            $("#abr-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var selectValue = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find("#abr-modal select option").filter(function() {
+                    return this.text == selectValue; 
+                }).attr('selected', true);
+            });
+            $("#yesSaveAbr").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var value = $(this).parents(".modal-content").find("select").val();
+                var postData = {id: hiddenModalID, value: value};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_sectors/abr",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $("#abr-modal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
             $("#yesApprove").on("click", function () {
                 var hiddenModalSectorID = $(this).parents(".modal-content").find("#hiddenUserID").val();
                 var postData = {id: hiddenModalSectorID, value: "trash"};
@@ -473,7 +550,6 @@ if ($this->router->fetch_method() === 'manage_sectors') {
                     }
                 });
             });
-
             $("#updateSectorBtn").on("click", function () {
                 var id = $(this).parents(".modal-content").find("#hiddenSectorID").val();
                 var sector = $(this).parents(".modal-content").find("#editSectorTextBox").val();
@@ -494,7 +570,7 @@ if ($this->router->fetch_method() === 'manage_sectors') {
                     }
                 });
             });
-                        $("#permanent-modal").on("shown.bs.modal", function (e) {
+           $("#permanent-modal").on("shown.bs.modal", function (e) {
                 var button = $(e.relatedTarget); // Button that triggered the modal
                 var ID = button.parents("tr").attr("data-id");
                 var name = button.parents("tr").find('td').eq(1).text();
@@ -590,6 +666,9 @@ if ($this->router->fetch_method() === 'manage_rd') {
                 },
                 /* ANZSRC */ {
                     "mData": "ANZSRC"
+                },
+                {
+                    "mData": "ABR"
                 },
                 /* Permanent */ {
                     "mData": "Permanent"
@@ -771,6 +850,33 @@ if ($this->router->fetch_method() === 'manage_rd') {
                     }
                 });
             });
+            $("#abr-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var selectValue = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find("#abr-modal select option").filter(function() {
+                    return this.text == selectValue; 
+                }).attr('selected', true);
+            });
+            $("#yesSaveAbr").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var value = $(this).parents(".modal-content").find("select").val();
+                var postData = {id: hiddenModalID, value: value};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_rd/abr",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $("#abr-modal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
         });
     </script>
 
@@ -795,6 +901,9 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
                 },
                 /* website */ {
                     "mData": "Website"
+                },
+                {
+                    "mData": "ABR"
                 },
                 /* Permanent */ {
                     "mData": "Permanent"
@@ -931,6 +1040,33 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
                     }
                 });
             });
+            $("#abr-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var selectValue = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find("#abr-modal select option").filter(function() {
+                    return this.text == selectValue; 
+                }).attr('selected', true);
+            });
+            $("#yesSaveAbr").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var value = $(this).parents(".modal-content").find("select").val();
+                var postData = {id: hiddenModalID, value: value};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_accelerators/abr",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $("#abr-modal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
         });
     </script>
 
@@ -953,6 +1089,9 @@ if ($this->router->fetch_method() === 'manage_universities') {
                 },
                 /* University */ {
                     "mData": "University"
+                },
+                {
+                    "mData": "ABR"
                 },
                 /* Permanent */ {
                     "mData": "Permanent"
@@ -1071,7 +1210,7 @@ if ($this->router->fetch_method() === 'manage_universities') {
                     }
                 });
             });
-                        $("#permanent-modal").on("shown.bs.modal", function (e) {
+            $("#permanent-modal").on("shown.bs.modal", function (e) {
                 var button = $(e.relatedTarget); // Button that triggered the modal
                 var ID = button.parents("tr").attr("data-id");
                 var name = button.parents("tr").find('td').eq(1).text();
@@ -1137,9 +1276,34 @@ if ($this->router->fetch_method() === 'manage_universities') {
                     }
                 });
             });
+            $("#abr-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var selectValue = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find("#abr-modal select option").filter(function() {
+                    return this.text == selectValue; 
+                }).attr('selected', true);
+            });
+            $("#yesSaveAbr").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var value = $(this).parents(".modal-content").find("select").val();
+                var postData = {id: hiddenModalID, value: value};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_universities/abr",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $("#abr-modal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
         });
-
-
     </script>
 
     <?php
@@ -1193,6 +1357,9 @@ if ($this->router->fetch_method() === 'manage_acc_commercials') {
                  "mData" : "Type"
                  },
                  */
+                 {
+                    "mData": "ABR"
+                 },
                  /* Permanent */ {
                     "mData": "Permanent"
                 },
@@ -1253,7 +1420,7 @@ if ($this->router->fetch_method() === 'manage_acc_commercials') {
                     }
                 });
             });
-                        $("#permanent-modal").on("shown.bs.modal", function (e) {
+            $("#permanent-modal").on("shown.bs.modal", function (e) {
                 var button = $(e.relatedTarget); // Button that triggered the modal
                 var ID = button.parents("tr").attr("data-id");
                 var name = button.parents("tr").find('td').eq(1).text();
@@ -1317,6 +1484,33 @@ if ($this->router->fetch_method() === 'manage_acc_commercials') {
                         var data = output.split("::");
                         if (data[0] === "OK") {
                             $("#editAccelerationModal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
+            $("#abr-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var selectValue = button.parents("tr").find('td').eq(1).text();
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find("#abr-modal select option").filter(function() {
+                    return this.text == selectValue; 
+                }).attr('selected', true);
+            });
+            $("#yesSaveAbr").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var value = $(this).parents(".modal-content").find("select").val();
+                var postData = {id: hiddenModalID, value: value};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_acc_commercials/abr",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $("#abr-modal").modal('hide');
                             oTable.fnDraw();
                         }
                     }
@@ -1691,7 +1885,7 @@ if ($this->router->fetch_method() === 'details') {
 		   $('#edit-logo').change(function(event) {
             var input = $(this)[0];
             var userId  = $('#profile-box-container').attr('data-user-id');
-            $('#loading-image').show();
+            $('#loading-image-logo').show();
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -1708,10 +1902,10 @@ if ($this->router->fetch_method() === 'details') {
                         }).done(function (response) {
                             var data = response.split("::");
                             if(data[0] === 'OK'){
-                                $('#loading-image').hide();
+                                $('#loading-image-logo').hide();
                                 $('#User-Logo').attr('src', e.target.result);
                             }else if(data[0] === 'FAIL'){
-                                $('#loading-image').hide();
+                                $('#loading-image-logo').hide();
                             }
                        });
                     
@@ -1724,7 +1918,7 @@ if ($this->router->fetch_method() === 'details') {
            $('#edit-banner').change(function(event) {
             var input = $(this)[0];
             var userId  = $('#profile-box-container').attr('data-user-id');
-            $('#loading-image').show();
+            $('#loading-image-banner').show();
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -1741,10 +1935,10 @@ if ($this->router->fetch_method() === 'details') {
                         }).done(function (response) {
                             var data = response.split("::");
                             if(data[0] === 'OK'){
-                                $('#loading-image').hide();
+                                $('#loading-image-banner').hide();
                                 $('#User-banner').attr('src', e.target.result);
                             }else if(data[0] === 'FAIL'){
-                                $('#loading-image').hide();
+                                $('#loading-image-banner').hide();
                             }
                        });
                     
@@ -1757,7 +1951,7 @@ if ($this->router->fetch_method() === 'details') {
            $('#edit-product').change(function(event) {
             var input = $(this)[0];
             var userId  = $('#profile-box-container').attr('data-user-id');
-            $('#loading-image').show();
+            $('#loading-image-product').show();
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -1774,10 +1968,10 @@ if ($this->router->fetch_method() === 'details') {
                         }).done(function (response) {
                             var data = response.split("::");
                             if(data[0] === 'OK'){
-                                $('#loading-image').hide();
+                                $('#loading-image-product').hide();
                                 $('#User-product').attr('src', e.target.result);
                             }else if(data[0] === 'FAIL'){
-                                $('#loading-image').hide();
+                                $('#loading-image-product').hide();
                             }
                        });
                     

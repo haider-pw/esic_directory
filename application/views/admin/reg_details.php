@@ -227,7 +227,9 @@ margin: 10px 0px;
 
                 }
                 .user-imgs-container .img-container{
-
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
                 }
                 .user-imgs-container .edit-button{
 
@@ -242,13 +244,26 @@ margin: 10px 0px;
           height: 25px;
              } 
 .user-imgs{
-  margin: 0 auto;
-  max-width: 500px;
-  padding: 3px;
-  border: 3px solid #d2d6de;
+    margin: 0 auto;
+    width: 100%;
+    padding: 3px;
+    border: 3px solid #d2d6de;
   }
 
-
+.loading-image{
+    display: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    text-align: center;
+}
+.loading-image img{
+	margin-top: 20%;
+}
         </style>
 
 
@@ -285,6 +300,9 @@ margin: 10px 0px;
               ?>
                 <div class="user-logo-container">
                   <img id="User-Logo" class="profile-user-img img-responsive" src="<?= $logoImage; ?>" alt="User profile picture">
+                  <div id="loading-image-logo" class="loading-image">
+				    <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
+				  </div>
                   <div class="fileupload fileupload-new" data-provides="fileupload">
                       <span class="btn btn-file"><span class="fileupload-new">Click To</span><span class="fileupload-exists"> Edit</span>
                       <input id="edit-logo" type="file" name="logo" />
@@ -469,7 +487,7 @@ margin: 10px 0px;
                       if(!empty($userProfile['productImage']) and is_file(FCPATH.'/'.$userProfile['productImage'])){ 
                         $productImage = base_url().'/'.$userProfile['productImage'];
                       }else{
-                         $productImage = base_url('pictures/defaultBanner.png');
+                         $productImage = base_url('pictures/defaultLogo.png');
                       }
 
                 ?>
@@ -477,6 +495,9 @@ margin: 10px 0px;
                   <h3>User Product Image</h3>
                   <div class="img-container">
                     <img id="User-product" class="user-imgs img-responsive" src="<?= $productImage; ?>" alt="Product Picture">
+                    <div id="loading-image-product" class="loading-image">
+					    <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
+					 </div>
                   </div>
                   <div class="fileupload fileupload-new" data-provides="fileupload">
                       <span class="btn btn-file"><span class="fileupload-new">Edit</span><span class="fileupload-exists"></span>
@@ -490,7 +511,7 @@ margin: 10px 0px;
                       if(!empty($userProfile['bannerImage']) and is_file(FCPATH.'/'.$userProfile['bannerImage'])){ 
                         $BannerImage = base_url().'/'.$userProfile['bannerImage'];
                       }else{
-                         $BannerImage = base_url('pictures/defaultBanner.png');
+                         $BannerImage = base_url('pictures/defaultBanner.jpg');
                       }
 
                 ?>
@@ -498,6 +519,9 @@ margin: 10px 0px;
                   <h3>User Banner Image</h3>
                   <div class="img-container">
                     <img id="User-banner" class="user-imgs img-responsive" src="<?= $BannerImage; ?>" alt="Banner Picture">
+                    <div id="loading-image-banner" class="loading-image">
+					    <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
+					 </div>
                   </div>
                   <div class="fileupload fileupload-new" data-provides="fileupload">
                       <span class="btn btn-file"><span class="fileupload-new">Edit</span><span class="fileupload-exists"></span>

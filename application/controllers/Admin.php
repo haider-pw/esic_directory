@@ -556,6 +556,8 @@ class Admin extends MY_Controller{
             $selectData = array('
             id AS ID,
             institution AS University,
+            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+                CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
@@ -724,6 +726,41 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'abr'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data=$value;
+            $updateData = array(
+                'AppStatus' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_institution',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'new'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -757,6 +794,8 @@ class Admin extends MY_Controller{
             $selectData = array('
             id AS ID,
             sector AS Sector,
+            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+                CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
@@ -926,6 +965,41 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'abr'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data=$value;
+            $updateData = array(
+                'AppStatus' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_sectors',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'new'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -963,6 +1037,8 @@ class Admin extends MY_Controller{
             IDNumber AS IDNumber,
             AddressContact AS AddressContact,
             ANZSRC AS ANZSRC,
+            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+                CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
@@ -1101,6 +1177,41 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'abr'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data=$value;
+            $updateData = array(
+                'AppStatus' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_RnD',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'delete'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -1151,6 +1262,8 @@ class Admin extends MY_Controller{
             Market AS Market,
             Technology AS Technology,
             Type AS Type,
+            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+                CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
@@ -1240,6 +1353,41 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'abr'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data=$value;
+            $updateData = array(
+                'AppStatus' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
         if($param === 'update'){
             if(!$this->input->post()){
                 echo "FAIL::No Value Posted";
@@ -1307,6 +1455,8 @@ class Admin extends MY_Controller{
             id AS ID,
             name AS Name,
             website AS Website,
+            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+                CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
             ',false);
@@ -1434,6 +1584,41 @@ class Admin extends MY_Controller{
                 }else{
                     echo $updateResult['message'];
                 }
+            }
+            return NULL;
+        }
+        if($param === 'abr'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id)){
+                echo "FAIL::Posted values are not VALID 1";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID 2";
+                return NULL;
+            }
+            $data=$value;
+            $updateData = array(
+                'AppStatus' => $data
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            ); 
+
+            $returnedData = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$updateData);
+            if($returnedData === true){
+                echo "OK::Record Successfully";
+            }else{
+                echo "OK::FAIL::".$returnedData['message'];
             }
             return NULL;
         }

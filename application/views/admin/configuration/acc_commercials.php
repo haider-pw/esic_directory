@@ -30,6 +30,7 @@
                                 <th>Member</th>
                                 <th>Web_Address</th>
                                 <th>Project_Title</th>
+                                <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
@@ -43,6 +44,7 @@
                                 <th>Member</th>
                                 <th>Web_Address</th>
                                 <th>Project_Title</th>
+                                <th>ABR</th>
                                 <th>Permanent</th>                        
                                 <th>Trashed</th>
                                 <th>Action</th>

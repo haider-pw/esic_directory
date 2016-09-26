@@ -69,6 +69,7 @@ class Reg extends CI_Controller {
         $email                  = $this->input->post('email');
         $website                = $this->input->post('website');
         $company                = $this->input->post('company');
+        $address                = $this->input->post('address');
         $business               = $this->input->post('business');
         $shortDescription       = $this->input->post('shortDescription');
         $date_pickter_format    = $this->input->post('cop_date');
@@ -119,16 +120,17 @@ class Reg extends CI_Controller {
             'email'             => $email,
             'website'           => $website,
             'company'           => $company,
+            'address'           => $address,
             'business'          => $business,
             'acn_number'        => $acn,
             'added_date'        => $added_date,
             'expiry_date'       => $expiry_date,
             'corporate_date'    => $cop_date,
-            'businessShortDescription'  => $shortDescription,
             'RnDID'             => $RnDID,
             'AccID'             => $AccID,
             'AccCoID'           => $AccCoID,
             'inID'              => $inID,
+            'businessShortDescription'  => $shortDescription,
             'score'             => 0
         ); 
 
@@ -203,6 +205,8 @@ class Reg extends CI_Controller {
         //step2
             $userID = $this->input->post('userID');
             $sector = $this->input->post('sector');
+            $ipAddress = $this->input->post('ipAddress');
+            
             $allowedExt = array('jpeg','jpg','png','gif');
 
             $uploadPath = './uploads/users/'.$userID.'/';
@@ -210,7 +214,8 @@ class Reg extends CI_Controller {
             $uploadDBPath = 'uploads/users/'.$userID.'/';
 
             $insertDataArray = array(
-                'sectorID' => $sector
+                'sectorID'  => $sector,
+                'ipAddress' => $ipAddress
             );
 
             //For Logo Upload
@@ -298,6 +303,7 @@ class Reg extends CI_Controller {
     }
     public function addInstitution(){
         $institution = $this->input->post("institution");
+        $institutionAppStatus = $this->input->post("institutionAppStatus");
         if(empty($institution) or !is_string($institution)){
             echo "FAIL::Please Add Institution, Field Can Not be Blank During Submission.";
             return;
@@ -313,22 +319,56 @@ class Reg extends CI_Controller {
            
             $insertData = array(
                 'institution' => $institution,
+                'AppStatus' => $institutionAppStatus,
                 'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_institution',$insertData);
-
             if($insertResult > 0){
                 echo "OK::".$insertResult."::".$institution;
+                    $allowedExt = array('jpeg','jpg','png','gif');
+                    $uploadPath = './uploads/logos/'.$insertResult.'/';
+                    $uploadDirectory = './uploads/logos/'.$insertResult;
+                    $uploadDBPath = 'uploads/logos/'.$insertResult.'/';
+                    $insertDataArray = array();
+                 //For Logo Upload
+                if(isset($_FILES['institutionLogoImage']['name'])){
+                        $FileName = $_FILES['institutionLogoImage']['name'];
+                        $explodedFileName = explode('.',$FileName);
+                        $ext = end($explodedFileName);
+                        if(!in_array(strtolower($ext),$allowedExt))
+                        {
+                            echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                            return;
+                        }else
+                        {
+
+                            $FileName = "institutionLogoImage".$insertResult."_".time().".".$ext;
+                            if(!is_dir($uploadDirectory)){
+                                mkdir($uploadDirectory, 0755, true);
+                            }
+
+                            move_uploaded_file($_FILES['institutionLogoImage']['tmp_name'],$uploadPath.$FileName);
+                            $insertDataArray['institutionLogo'] = $uploadDBPath.$FileName;
+                        }
+                }    
+                $whereUpdate = array('id' => $insertResult);
+                $resultUpdate = $this->Common_model->update('esic_institution',$whereUpdate,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
             }
        }
 
     }
-     public function addRnD(){
+    public function addRnD(){
         $rndname = $this->input->post("rndname");
         $IDNumber = $this->input->post("IDNumber");
         $Address = $this->input->post("Address");
         $ANZSRC = $this->input->post("ANZSRC");
+        $AppStatus = $this->input->post("rndAppStatus");
 
         if($rndname =='' ){
             echo "FAIL::Please Add RndName, Field Can Not be Blank During Submission.".$rndname.'/'.$IDNumber.'/'.$Address.'/'.$ANZSRC;
@@ -348,24 +388,54 @@ class Reg extends CI_Controller {
                 'IDNumber'  => $IDNumber,
                 'AddressContact'  => $Address,
                 'ANZSRC'    => $ANZSRC,
+                'AppStatus' => $AppStatus,
                 'insertionType' => 2
 
             );
 
             $insertResult = $this->Common_model->insert_record('esic_RnD',$insertData);
-
             if($insertResult > 0){
-                echo "OK::".$insertResult."::".$rndname;
-                return "OK::".$insertResult."::".$rndname;
+                    $allowedExt = array('jpeg','jpg','png','gif');
+                    $uploadPath = './uploads/logos/'.$insertResult.'/';
+                    $uploadDirectory = './uploads/logos/'.$insertResult;
+                    $uploadDBPath = 'uploads/logos/'.$insertResult.'/';
+                    $insertDataArray = array();
+                 //For Logo Upload
+                if(isset($_FILES['rndLogoImage']['name'])){
+                        $FileName = $_FILES['rndLogoImage']['name'];
+                        $explodedFileName = explode('.',$FileName);
+                        $ext = end($explodedFileName);
+                        if(!in_array(strtolower($ext),$allowedExt))
+                        {
+                            echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                            return;
+                        }else
+                        {
+
+                            $FileName = "rndLogoImage".$insertResult."_".time().".".$ext;
+                            if(!is_dir($uploadDirectory)){
+                                mkdir($uploadDirectory, 0755, true);
+                            }
+
+                            move_uploaded_file($_FILES['rndLogoImage']['tmp_name'],$uploadPath.$FileName);
+                            $insertDataArray['rndLogo'] = $uploadDBPath.$FileName;
+                        }
+                }    
+                $whereUpdate = array('id' => $insertResult);
+                $resultUpdate = $this->Common_model->update('esic_RnD',$whereUpdate,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::".$insertResult."::".$rndname;
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
             }
        }
 
     }
     public function addIndustryClassification(){
-      //  echo 'OK';
-
-    
         $Industry = $this->input->post("Industry");
+        $industryAppStatus = $this->input->post("industryAppStatus");
         if(empty($Industry) or !is_string($Industry)){
             echo "FAIL::Please Add Institution, Field Can Not be Blank During Submission.";
             return;
@@ -381,13 +451,46 @@ class Reg extends CI_Controller {
            
             $insertData = array(
                 'sector' => $Industry,
+                'AppStatus' => $industryAppStatus,
                 'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_sectors',$insertData);
-
             if($insertResult > 0){
-                echo "OK::".$insertResult."::".$Industry;
+                    $allowedExt = array('jpeg','jpg','png','gif');
+                    $uploadPath = './uploads/logos/'.$insertResult.'/';
+                    $uploadDirectory = './uploads/logos/'.$insertResult;
+                    $uploadDBPath = 'uploads/logos/'.$insertResult.'/';
+                    $insertDataArray = array();
+                 //For Logo Upload
+                if(isset($_FILES['secLogoImage']['name'])){
+                        $FileName = $_FILES['secLogoImage']['name'];
+                        $explodedFileName = explode('.',$FileName);
+                        $ext = end($explodedFileName);
+                        if(!in_array(strtolower($ext),$allowedExt))
+                        {
+                            echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                            return;
+                        }else
+                        {
+
+                            $FileName = "secLogoImage".$insertResult."_".time().".".$ext;
+                            if(!is_dir($uploadDirectory)){
+                                mkdir($uploadDirectory, 0755, true);
+                            }
+
+                            move_uploaded_file($_FILES['secLogoImage']['tmp_name'],$uploadPath.$FileName);
+                            $insertDataArray['secLogo'] = $uploadDBPath.$FileName;
+                        }
+                }    
+                $whereUpdate = array('id' => $insertResult);
+                $resultUpdate = $this->Common_model->update('esic_sectors',$whereUpdate,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::".$insertResult."::".$Industry;
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
             }
         }
 
@@ -402,6 +505,7 @@ class Reg extends CI_Controller {
         $State_Territory    = $this->input->post("State_Territory");
         $Project_Summary    = $this->input->post("Project_Summary");
         $Project_Location   = $this->input->post("Project_Location");
+        $AppStatus = $this->input->post("EntrepreneurProgrammeAppStatus");
         if(empty($Member) or !is_string($Member)){
             echo "FAIL::Please Fill All Required Fields, Those Can Not be Blank During Submission.";
             return;
@@ -423,13 +527,46 @@ class Reg extends CI_Controller {
                 'State_Territory'   => $State_Territory,
                 'Project_Summary'   => $Project_Summary,
                 'Project_Location'  => $Project_Location,
+                'AppStatus'         => $AppStatus,
                 'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_acceleration',$insertData);
-
             if($insertResult > 0){
-                echo "OK::".$insertResult."::".$Member;
+                    $allowedExt = array('jpeg','jpg','png','gif');
+                    $uploadPath = './uploads/logos/'.$insertResult.'/';
+                    $uploadDirectory = './uploads/logos/'.$insertResult;
+                    $uploadDBPath = 'uploads/logos/'.$insertResult.'/';
+                    $insertDataArray = array();
+                 //For Logo Upload
+                if(isset($_FILES['accLogoImage']['name'])){
+                        $FileName = $_FILES['accLogoImage']['name'];
+                        $explodedFileName = explode('.',$FileName);
+                        $ext = end($explodedFileName);
+                        if(!in_array(strtolower($ext),$allowedExt))
+                        {
+                            echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                            return;
+                        }else
+                        {
+
+                            $FileName = "accLogoImage".$insertResult."_".time().".".$ext;
+                            if(!is_dir($uploadDirectory)){
+                                mkdir($uploadDirectory, 0755, true);
+                            }
+
+                            move_uploaded_file($_FILES['accLogoImage']['tmp_name'],$uploadPath.$FileName);
+                            $insertDataArray['accLogo'] = $uploadDBPath.$FileName;
+                        }
+                }    
+                $whereUpdate = array('id' => $insertResult);
+                $resultUpdate = $this->Common_model->update('esic_acceleration',$whereUpdate,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::".$insertResult."::".$Member;
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
             }
         }
 
@@ -438,6 +575,7 @@ class Reg extends CI_Controller {
      public function addAcceleratorProgramme(){
         $name                         = $this->input->post("AcceleratorProgrammeName");
         $Programme_Web_Address        = $this->input->post("Programme_Web_Address");
+        $acceleratorProgrammeAppStatus= $this->input->post("acceleratorProgrammeAppStatus");
        
 
         if(empty($name) or !is_string($name)){
@@ -455,14 +593,13 @@ class Reg extends CI_Controller {
             $insertData = array(
                 'name'    => $name,
                 'website'  => $Programme_Web_Address,
+                'AppStatus' => $acceleratorProgrammeAppStatus,
                 'insertionType' => 2
             );
 
             $insertResult = $this->Common_model->insert_record('esic_acceleration_logo',$insertData);
 
             if($insertResult > 0){
-                echo "OK::".$insertResult."::".$name;
-
                     $allowedExt = array('jpeg','jpg','png','gif');
                     $uploadPath = './uploads/logos/'.$insertResult.'/';
                     $uploadDirectory = './uploads/logos/'.$insertResult;
@@ -488,19 +625,16 @@ class Reg extends CI_Controller {
                             move_uploaded_file($_FILES['ProgrammeLogoImage']['tmp_name'],$uploadPath.$FileName);
                             $insertDataArray['logo'] = $uploadDBPath.$FileName;
                         }
-                }
-                    
-
-                $whereUpdate = array(
-                        'id' => $insertResult
-                );
+                }    
+                $whereUpdate = array('id' => $insertResult);
                 $resultUpdate = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$insertDataArray);
-                    if($resultUpdate === true){
-                        echo "OK::Record Updated Successfully";
-                    }else{
-                        echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
-                    }
+                if($resultUpdate === true){
+                    echo "OK::".$insertResult."::".$name;
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
                 }
+            }
         }
 
     }

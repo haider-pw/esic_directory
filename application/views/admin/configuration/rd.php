@@ -31,6 +31,7 @@
                                 <th>IDNUMBER</th>
                                 <th>AddressContact</th>
                                 <th>ANZSRC</th>
+                                <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
@@ -45,6 +46,7 @@
                                 <th>IDNUMBER</th>
                                 <th>AddressContact</th>
                                 <th>ANZSRC</th>
+                                <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>

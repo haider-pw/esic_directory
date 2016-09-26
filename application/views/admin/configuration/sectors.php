@@ -32,6 +32,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Sector</th>
+                                <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
@@ -43,6 +44,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Sector</th>
+                                <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
                                 <th>Action</th>
