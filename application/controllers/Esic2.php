@@ -57,8 +57,7 @@ class Esic2 extends CI_Controller{
 
         //Lets make a simple query for Listing.
         $selectData = array(
-            '
-                user.id as userID,
+            '   user.id as userID,
                 concat(firstName, " ", lastName) as FullName,
                 email as Email,
                 company as Company,

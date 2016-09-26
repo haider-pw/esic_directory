@@ -20,8 +20,8 @@ class Esic_model extends CI_Model
         return $this->db->count_all("user");
     }
     public function getlist($page){
-        $offset = 3*$page;
-        $pagelimit = 3;
+        $offset = 9*$page;
+        $pagelimit = 9;
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
@@ -130,8 +130,8 @@ class Esic_model extends CI_Model
 
     }
     public function getfilterlist($page,$search,$secSelect,$comSelect,$OrderSelect,$OrderSelectValue){
-        $offset = 3*$page;
-        $pagelimit = 3;
+        $offset = 9*$page;
+        $pagelimit = 9;
         
         $total_results = $this->db->count_all("user");
         if($offset < $total_results){
@@ -278,6 +278,7 @@ class Esic_model extends CI_Model
                     concat(firstName, " ", lastName) as FullName,
                     user.email as Email,
                     user.company as Company,
+                    user.address as address,
                     user.business as Business,
                     user.businessShortDescription as BusinessShortDesc,
                     user.score as Score,
@@ -293,12 +294,21 @@ class Esic_model extends CI_Model
                     ERnD.IDNumber as IDNumber,
                     ERnD.AddressContact as AddressContact,
                     ERnD.ANZSRC as ANZSRC,
+                    ERnD.rndLogo as rndLogo,
+                    ERnD.AppStatus as RndAppStatus,
                     EAccCo.Member as Member,
+                    EAccCo.AppStatus as EAccCoAppStatus,
+                    EAccCo.AccLogo as AccCoLogo,
                     EAcc.name as Accname,
                     EAcc.logo as AccLogo,
                     EAcc.website as AccWeb,
+                    EAcc.AppStatus as EAccAppStatus,
                     EIn.institution as institution,
+                    EIn.institutionLogo as institutionLogo,
+                    EIn.AppStatus as EInAppStatus,
                     ESec.sector as sectorName,
+                    ESec.secLogo as secLogo,
+                    ESec.AppStatus as ESecAppStatus,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
                     ',
                 false
@@ -350,6 +360,11 @@ class Esic_model extends CI_Model
                     $img ='';
                     $bgimg ='';
                     $productImg = '';
+                    $AccImg = '';
+                    $AccCoImg ='';
+                    $rndLogo = '';
+                    $institutionLogo ='';
+                    $secLogo = '';
                     if(!empty($user['Status'])){
                         $status = $user['Status'];
                     }
@@ -379,8 +394,21 @@ class Esic_model extends CI_Model
                     }else{
                         $AccImg = base_url('pictures/defaultLogo.jpg');
                     }
+                    if(isset($user['AccCoLogo']) and !empty($user['AccCoLogo']) and is_file(FCPATH.'/'.$user['AccCoLogo'])){
+                        $AccCoImg = base_url($user['AccCoLogo']);
+                    }
+                    if(isset($user['secLogo']) and !empty($user['secLogo']) and is_file(FCPATH.'/'.$user['secLogo'])){
+                        $secLogo = base_url($user['secLogo']);
+                    }
+                    if(isset($user['institutionLogo']) and !empty($user['institutionLogo']) and is_file(FCPATH.'/'.$user['institutionLogo'])){
+                        $institutionLogo = base_url($user['institutionLogo']);
+                    }
+                    if(isset($user['rndLogo']) and !empty($user['rndLogo']) and is_file(FCPATH.'/'.$user['rndLogo'])){
+                        $rndLogo = base_url($user['rndLogo']);
+                    }
+
                    
-                    $result .= '<div class="single-item list-item hcard-search member_level_5">';
+                    $result .= '<div id="single-container" class="single-item list-item hcard-search member_level_5">';
                     $result .= '<div class="container">';
                     $result .= '<div class="background-img-container"><img src="'.$bgimg.'" alt="" class="left"></div>';
                     $result .= '<div class="container-box">';
@@ -402,6 +430,11 @@ class Esic_model extends CI_Model
 	                    $result .= '<p class="info-type">'.$user['Company'].'</p>';
 	                    $result .= '</div>';
 	                }
+	                if($user['address']!=''){
+	                    $result .= '<div class="product-details"><label>Address:</label>';
+	                    $result .= '<p class="info-type">'.$user['address'].'</p>';
+	                    $result .= '</div>';
+	                }
 	                if($web!=''){
 	                    $result .= '<div class="product-details website-address"><label>Website:</label><p>';
 	                    $result .= $web;
@@ -411,7 +444,7 @@ class Esic_model extends CI_Model
                     $result .= '<div class="small-details-container">';
                     $result .= '<div class="product-details status-container small-details"><label>Status:</label>'.$status.'</div>';
                     if($user['corporate_date']!=''){
-	                    $result .= '<div class="product-details small-details"><label>Corporate Date:</label>';
+	                    $result .= '<div class="product-details small-details"><label>Incorporate Date:</label>';
 	                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
 	                    $result .= '</div>';
 	                }
@@ -429,38 +462,68 @@ class Esic_model extends CI_Model
 	                    $result .= '<div class="product-details small-details"><label>ACN Number:</label>';
 	                    $result .= '<p class="info-type">'.$user['acn_number'].'</p>';
 	                    $result .= '</div>';
-	                }
+	                } 
                     $result .= '</div><div class="img-container product-img-container">';
                     $result .= '<img src="'.$productImg.'" alt="" class="left">';
                     $result .= '</div></div>';
                     if($user['institution']!=''){
 	                    $result .= '<div class="product-details other-details"><label>Institution:</label>';
 	                    $result .= '<p class="info-type">'.$user['institution'].'</p>';
+	                    if($user['EInAppStatus'] !=''){
+	                    	$result .= '<label>ABR Institution:</label><p class="info-type">'.$user['EInAppStatus'].'</p>';
+	                    }
+	                    if($institutionLogo !=''){
+		                    $result .= '<div class="logos-img-container img-container"><img src="'.$institutionLogo.'" alt="" class="left"></div>';
+		                }
 	                    $result .= '</div>';
 	                }
 	                if($user['sectorName']!=''){
 	                    $result .= '<div class="product-details other-details"><label>Sector:</label>';
 	                    $result .= '<p class="info-type">'.$user['sectorName'].'</p>';
+	                    if($user['ESecAppStatus'] !=''){
+		                    $result .= '<label>ABR Sector:</label><p class="info-type">'.$user['ESecAppStatus'].'</p>';
+		                }
+	                    if($secLogo !=''){
+		                    $result .= '<div class="logos-img-container img-container"><img src="'.$secLogo.'" alt="" class="left"></div>';
+		                }
 	                    $result .= '</div>';
 	                }
 	                if($user['rndname']!=''){
 	                    $result .= '<div class="product-details other-details"><label>R&D Name:</label>';
 	                    $result .= '<p class="info-type">'.$user['rndname'].'</p>';
+	                    if($user['RndAppStatus'] !=''){
+	                    	$result .= '<label>ABR R&D:</label><p class="info-type">'.$user['RndAppStatus'].'</p>';
+	                    }
+	                    if($rndLogo !=''){
+		                    $result .= '<div class="logos-img-container img-container"><img src="'.$rndLogo.'" alt="" class="left"></div>';
+		                }
 	                    $result .= '</div>';
 	                }
 	                if($user['Member']!=''){
-	                    $result .= '<div class="product-details other-details"><label>Acceleration Commercial:</label>';
+	                    $result .= '<div class="product-details other-details"><label>Commercialisation Australia:</label>';
 	                    $result .= '<p class="info-type">'.$user['Member'].'</p>';
+	                    if($user['EAccCoAppStatus'] !=''){
+		                    $result .= '<label>ABR Commercialisation Australia:</label><p class="info-type">'.$user['EAccCoAppStatus'].'</p>';
+		                }
+	                    if($AccCoImg !=''){
+		                    $result .= '<div class="logos-img-container img-container"><img src="'.$AccCoImg.'" alt="" class="left"></div>';
+		                }
 	                    $result .= '</div>';
 	                }
                 	if($user['Accname']!=''){
-	                    $result .= '<div class="product-details other-details"><label>Acceleration:</label>';
+	                    $result .= '<div class="product-details other-details"><label>Accelerator:</label>';
 	                    $result .= '<p class="info-type">'.$user['Accname'].'</p>';
+	                    if($user['EAccAppStatus'] !=''){
+		                    $result .= '<label>ABR Accelerator:</label><p class="info-type">'.$user['EAccAppStatus'].'</p>';
+		                }
+	                    if($AccImg !=''){
+		                    $result .= '<div class="logos-img-container img-container"><img src="'.$AccImg.'" alt="" class="left"></div>';
+		                }
 	                    $result .= '</div>';
 	                }
 	                if($desc !=''){
 	                    $result .= '<div class="description">';
-	                    $result .= '<label>Overview:</label><p>';
+	                    $result .= '<label>Summary:</label><p>';
 	                    $result .= $desc ;
 	                    $result .= '</p>';
 	                    $result .= '</div>';
