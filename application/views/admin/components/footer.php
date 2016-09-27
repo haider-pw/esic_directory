@@ -207,6 +207,7 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/js/jasny-bootstrap.min.js"></script>
 <!--script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.fileupload/9.9.0/js/jquery.fileupload.js"></script-->
+<script type="text/javascript" src="<?=base_url()?>assets/vendors/tinyEditor/tiny.editor.packed.js"></script>
 
 <script>
 
@@ -405,6 +406,18 @@ if( $this->router->fetch_method() === 'details'){
                         }
                     }
                 });
+            });
+
+
+            tinymce.init({
+                selector: 'div.editable',
+                inline: true,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table contextmenu paste'
+                ],
+                toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
             });
         });
     </script>

@@ -144,10 +144,7 @@ class Esic2 extends CI_Controller{
         $page =  $_GET['page'];
         $this->load->model('Esic_model');
         $data['list'] = $this->Esic_model->getlist($page);
-        echo "Hello World";
-        $this->load->view("box_listing/getlist",$data,true);
-        //print_r($list);
-        exit;
+        $this->load->view("box_listing/getlist",$data);
     }
     public function getfilterlist(){
         $page        =  $_GET['page'];

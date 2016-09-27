@@ -16,6 +16,14 @@
     <!-- DataTables -->
     <link rel="stylesheet" href="<?= base_url()?>assets/vendors/datatables/dataTables.bootstrap.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/vendors/datatables/responsive.bootstrap.css">
+
+    <?php
+        if($this->router->fetch_method() === ''){
+            echo '<link href="'.base_url().'assets/vendors/tinyEditor/style.css" type="text/css" />';
+        }
+    ?>
+    ?>
+
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url()?>assets/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
