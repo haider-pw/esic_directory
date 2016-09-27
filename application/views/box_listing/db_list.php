@@ -8,38 +8,57 @@ echo "</pre>";
 	body.single-item-layout{
 
 	}
-	body.single-item-layout #main-content{
-		padding: 0px 0px 2.5em;
+	body #main-content{
+		padding: 0px 0px 2.5em!important;
 		max-width: 1600px;
 	}
-	body.single-item-layout #wrap{
+	body #wrap{
 		padding: 0px 0px;
 		max-width: 1600px;
 	}
-	body.single-item-layout #single-container{
+	body #single-container{
 		margin-top:0px;
 	}
-	body.single-item-layout .container{
+	body #main-content .container{
 		padding:0px;
 		max-width: 1600px;
 	}
-	body.single-item-layout .logo-container{
-		text-align: center;
+	body .logo-container{
 		margin-top: -50px;
+        margin-bottom: 50px;
 	}
+    body.single-item-layout .logo-container img{
+        width: 40%;
+        border:none;
+        background: transparent;
+    }
 	body.single-item-layout .btn-back.container {
 		max-width: 1200px;
 		padding:10px 20px;
 	}
-
-    .container-box{
+    body.single-item-layout.container-box{
     	max-width: 1200px;
-    /*background-image: url("uploads/8/4/3/6/84367404/background-images/561993498.jpg") !important;
-    background-repeat: no-repeat !important;
-    background-position: 50.00% 19.91% !important;
-    background-size: 100% 100%!important;
-    background-color: transparent !important;*/
-}
+    }
+    body ul.product-list {
+        border-radius: 0px;
+    }
+    body #main-content ul.product-list li {
+        width: 20%;
+        min-height:300px;
+    }
+    body #main-content .module {
+        border-radius: 0px;
+        width: 100%;
+        margin:0px 0px 30px;
+    }
+    body #main-content ul li .product-details.date-container{
+        display: none;
+    }
+    @media all and (max-width: 768px){
+        body.single-item-layout.container-box{
+            text-align: center;
+        }
+    }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!--script src="https://raw.githubusercontent.com/cowboy/jquery-bbq/v1.2.1/jquery.ba-bbq.min.js"></script-->

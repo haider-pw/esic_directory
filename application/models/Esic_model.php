@@ -60,8 +60,7 @@ class Esic_model extends CI_Model
 	            )
 	        );
 	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','',$orderBy,$limit,true);
-	        $result="";
-	        
+	        return $usersResult;
 	       if(!empty($usersResult) && is_array($usersResult)){
 			    foreach($usersResult as $key=>$user){
 			    	$status='';
