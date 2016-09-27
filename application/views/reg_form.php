@@ -18,7 +18,6 @@
 
     </style>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
     <script src="http://esic.ctsdemo.com/assets/js/jquery.formtowizard.js"></script>

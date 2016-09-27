@@ -412,7 +412,7 @@ class Esic_model extends CI_Model
                     $result .= '<div class="container">';
                     $result .= '<div class="background-img-container"><img src="'.$bgimg.'" alt="" class="left"></div>';
                     $result .= '<div class="container-box">';
-                    $result .= '<div class="img-container">';
+                    $result .= '<div class="img-container logo-container">';
                     $result .= '<a href="#" class="permalink">';
                     $result .= '<img src="'.$img.'" alt="" class="left">';
                     $result .= '</a>';
