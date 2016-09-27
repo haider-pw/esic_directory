@@ -544,7 +544,17 @@ h1.homepage,.page-body h1,h1.hero {
 overflow: hidden;
 }
 #wrap .new-results{
-  margin:0 25px;
+     /* margin: 0 25px; */
+    background: rgba(238, 238, 238, 0.44);
+}
+body.single-item-layout #wrap .btn-back.container{
+  display: block;
+}
+body #wrap .btn-back.container{
+  display: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 98%;
 }
 ul.product-list {
   display: block;
@@ -565,6 +575,7 @@ ul.product-list li {
   border-radius: 15px;
   padding-bottom: 20px;
   text-align: left;
+  background: #fff;
 }
 
 ul.product-list li div {
