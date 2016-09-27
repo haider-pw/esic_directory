@@ -88,7 +88,7 @@ class Esic_model extends CI_Model
 			    	}
 			       
 			    $result .= '<li class="list-item hcard-search member_level_5" '.$page.'>';
-			     $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
+			     $result .= '<a href="#'.$user['userID'].'" class="permalink" data-link= "'.$user['userID'].'"">';
 			     $result .= '<div class="img-container wraptocenter"><span>';
 			         $result .= '<img src="'.$img.'" alt="" class="left">';
 			       $result .= '</span>';

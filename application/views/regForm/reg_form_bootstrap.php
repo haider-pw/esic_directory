@@ -61,6 +61,9 @@
 		    display: block;
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!--script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script-->
+
 </head>
 
 <body>
@@ -491,6 +494,9 @@
                     </div>
                 </fieldset>
                 <div class="button-container">
+                <div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2"></div>
+                    <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
+                    <div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2"</div>
                     <button id="back"  class="btn btn-primary submit">Back</button>
                     <button id="SubmitForm" type="button" class="btn btn-primary submit">Submit</button>
                 </div>
@@ -859,48 +865,56 @@
             $('#error-box').remove();
             $('#loading-submit').show();
 
-            var formData = new FormData();
-                    $.ajax({
-                            crossOrigin: true,
-                            type: $form.attr('method'),
-                            url: $form.attr('action'),
-                            data: $form.serialize()
-                    }).done(function (response) {
-                            var data = response.split("::");
-                            if(data[0] === "OK"){
-                                //Run another Ajax To Get Another Form.
-                               //console.log(response);
-                                formData.append('logo', $('#Logo')[0].files[0]);
-                                formData.append('banner', $('#BannerImage')[0].files[0]);
-                                formData.append('product', $('#productImage')[0].files[0]);
-                                formData.append('sector', $('#industryClassification').val());
-                                formData.append('ipAddress', ipAddress);
-                                formData.append('userID', data[2]);
+            if(grecaptcha.getResponse() == '') {
 
-                                $.ajax({       
-                                    crossOrigin: true,
-                                    type: $form.attr('method'),
-                                    url: "<?=base_url()?>Reg/step2",
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false
-                                }).done(function (response) {
-                                    var data = response.split("::");
-                                    if(data[0] === 'OK'){
-                                        $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(255, 255, 255, 0.8); padding: 5px; color: #333; font-weight: bold; border: 2px solid #333; width: 100%;display: block;">Thank you, Your Record have been successfully Updated</span>');
-                                         $('#loading-submit').hide();
-                                    }else if(data[0] === 'FAIL'){
-                                        $('#loading-submit').hide();
-                                    }
-                                });
-                            }else{
-                                console.log(response);
-                                $("#mainFormDiv").append('<span id="error-box" style="background: rgba(255, 255, 255, 0.8);padding: 5px;color: #333;font-weight: bold; border: 2px solid #333;width: 100%;display: block;">There are Errors, Please Fill All Fields</span>');
-                                $('#loading-submit').hide();
-                            }
+            $("#mainFormDiv").append('<span id="error-box" style="background: rgba(255, 255, 255, 0.8);padding: 5px;color: #333;font-weight: bold; border: 2px solid #333;width: 100%;display: block;">Please Check The Recaptcha and trg again</span>');
+            $('#loading-submit').hide();
 
-                    });
-            
+                  
+            }else{
+             var formData = new FormData();
+                $.ajax({
+                    crossOrigin: true,
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize()
+                }).done(function (response) {
+                    var data = response.split("::");
+                    if(data[0] === "OK"){
+                                    //Run another Ajax To Get Another Form.
+                                   //console.log(response);
+                        formData.append('logo', $('#Logo')[0].files[0]);
+                        formData.append('banner', $('#BannerImage')[0].files[0]);
+                        formData.append('product', $('#productImage')[0].files[0]);
+                        formData.append('sector', $('#industryClassification').val());
+                        formData.append('ipAddress', ipAddress);
+                        formData.append('userID', data[2]);
+
+                            $.ajax({       
+                                crossOrigin: true,
+                                type: $form.attr('method'),
+                                url: "<?=base_url()?>Reg/step2",
+                                data: formData,
+                                processData: false,
+                                contentType: false
+                            }).done(function (response) {
+                                var data = response.split("::");
+                                if(data[0] === 'OK'){
+                                    $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(255, 255, 255, 0.8); padding: 5px; color: #333; font-weight: bold; border: 2px solid #333; width: 100%;display: block;">Thank you, Your Record have been successfully Updated</span>');
+                                    $('#loading-submit').hide();
+                                }else if(data[0] === 'FAIL'){
+                                     $('#loading-submit').hide();
+                                }
+                            });
+                    }else{
+                                   // console.log(response);
+                       $("#mainFormDiv").append('<span id="error-box" style="background: rgba(255, 255, 255, 0.8);padding: 5px;color: #333;font-weight: bold; border: 2px solid #333;width: 100%;display: block;">There are Errors, Please Fill All Fields</span>');
+                        $('#loading-submit').hide();
+                    }
+
+                });
+            }
+                
        });
         $('#addRnDModel').on("click",function(e){
             e.preventDefault();
@@ -1268,7 +1282,7 @@
         
 </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
@@ -1282,6 +1296,6 @@
                     format: 'DD-MM-YYYY',
                 }
         });
-</script>
+</script-->
 </body>
 </html>
