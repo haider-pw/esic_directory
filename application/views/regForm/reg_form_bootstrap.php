@@ -796,8 +796,8 @@
 <script type="text/javascript">
     $(function(){
     	function zIndex($){
-	    	$('#main-wrap').css('z-index', 'initial');
-	    	$('#main-content').css('z-index', 'initial');
+	    	$('#main-wrap').css('z-index', 'auto');
+	    	$('#main-content').css('z-index', 'auto');
 	    }
         $("input[name='incorporatedAus']").on("change",function(){
             if($(this).val() === 'Between six and three years ago'){

@@ -143,17 +143,18 @@ echo "</pre>";
 <div id="loading-submit">
     <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
 </div>
- 
+
+<script type="text/javascript" src="<?=base_url()?>assets/js/jquery.ba-bbq.min.js"></script>
 <script>
     jQuery(document).ready(function($){
         getlist(0);
         var sectorsSelect,companySelect,searchInput,OrderSelect,OrderSelectValue,AdOrderSelect,ASOrderSelect,ExOrderSelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue;
-        $("body").on("click","a.permalink",function(e) {
-            e.preventDefault();
+/*        $("body").on("click","a.permalink",function(e) {
+//            e.preventDefault();
             var linkId = $(this).attr('data-link');
             //console.log('link'+linkId);
             redirectToLink(linkId);
-        });
+        });*/
         $("#filter_reset").click(function(e){
             e.preventDefault();
             $(".module select").val($("module select option:first").val());
@@ -230,7 +231,7 @@ echo "</pre>";
             var clickBtn ='filter_search';
             callfilter(clickBtn);
         });
-        $("body").on("click","#back",function(e){
+/*        $("body").on("click","#back",function(e){
             e.preventDefault();
             $('body').removeClass('single-item-layout');
             $('.content-shell #wrap .content').slideDown('slow');
@@ -238,7 +239,7 @@ echo "</pre>";
             $('.content-shell #wrap .single-item').remove();
             $(this).parent().remove();
             return false;    
-        });
+        });*/
         function callfilter(clickBtn){
                 var page = $("#filter_search").data('val');
                 //console.log('page ='+page);
@@ -356,6 +357,76 @@ echo "</pre>";
               //  scrollTop: $('#load_more').offset().top
             //}, 1000);
         }
+    });
+
+
+    $(function(){
+
+        // Keep a mapping of url-to-container for caching purposes.
+        var cache = {
+            // If url is '' (no fragment), display this div's content.
+            '': $('.bbq-default')
+        };
+
+        // Bind an event to window.onhashchange that, when the history state changes,
+        // gets the url from the hash and displays either our cached content or fetches
+        // new content to be displayed.
+        $(window).bind( 'hashchange', function(e) {
+
+            // Get the hash (fragment) as a string, with any leading # removed. Note that
+            // in jQuery 1.4, you should use e.fragment instead of $.param.fragment().
+            var url = $.param.fragment();
+
+            if(url){
+                redirectToLink(url);
+            }else{
+                $('body').removeClass('single-item-layout');
+                $('.content-shell #wrap .content').slideDown('slow');
+                $('.content-shell #wrap .single-item').slideUp('slow');
+                $('.content-shell #wrap .single-item').remove();
+                $(this).parent().remove();
+                return false;
+            }
+
+            // Remove .bbq-current class from any previously "current" link(s).
+            $( 'a.bbq-current' ).removeClass( 'bbq-current' );
+
+            // Hide any visible ajax content.
+            $( '.bbq-content' ).children( ':visible' ).hide();
+
+            // Add .bbq-current class to "current" nav link(s), only if url isn't empty.
+            url && $( 'a[href="#' + url + '"]' ).addClass( 'bbq-current' );
+
+            if ( cache[ url ] ) {
+                // Since the element is already in the cache, it doesn't need to be
+                // created, so instead of creating it again, let's just show it!
+                cache[ url ].show();
+
+            } else {
+                // Show "loading" content while AJAX content loads.
+                $( '.bbq-loading' ).show();
+
+                // Create container for this url's content and store a reference to it in
+                // the cache.
+                cache[ url ] = $( '<div class="bbq-item"/>' )
+
+                // Append the content container to the parent container.
+                    .appendTo( '.bbq-content' )
+
+                    // Load external content via AJAX. Note that in order to keep this
+                    // example streamlined, only the content in .infobox is shown. You'll
+                    // want to change this based on your needs.
+                    .load( url, function(){
+                        // Content loaded, hide "loading" content.
+                        $( '.bbq-loading' ).hide();
+                    });
+            }
+        });
+
+        // Since the event is only triggered when the hash changes, we need to trigger
+        // the event now, to handle the hash the page may have loaded with.
+        $(window).trigger( 'hashchange' );
+
         function redirectToLink(id){
             //console.log('ID'+id);
             $('#loading-submit').show();
@@ -369,109 +440,13 @@ echo "</pre>";
                 $('body').addClass('single-item-layout');
                 $('.content-shell #wrap .content').slideUp('slow');
                 $('.content-shell #wrap').css('min-height', '500px');
-                $('.content-shell #wrap').append(response);          
-                $('.content-shell #wrap').append('<div class="btn-back container"><a href="back-btn" id="back"  class="btn">Back</a></div>');
+                $('.content-shell #wrap').append(response);
+                $('.content-shell #wrap').append('<div class="btn-back container"><a href="#" id="back"  class="btn">Back</a></div>');
                 $('#loading-submit').hide();
             });
         }
+
     });
-/*
-    $(function(){
-  
-          // For each .bbq widget, keep a data object containing a mapping of
-          // url-to-container for caching purposes.
-          $('#single-container').each(function(){
-            $(this).data( 'single-container', {
-              cache: {
-                // If url is '' (no fragment), display this div's content.
-                '': $(this).find('#regList')
-              }
-            });
-          });
-          
-          // For all links inside a .bbq widget, push the appropriate state onto the
-          // history when clicked.
-          $('.btn-back a[href^=#]').live( 'click', function(e){
-            var state = {},
-              
-              // Get the id of this .bbq widget.
-              id = $(this).closest( '.single-container' ).attr( 'id' ),
-              
-              // Get the url from the link's href attribute, stripping any leading #.
-              url = $(this).attr( 'href' ).replace( /^#/, '' );
-            
-            // Set the state!
-            state[ id ] = url;
-            $.bbq.pushState( state );
-            
-            // And finally, prevent the default link click behavior by returning false.
-            return false;
-          });
-          
-          // Bind an event to window.onhashchange that, when the history state changes,
-          // iterates over all .bbq widgets, getting their appropriate url from the
-          // current state. If that .bbq widget's url has changed, display either our
-          // cached content or fetch new content to be displayed.
-          $(window).bind( 'hashchange', function(e) {
-            
-            // Iterate over all .bbq widgets.
-            $('.bbq').each(function(){
-              var that = $(this),
-                
-                // Get the stored data for this .bbq widget.
-                data = that.data( 'bbq' ),
-                
-                // Get the url for this .bbq widget from the hash, based on the
-                // appropriate id property. In jQuery 1.4, you should use e.getState()
-                // instead of $.bbq.getState().
-                url = $.bbq.getState( that.attr( 'id' ) ) || '';
-              
-              // If the url hasn't changed, do nothing and skip to the next .bbq widget.
-              if ( data.url === url ) { return; }
-              
-              // Store the url for the next time around.
-              data.url = url;
-              
-              // Remove .bbq-current class from any previously "current" link(s).
-              that.find( 'a.bbq-current' ).removeClass( 'bbq-current' );
-              
-              // Hide any visible ajax content.
-              that.find( '.bbq-content' ).children( ':visible' ).hide();
-              
-              // Add .bbq-current class to "current" nav link(s), only if url isn't empty.
-              url && that.find( 'a[href="#' + url + '"]' ).addClass( 'bbq-current' );
-              
-              if ( data.cache[ url ] ) {
-                // Since the widget is already in the cache, it doesn't need to be
-                // created, so instead of creating it again, let's just show it!
-                data.cache[ url ].show();
-                
-              } else {
-                // Show "loading" content while AJAX content loads.
-                that.find( '.bbq-loading' ).show();
-                
-                // Create container for this url's content and store a reference to it in
-                // the cache.
-                data.cache[ url ] = $( '<div class="bbq-item"/>' )
-                  
-                  // Append the content container to the parent container.
-                  .appendTo( that.find( '.bbq-content' ) )
-                  
-                  // Load external content via AJAX. Note that in order to keep this
-                  // example streamlined, only the content in .infobox is shown. You'll
-                  // want to change this based on your needs.
-                  .load( url, function(){
-                    // Content loaded, hide "loading" content.
-                    that.find( '.bbq-loading' ).hide();
-                  });
-              }
-            });
-          })
-          
-          // Since the event is only triggered when the hash changes, we need to trigger
-          // the event now, to handle the hash the page may have loaded with.
-          $(window).trigger( 'hashchange' );
-  
-    });*/
- 
+
+
 </script>
