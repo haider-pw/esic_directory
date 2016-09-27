@@ -28,7 +28,7 @@ if(!empty($list) && is_array($list)){
 	<a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID']?>">
 		<div class="img-container wraptocenter">
 			<span>
-				<img src="'.$img.'" alt="" class="left">'
+				<img src="<?= $img; ?>" alt="" class="left">'
 			</span>'
 		</div>
 		<div class="product-container">

@@ -60,72 +60,11 @@ class Esic_model extends CI_Model
 	            )
 	        );
 	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','',$orderBy,$limit,true);
-	        return $usersResult;
-	       if(!empty($usersResult) && is_array($usersResult)){
-			    foreach($usersResult as $key=>$user){
-			    	$status='';
-			    	$web='';
-			    	$desc='';
-			    	$img ='';
-			    	if(!empty($user['Status'])){
-			    		$status = $user['Status'];
-			    	}
-			    	if(!empty($user['Web'])){
-			    		$web = '<a target="_blank" href="http://'.$user['Web'].'" class="website">'.$user['Web'].'</a>';
-			    	}
-			    	if(!empty($user['BusinessShortDesc'])){
-			    		if(strlen($user['BusinessShortDesc']) > 170){
-			    			$desc =  substr($user['BusinessShortDesc'],0,160).'...';
-			    		}else{
-			    			$desc =   $user['BusinessShortDesc'];
-			    		}
-			    	}
-			    	if(isset($user['Logo']) and !empty($user['Logo']) and is_file(FCPATH.'/'.$user['Logo'])){
-			    		$img = base_url($user['Logo']);
-			    	}else{
-			    		$img = base_url('pictures/defaultLogo.png');
-			    	}
-			       
-			    $result .= '<li class="list-item hcard-search member_level_5" '.$page.'>';
-			     $result .= '<a href="#'.$user['userID'].'" class="permalink" data-link= "'.$user['userID'].'"">';
-			     $result .= '<div class="img-container wraptocenter"><span>';
-			         $result .= '<img src="'.$img.'" alt="" class="left">';
-			       $result .= '</span>';
-			     $result .= '</div><div class="product-container">';
-			     $result .= '<div class="status-container">'.$status.'</div>';
-			     $result .= '<div class="name-container">';
-			         $result .= '<h3>'.$user['FullName'].'</h3>';
-			     $result .= '</div><div class="clear"></div>';
-			      $result .= '<div class="product-details">';
-			      	$result .= '<p class="info-type">'.$user['Company'].'</p>';
-			      $result .= '</div>';
-			      $result .= '<div class="product-details">';
-			        $result .= '<span class="price-funded"></span>';
-			        $result .= '<span class="price-assuarance">';
-			        $result .= $web;
-			        $result .= '</span>';
-			        $result .= '<div class="description">';
-                    $result .= '<p>';
-                    $result .= $desc;
-                    $result .= '</p>';
-                    $result .= '</div>';
-			        $result .= '<div class="product-details date-container add"><label>Added Date:</label>';
-                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details date-container cop"><label>Incoporate Date:</label>';
-                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
-                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
-                    $result .= '</div>';
-			        $result .= '</div></div></a></li>';
-			       
-			    }
-			}
+	     return $usersResult;
 		}else{
-			$result="NORESULT";
+			 return "NORESULT";
 		}
-		return $result;
+		return "NORESULT";
 
     }
     public function getfilterlist($page,$search,$secSelect,$comSelect,$OrderSelect,$OrderSelectValue){
@@ -195,78 +134,11 @@ class Esic_model extends CI_Model
 	            )
 	        );
 	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','','',$orderBy,$limit,true);
-	        $result="";
-	        
-	       if(!empty($usersResult) && is_array($usersResult)){
-	       		$count=0;
-			    foreach($usersResult as $key=>$user){
-			    	$count++;
-			    	$status='';
-			    	$web='';
-			    	$desc='';
-			    	$img ='';
-			    	if(!empty($user['Status'])){
-			    		$status = $user['Status'];
-			    	}
-			    	if(!empty($user['Web'])){
-			    		$web = '<a target="_blank" href="http://'.$user['Web'].'" class="website">'.$user['Web'].'</a>';
-			    	}
-			    	if(!empty($user['BusinessShortDesc'])){
-			    		if(strlen($user['BusinessShortDesc']) > 170){
-			    			$desc =  substr($user['BusinessShortDesc'],0,160).'...';
-			    		}else{
-			    			$desc =   $user['BusinessShortDesc'];
-			    		}
-			    	}
-			    	if(isset($user['Logo']) and !empty($user['Logo']) and is_file(FCPATH.'/'.$user['Logo'])){
-			    		$img = base_url($user['Logo']);
-			    	}else{
-			    		$img = base_url('pictures/defaultLogo.png');
-			    	}
-			       
-			    $result .= '<li class="list-item hcard-search member_level_5">';
-			    $result .= '<a href="#" class="permalink" data-link= "'.$user['userID'].'"">';
-			     $result .= '<div class="img-container wraptocenter"><span>';
-			         $result .= '<img src="'.$img.'" alt="" class="left">';
-			       $result .= '</span>';
-			     $result .= '</div><div class="product-container">';
-			     $result .= '<div class="status-container">'.$status.'</div>';
-			     $result .= '<div class="name-container">';
-			         $result .= '<h3>'.$user['FullName'].'</h3>';
-			     $result .= '</div><div class="clear"></div>';
-			      $result .= '<div class="product-details">';
-			      	$result .= '<p class="info-type">'.$user['Company'].'</p>';
-			      $result .= '</div>';
-			      $result .= '<div class="product-details">';
-			        $result .= '<span class="price-funded"></span>';
-			        $result .= '<span class="price-assuarance">';
-			        $result .= $web;
-			        $result .= '</span>';
-                    $result .= '<div class="description">';
-                    $result .= '<p>';
-                    $result .= $desc;
-                    $result .= '</p>';
-                    $result .= '</div>';
-			        $result .= '<div class="product-details date-container add"><label>Added Date:</label>';
-                    $result .= '<p class="info-type">'.$user['added_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details date-container cop"><label>Coporate Date:</label>';
-                    $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
-                    $result .= '</div>';
-                    $result .= '<div class="product-details date-container exp"><label>Expiry Date:</label>';
-                    $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
-                    $result .= '</div>';
-			        $result .= '</div></div></a></li>';
-			       
-			    }
-
-			}else{
-				$result="NORESULT";
-			}
+	        return $usersResult;
 		}else{
-			$result="NORESULT";
+			 return "NORESULT";
 		}
-		return $result;//.$this->db->last_query();
+		return "NORESULT";
     }
     public function getdetails($id){
   

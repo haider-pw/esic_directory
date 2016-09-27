@@ -39,107 +39,11 @@ class Esic2 extends CI_Controller{
 
         $data['sectors'] = $this->Common_model->select('esic_sectors');
         $data['company'] = $this->Common_model->select('user');
-
-        $config = array();
-        $config['target']      = '#regList';
-        $config["base_url"] = base_url() . "Esic2/ajaxPaginationData";
-        $config["total_rows"] = $this->Esic_model->record_count();
-        $config["per_page"] = $this->perPage;
-        $config['cur_tag_open'] = '<b>';
-        $config['cur_tag_close'] = '</b>';
-        $config['next_link'] = 'Next &rarr;';
-        $config['prev_link'] = '&larr; Previous';
-        $config['show_count']    = false;
-//        $config["uri_segment"] = 3;
-
-        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-
-
-        //Lets make a simple query for Listing.
-        $selectData = array(
-            '   user.id as userID,
-                concat(firstName, " ", lastName) as FullName,
-                email as Email,
-                company as Company,
-                business as Business,
-                businessShortDescription as BusinessShortDesc,
-                score as Score,
-                logo as Logo,
-                website as Web,
-                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">","Self Assessed","</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
-            ',
-            false
-        );
-        $joins = array(
-            array(
-                'table' => 'esic_status ES',
-                'condition' => 'ES.id = user.status',
-                'type' => 'LEFT'
-            )
-        );
-        $limit = array($config["per_page"],$page);
-        $data['usersResult'] = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','','',$limit,true);
-        $this->load->vars($data);
-        $this->ajax_pagination->initialize($config);
-        $data["links"] = $this->ajax_pagination->create_links();
-        $data["pageInfo"] = "Showing ".( $this->ajax_pagination->cur_page * $this->ajax_pagination->per_page)." of ". $config["total_rows"]." total results";
+        $page = 0;
+        $data['usersResult'] = $this->Esic_model->getlist($page);
         $this->load->view("box_listing/db_list",$data);
     }
 
-    public function ajaxPaginationData(){
-
-
-        $page = $this->input->post('page');
-        if(!$page){
-            $offset = 0;
-        }else{
-            $offset = $page;
-        }
-
-        $config = array();
-        $config['target']      = '#regList';
-        $config["base_url"] = base_url() . "Esic2/ajaxPaginationData";
-        $config["total_rows"] = $this->Esic_model->record_count();
-        $config['per_page']    = $this->perPage;
-
-        $config['cur_tag_open'] = '<b>';
-        $config['cur_tag_close'] = '</b>';
-        $config['next_link'] = 'Next &rarr;';
-        $config['prev_link'] = '&larr; Previous';
-        $config['show_count']    = false;
-
-        $this->ajax_pagination->initialize($config);
-        $limit = array($config["per_page"],$offset);
-        //Lets make a simple query for Listing.
-        $selectData = array(
-            '
-                user.id as userID,
-                concat(firstName, " ", lastName) as FullName,
-                email as Email,
-                company as Company,
-                business as Business,
-                businessShortDescription as BusinessShortDesc,
-                score as Score,
-                logo as Logo,
-                website as Web,
-                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
-            ',
-            false
-        );
-        $joins = array(
-            array(
-                'table' => 'esic_status ES',
-                'condition' => 'ES.id = user.status',
-                'type' => 'LEFT'
-            )
-        );
-        $data['usersResult'] = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','','',$limit,true);
-        $data["links"] = $this->ajax_pagination->create_links();
-        //load the view
-//        print_r($this->ajax_pagination);
-        $data["pageInfo"] = "Showing ".( $this->ajax_pagination->cur_page * $this->ajax_pagination->per_page)." of ". $config["total_rows"]." total results";
-        $this->load->view('box_listing/db_list_ajax', $data, false);
-    }
     public function getlist(){
         $page =  $_GET['page'];
         $this->load->model('Esic_model');
@@ -154,9 +58,8 @@ class Esic2 extends CI_Controller{
         $orderSelect =  $_GET['orderSelect'];
         $orderSelectValue = $_GET['orderSelectValue'];  
         $this->load->model('Esic_model');
-        $list = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect,$orderSelect,$orderSelectValue);
-        print_r($list);
-        exit;
+        $data['list'] = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect,$orderSelect,$orderSelectValue);
+        $this->load->view("box_listing/getlist",$data);
     }
 
     public function info($userID){
