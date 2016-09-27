@@ -4,64 +4,7 @@ var_dump($links);
 echo "</pre>";
 */?>
 <link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/boxlisting.css">
-<style type="text/css">
-	body.single-item-layout{
-
-	}
-	body #main-content{
-		padding: 0px 0px 2.5em!important;
-		max-width: 1600px;
-	}
-	body #wrap{
-		padding: 0px 0px;
-		max-width: 1600px;
-	}
-	body #single-container{
-		margin-top:0px;
-	}
-	body #main-content .container{
-		padding:0px;
-		max-width: 1600px;
-	}
-	body .logo-container{
-		margin-top: -50px;
-        margin-bottom: 50px;
-	}
-    body.single-item-layout .logo-container img{
-        width: 40%;
-        border:none;
-        background: transparent;
-    }
-	body.single-item-layout .btn-back.container {
-		max-width: 1200px;
-		padding:10px 20px;
-	}
-    body.single-item-layout.container-box{
-    	max-width: 1200px;
-    }
-    body ul.product-list {
-        border-radius: 0px;
-    }
-    body #main-content ul.product-list li {
-        width: 20%;
-        min-height:300px;
-    }
-    body #main-content .module {
-        border-radius: 0px;
-        width: 100%;
-        margin:0px 0px 30px;
-    }
-    body #main-content ul li .product-details.date-container{
-        display: none;
-    }
-    @media all and (max-width: 768px){
-        body.single-item-layout.container-box{
-            text-align: center;
-        }
-    }
-</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!--script src="https://raw.githubusercontent.com/cowboy/jquery-bbq/v1.2.1/jquery.ba-bbq.min.js"></script-->
 <div class="content-shell">
     <div class="content-wrap" id="wrap">
         <div class="content">

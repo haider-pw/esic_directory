@@ -8,9 +8,6 @@ if(!empty($list) && is_array($list)){
 			    	if(!empty($user['Status'])){
 			    		$status = $user['Status'];
 			    	}
-			    	if(!empty($user['Web'])){
-			    		$web = '<a target="_blank" href="http://'.$user['Web'].'" class="website">'.$user['Web'].'</a>';
-			    	}
 			    	if(!empty($user['BusinessShortDesc'])){
 			    		if(strlen($user['BusinessShortDesc']) > 170){
 			    			$desc =  substr($user['BusinessShortDesc'],0,160).'...';
@@ -25,11 +22,11 @@ if(!empty($list) && is_array($list)){
 			    	}
 ?>
 <li class="list-item hcard-search member_level_5" data-page="<= $page ?>">
-	<a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID']?>">
+	<a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID'];?>">
 		<div class="img-container wraptocenter">
 			<span>
-				<img src="<?= $img; ?>" alt="" class="left">'
-			</span>'
+				<img src="<?= $img; ?>" alt="" class="left"/>
+			</span>
 		</div>
 		<div class="product-container">
 			<div class="status-container">
@@ -45,8 +42,6 @@ if(!empty($list) && is_array($list)){
 			      </p>
 			</div>
 			<div class="product-details">
-			     <span class="price-funded"></span>
-			     <span class="price-assuarance"><?= $web ?></span>
 			     <div class="description">
                     <p><?= $desc; ?> </p>
                  </div>
