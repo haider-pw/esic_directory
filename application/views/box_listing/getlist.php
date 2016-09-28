@@ -28,38 +28,51 @@ if(!empty($list) && is_array($list)){
 				<img src="<?= $img; ?>" alt="" class="left"/>
 			</span>
 		</div>
+	</a>	
 		<div class="product-container">
 			<div class="status-container">
 				<?= $status;?>	
 			</div>
-			<div class="name-container">
-			        <h3><?= $user['FullName']; ?></h3>
+			<div class="name-container person-name">
+			        <a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID'];?>"><h3><?= $user['FullName']; ?></h3></a>
 			</div>
 			<div class="clear"></div>
-			<div class="product-details">
+			<div class="product-details company-name">
+			<a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID'];?>">
 			      <p class="info-type">
 			      		<?= $user['Company']; ?>	
 			      </p>
+			</a>
 			</div>
 			<div class="product-details">
-			     <div class="description">
+			     <div class="description overlay-desc">
                     <p><?= $desc; ?> </p>
                  </div>
-			     <div class="product-details date-container add">
-			     	<label>Added Date:</label>
-                  	<p class="info-type"><?= $user['added_date'];?></p>
-                 </div>
-                 <div class="product-details date-container cop">
-	                 <label>Incoporate Date:</label>
-	                 <p class="info-type"><? $user['corporate_date']; ?></p>
-                 </div>
-                <div class="product-details date-container exp">
-                	<label>Expiry Date:</label>
-                	<p class="info-type"><?= $user['expiry_date'];?></p>
+                 <div class="dates-box">
+                 	<button type="button" class="show-dates">
+	                		<i class="fa fa-calendar" aria-hidden="true"></i>
+                    </button>
+                 	<?php if(!empty($user['added_date'])){ ?>
+				     <div class="product-details date-container add">
+				     	<label>Added Date:</label>
+	                  	<p class="info-type"><?= $user['added_date'];?></p>
+	                 </div>
+	                 <?php } ?>
+	                 <?php if(!empty($user['corporate_date'])){ ?>
+	                 <div class="product-details date-container cop">
+		                 <label>Incoporate Date:</label>
+		                 <p class="info-type"><?= $user['corporate_date']; ?></p>
+	                 </div>
+	                 <?php } ?>
+	                 <?php if(!empty($user['expiry_date'])){ ?>
+	                <div class="product-details date-container exp">
+	                	<label>Expiry Date:</label>
+	                	<p class="info-type"><?= $user['expiry_date'];?></p>
+	                </div>
+	                <?php } ?>
                 </div>
 			</div>
 		 </div>
-	</a>
 </li>
 <?php 
 			       

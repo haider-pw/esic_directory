@@ -1,10 +1,9 @@
-<?php
-/*echo "<pre>";
-var_dump($links);
-echo "</pre>";
-*/?>
+<?php ?>
 <link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/boxlisting.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    
 <div class="content-shell">
     <div class="content-wrap" id="wrap">
         <div class="content">
@@ -117,6 +116,9 @@ echo "</pre>";
             //console.log('link'+linkId);
             redirectToLink(linkId);
         });*/
+        $("body").on("click",".show-dates",function(e) {
+            $(this).parent().find('.date-container').toggle();
+        });
         $("#filter_reset").click(function(e){
             e.preventDefault();
             $(".module select").val($("module select option:first").val());
