@@ -64,6 +64,9 @@ class Reg extends CI_Controller {
         //header("Access-Control-Allow-Methods: PUT, GET, POST");
         //header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         //Getting all the posted Values.
+        $cop_date = '';
+        $expiry_date = '';
+
         $firstName              = $this->input->post('firstName');
         $lastName               = $this->input->post('lastName');
         $email                  = $this->input->post('email');
@@ -75,10 +78,15 @@ class Reg extends CI_Controller {
         $business               = $this->input->post('business');
         $shortDescription       = $this->input->post('shortDescription');
         $date_pickter_format    = $this->input->post('cop_date');
-        $cop_date               = date("Y-m-d",strtotime($date_pickter_format));
-        $acn                    = $this->input->post('acn');
+        if(!empty($date_pickter_format)){
+            $cop_date               = date("Y-m-d",strtotime($date_pickter_format));
+            $expiry_date            =  getExpiryDate($cop_date);// expiry date calculated on baise on coprated date after 5 years
+        }else{
+            $cop_date = '';
+            $expiry_date = '';
+        }
         $added_date             =  date('Y-m-d');
-        $expiry_date            =  getExpiryDate($cop_date);// expiry date calculated on baise on coprated date after 5 years
+        $acn                    = $this->input->post('acn');
 
         $mExpense               = $this->input->post('1mExpense');
         $assessableIncomeYear   = $this->input->post('assessableIncomeYear');

@@ -22,6 +22,8 @@
                 event.preventDefault();
                 $("#form1").slideUp('slow');
                 $("#SignupFormStep2").slideDown('slow');
+                var test = $('#cop_date').val();
+                console.log('cop_date:'+test);
             });
             $('#back').click(function(event) {
                 event.preventDefault();
