@@ -1,8 +1,15 @@
 <?php ?>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/boxlisting.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+
+
     
 <div class="content-shell">
     <div class="content-wrap" id="wrap">
@@ -16,6 +23,9 @@
                                     <input type="text" value="" name="location_value" id="location_search"
                                        class="locationSuggest ac_input" placeholder="Name, website"
                                        autocomplete="off">
+                                </div>
+                                <div class="advance-filter-toggle">
+                                    <a href="#" id="show-filter">Advance Filters</a>
                                 </div>
                                 <div class="selectFilters sectors">
                                      <select id="sectorsSelect" placeholder="Select Sector">
@@ -104,7 +114,7 @@
 <div id="loading-submit">
     <img src="<?=base_url();?>assets/images/loading.gif" alt="loading">
 </div>
-
+<script type="text/javascript" src="<?=base_url()?>assets/js/jquery.ba-bbq.min.js"></script>
 <script type="text/javascript" src="<?=base_url()?>assets/js/jquery.ba-bbq.min.js"></script>
 <script>
     jQuery(document).ready(function($){
@@ -117,7 +127,12 @@
             redirectToLink(linkId);
         });*/
         $("body").on("click",".show-dates",function(e) {
+             e.preventDefault();
             $(this).parent().find('.date-container').toggle();
+        });
+        $("body").on("click","#show-filter",function(e) {
+            e.preventDefault();
+             $('#filter select, #sort-filters select').toggle();
         });
         $("#filter_reset").click(function(e){
             e.preventDefault();
@@ -339,8 +354,16 @@
 
             // Get the hash (fragment) as a string, with any leading # removed. Note that
             // in jQuery 1.4, you should use e.fragment instead of $.param.fragment().
-            var url = $.param.fragment();
-
+            //window.location.href
+            var url = $(location).attr('href');
+            url = url.split('#').reverse()[0];
+            //var url =  $.param.fragment();
+           
+            if($.isNumeric(url)){
+                url = url;
+            }else{
+                 url = false;
+            }
             if(url){
                 redirectToLink(url);
             }else{
@@ -399,6 +422,7 @@
                 type:'GET',
                 data: {id:id}
             }).done(function(response){
+                $("html, body").animate({ scrollTop: 0 }, "slow");
                 $('.content-shell #wrap .single-item.list-item').remove();
                 $('.content-shell #wrap .btn-back').remove();
                 $('body').addClass('single-item-layout');
