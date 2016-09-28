@@ -93,7 +93,19 @@ legend {
 form {
 /*background-color: #424242;*/
 }
+form .address-container{
 
+}
+form .address-container label{
+  display: block;
+}
+form .address-container input#address{
+  width: 40%;
+}
+form .address-container input{
+  width: 25%;
+  display: inline-block;
+}
 
 #SaveAccount {
   margin-top: 5px;

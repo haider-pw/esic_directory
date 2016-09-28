@@ -19,8 +19,7 @@ class Esicdetails extends CI_Controller{
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         $id  =  $_GET['id'];
         $this->load->model('Esic_model');
-        $list = $this->Esic_model->getdetails($id);
-        print_r($list);
-        exit;
+        $data['list'] = $this->Esic_model->getdetails($id);
+        $this->load->view('product_details',$data);
     }
 }

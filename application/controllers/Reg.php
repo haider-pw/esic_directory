@@ -70,6 +70,8 @@ class Reg extends CI_Controller {
         $website                = $this->input->post('website');
         $company                = $this->input->post('company');
         $address                = $this->input->post('address');
+        $state                  = $this->input->post('state');
+        $town                   = $this->input->post('town');
         $business               = $this->input->post('business');
         $shortDescription       = $this->input->post('shortDescription');
         $date_pickter_format    = $this->input->post('cop_date');
@@ -121,6 +123,8 @@ class Reg extends CI_Controller {
             'website'           => $website,
             'company'           => $company,
             'address'           => $address,
+            'state'             => $state,
+            'town'              => $town,
             'business'          => $business,
             'acn_number'        => $acn,
             'added_date'        => $added_date,

@@ -150,6 +150,8 @@ class Esic_model extends CI_Model
                     user.email as Email,
                     user.company as Company,
                     user.address as address,
+                    user.state as state,
+                    user.town as town,
                     user.business as Business,
                     user.businessShortDescription as BusinessShortDesc,
                     user.score as Score,

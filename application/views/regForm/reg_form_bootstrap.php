@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Form to Wizard with jQuery Validation plugin</title>
+    <title>Esic Form For Registering</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
     <link href="<?=base_url();?>assets/css/form.css" rel="stylesheet">
@@ -106,9 +106,11 @@
                         <label for="Company">Company Name</label>
                         <input id="Company" name="company" type="text" class="form-control" placeholder="Company" />
                     </div>
-                     <div class="form-group">
+                     <div class="form-group address-container">
                         <label for="Address">Address</label>
-                        <input id="Address" name="address" type="text" class="form-control" placeholder="Address" />
+                        <input id="Address" name="address" type="text" class="form-control" placeholder="Street" />
+                        <input id="town" name="town" type="text" class="form-control" placeholder="Town" />
+                        <input id="state" name="state" type="text" class="form-control" placeholder="State" />
                     </div>
                     <div class="form-group">
                         <label for="Business">Business Name (if different)</label>
@@ -796,8 +798,8 @@
 <script type="text/javascript">
     $(function(){
     	function zIndex($){
-	    	$('#main-wrap').css('z-index', 'auto');
-	    	$('#main-content').css('z-index', 'auto');
+	    	$('#main-wrap').css('z-index', 'initial');
+	    	$('#main-content').css('z-index', 'initial');
 	    }
         $("input[name='incorporatedAus']").on("change",function(){
             if($(this).val() === 'Between six and three years ago'){
