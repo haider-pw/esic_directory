@@ -348,7 +348,7 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
 }
 if( $this->router->fetch_method() === 'details'){
 ?>
-    <script type="text/javascript" src="<?=base_url()?>assets/vendors/tinyEditor/tiny.editor.packed.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>assets/vendors/tinymce/tinymce.min.js"></script>
     <script type="text/javascript">
         $(function(){
             //Some Action To Perform When Modal Is Shown.
@@ -403,26 +403,47 @@ if( $this->router->fetch_method() === 'details'){
             });
 
 
-            var editor = new TINY.editor.edit('editor', {
-                id: 'desc-textarea',
-                width: 584,
-                height: 175,
-                cssclass: 'tinyeditor',
-                controlclass: 'tinyeditor-control',
-                rowclass: 'tinyeditor-header',
-                dividerclass: 'tinyeditor-divider',
-                controls: ['bold', 'italic', 'underline', 'strikethrough', '|', 'subscript', 'superscript', '|',
-                    'orderedlist', 'unorderedlist', '|', 'outdent', 'indent', '|', 'leftalign',
-                    'centeralign', 'rightalign', 'blockjustify', '|', 'unformat', '|', 'undo', 'redo', 'n',
-                    'font', 'size', 'style', '|', 'image', 'hr', 'link', 'unlink', '|', 'print'],
-                footer: true,
-                fonts: ['Verdana','Arial','Georgia','Trebuchet MS'],
-                xhtml: true,
-                cssfile: 'custom.css',
-                bodyid: 'editor',
-                footerclass: 'tinyeditor-footer',
-                toggle: {text: 'source', activetext: 'wysiwyg', cssclass: 'toggle'},
-                resize: {cssclass: 'resize'}
+            tinyMCE.init({
+                selector: '#desc-textarea',
+                height: 500,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table contextmenu paste code'
+                ],
+                toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                content_css: '//www.tinymce.com/css/codepen.min.css'
+            });
+
+            $("body").on("click", ".save-desc", function (e) {
+                e.preventDefault();
+                var userId = $(this).attr('data-user-id');
+                var textArea = tinyMCE.get('desc-textarea').getContent();
+                var ansDiv = $('.edit-desc');
+                var saveBtn = $('#save-desc');
+                var descText = $('#desc-text pre');
+                var descDataText = $.trim(textArea);
+                var postData = {
+                    userID: userId,
+                    descDataText: descDataText
+                };
+                saveBtn.parent().remove();
+                $.ajax({
+                    url: baseUrl + "Admin/savedesc",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                        var data = output.split("::");
+                        if (data[0] === "OK") {
+                            console.log(output);
+                            descText.html(data[1]);
+                            ansDiv.hide();
+                            $('#desc-edit').show();
+                            descText.show();
+                        }
+                    }
+                });
+
             });
         });
     </script>
@@ -1624,36 +1645,6 @@ if ($this->router->fetch_method() === 'details') {
                 
               
             });
-            $("body").on("click", ".save-desc", function (e) {
-                e.preventDefault();
-                var userId = $(this).attr('data-user-id');
-                var textArea = $('#desc-textarea');
-                var ansDiv = $('.edit-desc');
-                var saveBtn = $('#save-desc');
-                var descText = $('#desc-text pre');
-                var descDataText = $.trim(textArea.val());
-                var postData = {
-                    userID: userId,
-                    descDataText: descDataText
-                };
-                saveBtn.parent().remove();
-                $.ajax({
-                    url: baseUrl + "Admin/savedesc",
-                    data: postData,
-                    type: "POST",
-                    success: function(output) {
-                       var data = output.split("::");
-                       if (data[0] === "OK") {
-	                        console.log(output);
-	                        descText.text(data[1]);
-	                        ansDiv.hide();
-	                        $('#desc-edit').show();
-	                        descText.show();
-	                    }
-                    }
-                });
-              
-            });
             $("body").on("click", ".date-edit", function (e) {
                 e.preventDefault();
                 var userId = $('#profile-box-container').attr('data-user-id');
@@ -1927,7 +1918,7 @@ if ($this->router->fetch_method() === 'details') {
                             }
                        });
                     
-                     }
+                     };
                     reader.readAsDataURL(input.files[0]);
                 }else{
                     $('#loading-image').hide();

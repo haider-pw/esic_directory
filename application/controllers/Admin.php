@@ -284,7 +284,7 @@ class Admin extends MY_Controller{
                 $updateArray['businessShortDescription'] = $descDataText;
                 $whereUpdate = array('id' => $userID);
                 $this->Common_model->update('user',$whereUpdate,$updateArray);
-                echo 'OK::'.$descDataText.'';
+                echo 'OK::'.urldecode($descDataText).'';
             exit();
     }
     public function savelogo(){

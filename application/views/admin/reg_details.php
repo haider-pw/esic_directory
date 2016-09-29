@@ -540,13 +540,13 @@ margin: 10px 0px;
                     <div class="timeline-item">
                       <h3 class="timeline-header">Brief Description  <a href="#" id="desc-edit" data-user-id="<?= $userProfile['userID'];?>" class="pull-right btn-box-tool desc-edit"><i class="fa fa-pencil"></i></a></h3>
                       <div id="desc-text" class="timeline-body">
-                      <pre><?= trim($userProfile['BusinessShortDesc']);?></pre>
+                      <pre><?= trim(urldecode($userProfile['BusinessShortDesc']));?></pre>
                       </div>
                     </div>
                     <div class="timeline-item edit-desc">
                       <div class="form-group">
                         <label>Please Edit The Description Here</label>
-                        <textarea id="desc-textarea" name="desc"></textarea>
+                        <textarea id="desc-textarea" name="desc"><?=$userProfile['BusinessShortDesc'];?></textarea>
                       </div>
                     </div>
                   </div>

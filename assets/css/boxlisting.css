@@ -1059,3 +1059,20 @@ body.menu-open #navmobile {
 		z-index: -1;
 	}
 }
+
+
+/*CSS From Haider*/
+.container-box>.container-box> .logo-container{
+    text-align: center;
+    margin-top: -114px;
+}
+.container-box>.container-box> .logo-container >a.permalink {
+    display: inline-block;
+}
+.container-box>.container-box> .logo-container >a.permalink > img{
+    border-radius: 50%;
+}
+.background-img-container{
+    height:350px;
+}
+/*End of CSS Haider*/
