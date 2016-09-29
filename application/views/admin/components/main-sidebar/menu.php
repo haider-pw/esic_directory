@@ -23,10 +23,10 @@
         <ul class="treeview-menu">
             <li><a href="<?=base_url('Admin/manage_universities')?>"><i class="fa fa-circle-o"></i> Manage Universities</a></li>
             <li><a href="<?=base_url('Admin/manage_rd')?>"><i class="fa fa-circle-o"></i> Manage R&D</a></li>
-<!--            Acceleration Commercials-->
             <li><a href="<?=base_url('Admin/manage_acc_commercials')?>"><i class="fa fa-circle-o"></i> Manage Acc Commercials</a></li>
             <li><a href="<?=base_url('Admin/manage_accelerators')?>"><i class="fa fa-circle-o"></i> Manage Accelerators</a></li>
             <li><a href="<?=base_url('Admin/manage_sectors')?>"><i class="fa fa-circle-o"></i> Manage Sectors</a></li>
+            <li><a href="<?=base_url('Admin/manage_status')?>"><i class="fa fa-circle-o"></i> Manage Status</a></li>
         </ul>
     </li>
     <!--<li class="treeview">

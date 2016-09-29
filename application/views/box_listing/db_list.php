@@ -63,8 +63,8 @@
                                 <div class="sortFilters">
                                     <select id="dateAddedOrderSelect" placeholder="Order By date added">
                                         <option value="" disabled selected>Order by date added</option>
-                                        <option value="asc">Newest</option>
-                                        <option value="desc">Oldest</option>
+                                        <option value="desc">Newest</option>
+                                        <option value="asc">Oldest</option>
                                     </select>
                                 </div>
                                 <div class="sortFilters">

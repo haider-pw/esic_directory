@@ -20,20 +20,13 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <input type="hidden" id="hiddenUserID">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <input type="hidden" id="hiddenUserID">
+                        	<input type="hidden" id="hiddenUserID">
+                            <input type="hidden" id="hiddenID">
                             <label for="editStatusTextBox">Update the Pre-Assessment Esic Status</label>
                             <select id="editStatusTextBox" name="editStatusTextBox" style="width: 80%;">
                                     <option value="0">Select...</option>
-                                    <option value="1">Pending</option>
-                                    <option value="2">In assessment</option>
-                                    <option value="3">Self assessed ESIC pending verification</option>
-                                    <option value="4">Later stage innovation company</option>
-                                    <option value="5">ESIC (confirm R&D ratio)</option>
-                                    <option value="6">ESIC (confirm R&D or Investment)</option>  
-                                    <option value="7">Approved</option>        
                             </select>
                         </div>
                     </div>
@@ -80,6 +73,45 @@
 
 
 <?php
+    }else if($this->router->fetch_method() === 'manage_status') {
+?>
+
+<style>
+.modal select{
+    min-height: 25px;
+    max-width: 300px;
+    display: block;
+  }
+</style>
+<!--Edit Ward Modal-->
+<div class="modal approval-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Delete Esic Status</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenUserID">
+                    <div class="col-md-12">
+                        <p>Do You Want To Delete This Status?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="yesApprove">Yes</button>
+                <button type="button" class="btn btn-danger mright" data-dismiss="modal" aria-label="Close" id="nodelete">No</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+
+<?php 
     }else{
 ?>
 <style>
@@ -196,10 +228,16 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
-
-
+<!-- jQuery 3.1.1 -->
+<!--script src="https://code.jquery.com/jquery-3.1.1.js"></script-->
+<!-- jQuery migrate-3.0.0 -->
+<!--script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script-->
+<!-- jQuery 1.12.4 -->
+<!--script src="https://code.jquery.com/jquery-1.12.4.js"></script-->
+<!-- jQuery 2.2.4 -->
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 <!-- jQuery 2.2.3 -->
-<script src="<?= base_url()?>assets/vendors/jQuery/jquery-2.2.3.min.js"></script>
+<!--script src="<?= base_url()?>assets/vendors/jQuery/jquery-2.2.3.min.js"></script-->
 <!-- Bootstrap 3.3.6 -->
 <script src="<?= base_url()?>assets/vendors/bootstrap/js/bootstrap.min.js"></script>
 <!-- DataTables -->
@@ -282,10 +320,28 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
 
             //Some Action To Perform When Modal Is Shown.
             $(".approval-modal").on("shown.bs.modal", function (e) {
-                var button = $(e.relatedTarget); // Button that triggered the modal
-                var ID = button.parents("tr").attr("data-id");
-                var modal = $(this);
-                modal.find("input#hiddenUserID").val(ID);
+            	 var button = $(e.relatedTarget); // Button that triggered the modal
+			     var ID = button.parents("tr").attr("data-id");
+			     var modal = $(this);
+			     modal.find("input#hiddenUserID").val(ID);
+            	$.ajax({
+                    url: baseUrl + "Admin/manage_status/allvalues",
+                    type: "POST",
+                    success: function (output) {
+                        var model = $(this);
+                        var data = $.parseJSON(output);
+                        $('#editStatusTextBox').html('');
+	                        $.each(data, function( key, value ) {
+							  $('#editStatusTextBox').append('<option value="'+value.id+'">'+value.status+'</option>');
+							}); 
+						var StatusText = $.trim(button.parents("tr").find('.status').text());
+					    var StatusID = $('#editStatusTextBox option').filter(function () { 
+					              return $(this).html() == StatusText; 
+					     }).val(); 	
+					    $("#editStatusTextBox").val(StatusID); 
+                    }
+                });
+  
             });
 
             $("#saveStatus").on("click", function () {
@@ -435,7 +491,6 @@ if( $this->router->fetch_method() === 'details'){
                     success: function(output) {
                         var data = output.split("::");
                         if (data[0] === "OK") {
-                            console.log(output);
                             descText.html(data[1]);
                             ansDiv.hide();
                             $('#desc-edit').show();
@@ -1579,7 +1634,7 @@ if ($this->router->fetch_method() === 'details') {
                     id: id,
                     userID: userID,
                     dataQuestionId: dataQuestionId,
-                    Answervalue, Answervalue,
+                    Answervalue: Answervalue,
                     oldScore: oldScore
                 };
                 $.ajax({
@@ -2002,6 +2057,123 @@ if ($this->router->fetch_method() === 'details') {
 
     </script>
 <?php }
+	if ($this->router->fetch_method() === 'manage_status') {
+?>
+    <script>
+        $(function () {
+            oTable = "";
+            var regTableSelector = $("#statusList");
+            var url_DT = baseUrl + "Admin/manage_status/listing";
+            var aoColumns_DT = [
+                /* ID */ {
+                    "mData": "ID",
+                    "bVisible": true,
+                    "bSortable": true,
+                    "bSearchable": true
+                },
+                /* Status */ {
+                    "mData": "Status"
+                },
+                /* Action Buttons */ {
+                    "mData": "ViewEditActionButtons"
+                }
+            ];
+            var HiddenColumnID_DT = "ID";
+            var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
+            commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
+
+
+            new $.fn.dataTable.Responsive(oTable, {
+                details: true
+            });
+            removeWidth(oTable);
+
+            //Code for search box
+            $("#search-input").on("keyup", function (e) {
+                oTable.fnFilter($(this).val());
+            });
+
+            $(".approval-modal").on("shown.bs.modal", function (e) {
+
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var Status = $.trim(button.parents("tr").find('td').eq(1).text());
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find(".modal-body").find('p > strong').text(' "' + Status + '"');
+            });
+
+            $("#editStatusModal").on("shown.bs.modal", function (e) {
+				var button = $(e.relatedTarget); // Button that triggered the modal
+				var ID = button.parents("tr").attr("data-id");
+				var Status = $.trim(button.parents("tr").find('td').eq(1).text());
+				var modal = $(this);
+				modal.find("input#hiddenID").val(ID);
+				modal.find("#editStatusBox").val(Status);
+
+            });
+
+            $("#yesApprove").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var postData = {id: hiddenModalID, value: "delete"};
+                $.ajax({
+                    url: baseUrl + "Admin/manage_status/delete",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] == 'OK') {
+                            $(".approval-modal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
+
+            $("#updateStatusBtn").on("click", function () {
+                var id = $(this).parents(".modal-content").find("#hiddenID").val();
+                var Status = $.trim($(this).parents(".modal-content").find("#editStatusBox").val());
+                var postData = {
+                    id: id,
+                    status: Status
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/manage_status/update",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] === "OK") {
+                            $("#editStatusModal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
+          
+            $("#addStatusBtn").on("click", function () {
+                var Status = $(this).parents(".modal-content").find("#addStatusTextBox").val();
+                var postData = {
+                    status: Status
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/manage_status/new",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                        var data = output.split("::");
+                        if (data[0] === "OK") {
+                            $(".addNewModal").modal('hide');
+                            oTable.fnDraw();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <?php
+}
 
 
 ?>

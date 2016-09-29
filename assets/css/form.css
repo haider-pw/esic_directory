@@ -1,6 +1,13 @@
 body.menu-open #navmobile {
    z-index: 1;
 }
+body div#main-wrap{
+  z-index: auto;
+}
+body div#main-content{
+  z-index: auto;
+}
+
 @media (max-width: 1024px){
   #navmobile {
     z-index: -1;

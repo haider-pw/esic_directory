@@ -800,8 +800,8 @@
 <script type="text/javascript">
     $(function(){
     	function zIndex($){
-	    	$('#main-wrap').css('z-index', 'initial');
-	    	$('#main-content').css('z-index', 'initial');
+	    	$('#main-wrap').css('z-index', 'auto');
+	    	$('#main-content').css('z-index', 'auto');
 	    }
         $("input[name='incorporatedAus']").on("change",function(){
             if($(this).val() === 'Between six and three years ago'){
@@ -1286,20 +1286,30 @@
         
 </script>
 
-    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+<!-- jQuery 3.1.1 -->
+<script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+<!-- jQuery migrate-3.0.0 -->
+<!--script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script-->
+<!-- jQuery 1.12.4 -->
+<!--script src="https://code.jquery.com/jquery-1.12.4.js"></script-->
+<!-- jQuery 2.2.3 -->
+<!--script src="<?= base_url()?>assets/vendors/jQuery/jquery-2.2.3.min.js"></script-->
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
+
 
 <script type="text/javascript">
-//$('.modal select').select2();
+$('.modal select').select2();
 	//$("#cop_date").datepicker();
-	$("#cop_date").datepicker({
+	$("#cop_date").daterangepicker({
                 singleDatePicker: true,
                 locale: {
                     format: 'DD-MM-YYYY',
                 }
         });
-</script-->
+</script>
 </body>
 </html>
