@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: HI
- * Date: 9/27/2016
- * Time: 5:44 PM
- */
-
-$result="";
 if(!empty($list)){
     $count=0;
     foreach($list as $key=>$user){
@@ -63,133 +55,214 @@ if(!empty($list)){
         if(isset($user['rndLogo']) and !empty($user['rndLogo']) and is_file(FCPATH.'/'.$user['rndLogo'])){
             $rndLogo = base_url($user['rndLogo']);
         }
+        ?>
 
+<div id="single-container" class="single-item list-item hcard-search member_level_5">
+    <div class="container">
+       <div class="background-img-container"><img src="<?= $bgimg; ?>" alt="" class="left"></div>
+            <div class="container-box">
+                <div class="img-container logo-container">
+                    <a href="#" class="permalink">
+                        <img src="<?= $img; ?>" alt="" class="left">
+                     </a>
+                </div>
+                <ul class="nav nav-tabs">
+                  <li class="active"><a data-toggle="tab" href="#home">Overview</a></li>
+                  <li><a data-toggle="tab" href="#menu1">Dates and Status</a></li>
+                  <li><a data-toggle="tab" href="#menu2">Detail</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div id="home" class="tab-pane fade in active">
+                        <div class="detail-container">
+                            <?php if($user['FullName']!=''){ ?>
+                                <div class="product-details">
+                                    <label>Name:</label>
+                                    <a href="#" class="permalink" >
+                                        <h3><?= $user['FullName'] ?></h3>
+                                    </a>
+                                </div>
+                            <?php  } if($user['Company']!=''){ ?>
+                                <div class="product-details">
+                                    <label>Company:</label>
+                                    <p class="info-type"><?= $user['Company'];?></p>
+                                </div>
+                            <?php  }  if($user['sectorName']!=''){ ?>
+                                <div class="product-details">
+                                   <label>Sector:</label>
+                                   <p class="info-type"><?= $user['sectorName']; ?></p>
+                                       <!--
+                                   <?php if($user['ESecAppStatus'] !=''){ ?>
+                                        <label>ABR Sector:</label>
+                                        <p class="info-type">
+                                            <?= $user['ESecAppStatus'];?>
+                                        </p>
+                                    <?php  } ?>
+                                   <?php  if($secLogo !=''){ ?>
+                                       <div class="logos-img-container img-container">
+                                            <img src="<?= $secLogo; ?>" alt="" class="left">
+                                       </div>
+                                    <?php  } ?>
+                                    -->
+                                </div>
+                            <?php  } ?>
+                            <?php if($user['address']!=''){ ?>
+                                <div class="product-details">
+                                    <label>Address:</label>
+                                    <p class="info-type"><?= $user['address'];?></p>
+                               </div>
+                            <?php  } ?>
+                            <?php if($web!=''){ ?>
+                                <div class="product-details website-address">
+                                    <label>Website:</label>
+                                    <p><?= $web; ?></p>
+                                </div>
+                           <?php  } ?>
+                            <?php if($desc !=''){ ?>
+                                    <div class="description">
+                                        <label>Summary:</label>
+                                        <p><?= $desc ;?></p>
+                                    </div>
+                            <?php  } ?>
+                            <?php if($productImg !=''){ ?>
+                                <div class="img-container product-img-container">
+                                    <label>Product Image:</label>
+                                    <img src="<?= $productImg;?> " alt="" class="left">
+                                </div>
+                            <?php } ?>
+                                <br />
+                        </div>
+                  </div>
+                  <div id="menu1" class="tab-pane fade">
+                        <div class="detail-container">
+                             <div class="product-di-container">
+                                <div class="small-details-container">
+                                     <?php if($user['acn_number']!=''){ ?>
+                                        <div class="product-details small-details">
+                                            <label>ACN Number:</label>
+                                            <p class="info-type"><?= $user['acn_number'];?></p>
+                                        </div>
+                                    <?php  } ?>
+                                    <?php if($status!=''){ ?>
+                                        <div class="product-details status-container small-details">
+                                                <label>Status:</label>
+                                                <?= $status;?>
+                                        </div>
+                                    <?php }if($user['corporate_date']!=''){ ?>
+                                        <div class="product-details small-details">
+                                            <label>Incorporate Date:</label>
+                                            <p class="info-type"><?= $user['corporate_date'];?></p>
+                                       </div>
+                                    <?php  } ?>
+                                    <?php if($user['added_date']!=''){ ?>
+                                       <div class="product-details small-details">
+                                            <label>Added Date:</label>
+                                            <p class="info-type"><?= $user['added_date'];?></p>
+                                        </div>
+                                    <?php  } ?>
+                                    <?php if($user['expiry_date']!=''){ ?>
+                                        <div class="product-details small-details">
+                                            <label>Expiry Date:</label>
+                                            <p class="info-type"><?= $user['expiry_date'];?></p>
+                                        </div>
+                                    <?php  } ?>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+                  <div id="menu2" class="tab-pane fade">
+                        <div class="detail-container category-tab">
+                         <?php if($user['institution']!=''){ ?>
+                                <div class="category-container">
+                                    <div class="category-box">
+                                        <div class="category-details">
+                                            <label>Institution:</label>
+                                            <p class="info-type"><?= $user['institution'];?></p>
+                                        </div>
+                                           <?php if($user['EInAppStatus'] !=''){ ?>
+                                         <div class="category-details">
+                                                <label>ABR Institution:</label>
+                                                <p class="info-type"><?= $user['EInAppStatus']; ?> </p>
+                                        </div>
+                                        <?php  } ?>
+                                    </div>
+                               <?php if($institutionLogo !=''){ ?>
+                                    <div class="logos-img-container img-container category-img">
+                                        <img src="<?= $institutionLogo;?> " alt="" class="left">
+                                    </div>
+                                <?php  } ?>
+                                </div>
+                            <?php  } ?>
+                            <?php if($user['rndname']!=''){ ?>
+                               <div class="category-container">
+                                    <div class="category-box">
+                                        <div class="category-details">
+                                            <label>R&D Name:</label>
+                                            <p class="info-type"><?= $user['rndname'];?> </p>
+                                        </div>
+                                        <?php if($user['RndAppStatus'] !=''){ ?>
+                                         <div class="category-details">
+                                               <label>ABR R&D:</label>
+                                               <p class="info-type"><?= $user['RndAppStatus'];?></p>
+                                        </div>
+                                        <?php  } ?>
+                                    </div>
+                                <?php if($rndLogo !=''){ ?>
+                                    <div class="logos-img-container img-container category-img">
+                                        <img src="<?= $rndLogo; ?>" alt="" class="left">
+                                    </div>
+                                <?php  } ?>
+                                </div>
+                            <?php  } if($user['Member']!=''){ ?>
+                                    <div class="category-container">
+                                        <div class="category-box">
+                                            <div class="category-details">
+                                                <label>Commercialisation Australia:</label>
+                                                <p class="info-type"><?= $user['Member']; ?></p>
+                                            </div>
+                                             <?php if($user['EAccCoAppStatus'] !=''){ ?>
+                                                <div class="category-details">
+                                                            <label>ABR Commercialisation Australia:</label>
+                                                            <p class="info-type"><?= $user['EAccCoAppStatus']; ?></p>
+                                                </div>
+                                            <?php  } ?>
+                                        </div>
+                                        <?php if($AccCoImg !=''){ ?>
+                                                <div class="logos-img-container img-container category-img">
+                                                    <img src="<?= $AccCoImg ?>" alt="" class="left">
+                                                </div>
+                                       <?php  } ?>
+                                    </div>
+                            <?php  } ?>
+                            <?php if($user['Accname']!=''){ ?>
+                                    <div class="category-container">
+                                        <div class="category-box">
+                                            <div class="category-details">
+                                                <label>Accelerator:</label>
+                                                <p class="info-type"><?= $user['Accname']; ?></p>
+                                            </div>
+                                            <?php if($user['EAccAppStatus'] !=''){ ?>
+                                                <div class="category-details">
+                                                   <label>ABR Accelerator:</label>
+                                                   <p class="info-type"><?= $user['EAccAppStatus']; ?></p>
+                                                </div>
+                                            <?php  } ?>
+                                        </div>
+                                        <?php if($AccImg !=''){ ?>
+                                            <div class="logos-img-container img-container category-img">
+                                                <img src="<?= $AccImg ?>" alt="" class="left">
+                                            </div>
+                                        <?php  } ?>
+                                    </div>
+                            <?php  } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+     <?php  } 
 
-        $result .= '<div id="single-container" class="single-item list-item hcard-search member_level_5">';
-        $result .= '<div class="container">';
-        $result .= '<div class="background-img-container"><img src="'.$bgimg.'" alt="" class="left"></div>';
-        $result .= '<div class="container-box">';
-        $result .= '<div class="img-container logo-container">';
-        $result .= '<a href="#" class="permalink">';
-        $result .= '<img src="'.$img.'" alt="" class="left">';
-        $result .= '</a>';
-        $result .= '</div>';
-        $result .= '<div class="detail-container">';
-        if($user['FullName']!=''){
-            $result .= '<div class="product-details"><label>Name:</label>';
-            $result .= '<a href="#" class="permalink" >';
-            $result .= '<h3>'.$user['FullName'].'</h3>';
-            $result .= '</a>';
-            $result .= '</div>';
-        }
-        if($user['Company']!=''){
-            $result .= '<div class="product-details"><label>Company:</label>';
-            $result .= '<p class="info-type">'.$user['Company'].'</p>';
-            $result .= '</div>';
-        }
-        if($user['address']!=''){
-            $result .= '<div class="product-details"><label>Address:</label>';
-            $result .= '<p class="info-type">'.$user['address'].'</p>';
-            $result .= '</div>';
-        }
-        if($web!=''){
-            $result .= '<div class="product-details website-address"><label>Website:</label><p>';
-            $result .= $web;
-            $result .= '</p></div>';
-        }
-        $result .= '<div class="product-di-container">';
-        $result .= '<div class="small-details-container">';
-        $result .= '<div class="product-details status-container small-details"><label>Status:</label>'.$status.'</div>';
-        if($user['corporate_date']!=''){
-            $result .= '<div class="product-details small-details"><label>Incorporate Date:</label>';
-            $result .= '<p class="info-type">'.$user['corporate_date'].'</p>';
-            $result .= '</div>';
-        }
-        if($user['added_date']!=''){
-            $result .= '<div class="product-details small-details"><label>Added Date:</label>';
-            $result .= '<p class="info-type">'.$user['added_date'].'</p>';
-            $result .= '</div>';
-        }
-        if($user['expiry_date']!=''){
-            $result .= '<div class="product-details small-details"><label>Expiry Date:</label>';
-            $result .= '<p class="info-type">'.$user['expiry_date'].'</p>';
-            $result .= '</div>';
-        }
-        if($user['acn_number']!=''){
-            $result .= '<div class="product-details small-details"><label>ACN Number:</label>';
-            $result .= '<p class="info-type">'.$user['acn_number'].'</p>';
-            $result .= '</div>';
-        }
-        $result .= '</div><div class="img-container product-img-container">';
-        $result .= '<img src="'.$productImg.'" alt="" class="left">';
-        $result .= '</div></div>';
-        if($user['institution']!=''){
-            $result .= '<div class="product-details other-details"><label>Institution:</label>';
-            $result .= '<p class="info-type">'.$user['institution'].'</p>';
-            if($user['EInAppStatus'] !=''){
-                $result .= '<label>ABR Institution:</label><p class="info-type">'.$user['EInAppStatus'].'</p>';
-            }
-            if($institutionLogo !=''){
-                $result .= '<div class="logos-img-container img-container"><img src="'.$institutionLogo.'" alt="" class="left"></div>';
-            }
-            $result .= '</div>';
-        }
-        if($user['sectorName']!=''){
-            $result .= '<div class="product-details other-details"><label>Sector:</label>';
-            $result .= '<p class="info-type">'.$user['sectorName'].'</p>';
-            if($user['ESecAppStatus'] !=''){
-                $result .= '<label>ABR Sector:</label><p class="info-type">'.$user['ESecAppStatus'].'</p>';
-            }
-            if($secLogo !=''){
-                $result .= '<div class="logos-img-container img-container"><img src="'.$secLogo.'" alt="" class="left"></div>';
-            }
-            $result .= '</div>';
-        }
-        if($user['rndname']!=''){
-            $result .= '<div class="product-details other-details"><label>R&D Name:</label>';
-            $result .= '<p class="info-type">'.$user['rndname'].'</p>';
-            if($user['RndAppStatus'] !=''){
-                $result .= '<label>ABR R&D:</label><p class="info-type">'.$user['RndAppStatus'].'</p>';
-            }
-            if($rndLogo !=''){
-                $result .= '<div class="logos-img-container img-container"><img src="'.$rndLogo.'" alt="" class="left"></div>';
-            }
-            $result .= '</div>';
-        }
-        if($user['Member']!=''){
-            $result .= '<div class="product-details other-details"><label>Commercialisation Australia:</label>';
-            $result .= '<p class="info-type">'.$user['Member'].'</p>';
-            if($user['EAccCoAppStatus'] !=''){
-                $result .= '<label>ABR Commercialisation Australia:</label><p class="info-type">'.$user['EAccCoAppStatus'].'</p>';
-            }
-            if($AccCoImg !=''){
-                $result .= '<div class="logos-img-container img-container"><img src="'.$AccCoImg.'" alt="" class="left"></div>';
-            }
-            $result .= '</div>';
-        }
-        if($user['Accname']!=''){
-            $result .= '<div class="product-details other-details"><label>Accelerator:</label>';
-            $result .= '<p class="info-type">'.$user['Accname'].'</p>';
-            if($user['EAccAppStatus'] !=''){
-                $result .= '<label>ABR Accelerator:</label><p class="info-type">'.$user['EAccAppStatus'].'</p>';
-            }
-            if($AccImg !=''){
-                $result .= '<div class="logos-img-container img-container"><img src="'.$AccImg.'" alt="" class="left"></div>';
-            }
-            $result .= '</div>';
-        }
-        if($desc !=''){
-            $result .= '<div class="description">';
-            $result .= '<label>Summary:</label><p>';
-            $result .= $desc ;
-            $result .= '</p>';
-            $result .= '</div>';
-        }
-        $result .= "<br />";
-        $result .= '</div></div></div>';
-        $result .= '</div></div>';
-    }
-
-    echo $result;
-
+}else{
+    echo 'Fail: No Result';
 }
