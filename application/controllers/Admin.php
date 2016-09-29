@@ -39,7 +39,7 @@ class Admin extends MY_Controller{
             email AS Email, company AS Company,
             business AS Business,
             score AS Score,
-            CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END AS Status
+            CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 7 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") END AS Status
             ',false);
             $joins = array(
                 array(
@@ -66,6 +66,7 @@ class Admin extends MY_Controller{
     public function assessment_list(){
         $userID = $this->input->post('id');
         $status = $this->input->post('value');
+        $statusValue = $this->input->post('statusValue');
         if(!isset($userID) || empty($userID)){
             echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
             return;
@@ -78,11 +79,8 @@ class Admin extends MY_Controller{
         }
         //UpdateData
         $updateArray = array();
-        if($status === 'approve'){
-            $updateArray['status'] = 3;
-        }
-        if($status === 'pending'){
-            $updateArray['status'] = 1;
+        if($status === 'approve' || !empty($statusValue)){
+            $updateArray['status'] = $statusValue;
         }
 
 
@@ -113,7 +111,7 @@ class Admin extends MY_Controller{
                     user.added_date as added_date,
                     user.ipAddress as ipAddress,
                     ESEC.sector as sector,
-                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 2 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") ELSE "" END as Status
+                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 7 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") ELSE "" END as Status
             ',false);
             //EQS.SolVal as solval,
               //      EQS.Points as points,

@@ -6,7 +6,7 @@
 </footer>
 
 <?php
-    if($this->router->fetch_method() === 'assessments_list' || $this->router->fetch_method() === 'details'){
+    if($this->router->fetch_method() === 'assessments_list' || $this->router->fetch_method() === 'details'|| $this->router->fetch_method() === 'index'){
 ?>
 
 <!--Edit Ward Modal-->
@@ -15,21 +15,34 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Update Approval Status</h4>
+                <h4 class="modal-title">Update Esic Status</h4>
             </div>
 
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" id="hiddenUserID">
                     <div class="col-md-12">
-                        <p>Update the Pre-Assessment Approval Status?</p>
+                        <div class="form-group">
+                            <input type="hidden" id="hiddenUserID">
+                            <label for="editStatusTextBox">Update the Pre-Assessment Esic Status</label>
+                            <select id="editStatusTextBox" name="editStatusTextBox" style="width: 80%;">
+                                    <option value="0">Select...</option>
+                                    <option value="1">Pending</option>
+                                    <option value="2">In assessment</option>
+                                    <option value="3">Self assessed ESIC pending verification</option>
+                                    <option value="4">Later stage innovation company</option>
+                                    <option value="5">ESIC (confirm R&D ratio)</option>
+                                    <option value="6">ESIC (confirm R&D or Investment)</option>  
+                                    <option value="7">Approved</option>        
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger mright" id="noPending">Pending</button>
-                <button type="button" class="btn btn-success" id="yesApprove">Approve</button>
+                <button type="button" class="btn btn-danger mright" id="saveStatus">Save</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
 
         </div><!-- /.modal-content -->
@@ -207,7 +220,7 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.jasny/3.13/js/jasny-bootstrap.min.js"></script>
 <!--script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.fileupload/9.9.0/js/jquery.fileupload.js"></script-->
-<script type="text/javascript" src="<?=base_url()?>assets/vendors/tinyEditor/tiny.editor.packed.js"></script>
+
 
 <script>
 
@@ -275,39 +288,19 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
                 modal.find("input#hiddenUserID").val(ID);
             });
 
-            $("#yesApprove").on("click", function () {
+            $("#saveStatus").on("click", function () {
                 var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var editStatusTextBox = $(this).parents(".modal-content").find("#editStatusTextBox").val();
                 if (hiddenModalUserID == '') {
                     hiddenModalUserID = $(this).attr('data-id');
                 }
-                var postData = {id: hiddenModalUserID, value: "approve"};
+                var postData = {id: hiddenModalUserID, value: "approve", statusValue: editStatusTextBox};
                 $.ajax({
                     url: baseUrl + "Admin/assessment_list",
                     data: {
                         id: hiddenModalUserID,
-                        value: "approve"
-                    },
-                    type: "POST",
-                    success: function (output) {
-                        var data = output.split("::");
-                        if (data[0] == 'OK') {
-                            oTable.fnDraw();
-                            $('.approval-modal').modal('hide');
-                        }
-                    }
-                });
-            });
-            $("#noPending").on("click", function () {
-                var hiddenModalUserID = $(this).parents(".modal-content").find("#hiddenUserID").val();
-                if (hiddenModalUserID == '') {
-                    hiddenModalUserID = $(this).attr('data-id');
-                }
-                var postData = {id: hiddenModalUserID, value: "pending"};
-                $.ajax({
-                    url: baseUrl + "Admin/assessment_list",
-                    data: {
-                        id: hiddenModalUserID,
-                        value: "pending"
+                        value: "approve",
+                        statusValue :editStatusTextBox
                     },
                     type: "POST",
                     success: function (output) {
@@ -355,6 +348,7 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
 }
 if( $this->router->fetch_method() === 'details'){
 ?>
+    <script type="text/javascript" src="<?=base_url()?>assets/vendors/tinyEditor/tiny.editor.packed.js"></script>
     <script type="text/javascript">
         $(function(){
             //Some Action To Perform When Modal Is Shown.
@@ -409,15 +403,26 @@ if( $this->router->fetch_method() === 'details'){
             });
 
 
-            tinymce.init({
-                selector: 'div.editable',
-                inline: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table contextmenu paste'
-                ],
-                toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
+            var editor = new TINY.editor.edit('editor', {
+                id: 'desc-textarea',
+                width: 584,
+                height: 175,
+                cssclass: 'tinyeditor',
+                controlclass: 'tinyeditor-control',
+                rowclass: 'tinyeditor-header',
+                dividerclass: 'tinyeditor-divider',
+                controls: ['bold', 'italic', 'underline', 'strikethrough', '|', 'subscript', 'superscript', '|',
+                    'orderedlist', 'unorderedlist', '|', 'outdent', 'indent', '|', 'leftalign',
+                    'centeralign', 'rightalign', 'blockjustify', '|', 'unformat', '|', 'undo', 'redo', 'n',
+                    'font', 'size', 'style', '|', 'image', 'hr', 'link', 'unlink', '|', 'print'],
+                footer: true,
+                fonts: ['Verdana','Arial','Georgia','Trebuchet MS'],
+                xhtml: true,
+                cssfile: 'custom.css',
+                bodyid: 'editor',
+                footerclass: 'tinyeditor-footer',
+                toggle: {text: 'source', activetext: 'wysiwyg', cssclass: 'toggle'},
+                resize: {cssclass: 'resize'}
             });
         });
     </script>

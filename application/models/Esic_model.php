@@ -202,7 +202,7 @@ class Esic_model extends CI_Model
                 ),
                 array(
                     'table' => 'esic_acceleration EAccCo',
-                    'condition' => 'EAccCo.id = user.AccID',
+                    'condition' => 'EAccCo.id = user.AccCoID',
                     'type' => 'LEFT'
                 ),
                 array(
