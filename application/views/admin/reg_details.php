@@ -452,7 +452,19 @@ margin: 10px 0px;
                   </div>
                </div>
                <hr>
-            <?php }  if(!empty($userProfile['ScorePercentage'])){ ?>
+            <?php }if(!empty($userProfile['dateDiff'])){ 
+
+                  $percentageDays = (($userProfile['dateDiff']/(5*365))*100);
+
+              ?>
+              <strong><i class="fa fa-briefcase margin-r-5"></i> Days Remaining Percentage</strong>
+               <div class="progress md">
+                   <div class="question-bar progress-bar progress-bar-aqua" style="width: <?= round($percentageDays).'%';?>" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                      <span class=""><?= round($percentageDays).'%';?></span>
+                    </div>
+                </div>
+            <?php } 
+            if(!empty($userProfile['ScorePercentage'])){ ?>
               <strong><i class="fa fa-briefcase margin-r-5"></i> Score</strong>
                <div class="progress md">
                    <div class="question-bar progress-bar progress-bar-aqua" style="width: <?= round($userProfile['ScorePercentage']).'%';?>" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">

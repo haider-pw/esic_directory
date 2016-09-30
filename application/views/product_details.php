@@ -55,6 +55,9 @@ if(!empty($list)){
         if(isset($user['rndLogo']) and !empty($user['rndLogo']) and is_file(FCPATH.'/'.$user['rndLogo'])){
             $rndLogo = base_url($user['rndLogo']);
         }
+        $date1 = new DateTime($user['corporate_date']);
+        $date2 = new DateTime($user['expiry_date']);
+        $diff = $date2->diff($date1)->format("%a");
         ?>
 
 <div id="single-container" class="single-item list-item hcard-search member_level_5">
@@ -66,14 +69,9 @@ if(!empty($list)){
                         <img src="<?= $img; ?>" alt="" class="left">
                      </a>
                 </div>
-                <ul class="nav nav-tabs">
-                  <li class="active"><a data-toggle="tab" href="#home">Overview</a></li>
-                  <li><a data-toggle="tab" href="#menu1">Dates and Status</a></li>
-                  <li><a data-toggle="tab" href="#menu2">Detail</a></li>
-                </ul>
-                <div class="tab-content">
-                  <div id="home" class="tab-pane fade in active">
-                        <div class="detail-container">
+                <div class="clear"></div>
+                <div class="wrapper">
+                        <div class="detail-container main-details">
                             <?php if($user['FullName']!=''){ ?>
                                 <div class="product-details">
                                     <label>Name:</label>
@@ -84,58 +82,28 @@ if(!empty($list)){
                             <?php  } if($user['Company']!=''){ ?>
                                 <div class="product-details">
                                     <label>Company:</label>
-                                    <p class="info-type"><?= $user['Company'];?></p>
+                                    <h3><?= $user['Company'];?></h3>
                                 </div>
                             <?php  }  if($user['sectorName']!=''){ ?>
                                 <div class="product-details">
                                    <label>Sector:</label>
-                                   <p class="info-type"><?= $user['sectorName']; ?></p>
-                                       <!--
-                                   <?php if($user['ESecAppStatus'] !=''){ ?>
-                                        <label>ABR Sector:</label>
-                                        <p class="info-type">
-                                            <?= $user['ESecAppStatus'];?>
-                                        </p>
-                                    <?php  } ?>
-                                   <?php  if($secLogo !=''){ ?>
-                                       <div class="logos-img-container img-container">
-                                            <img src="<?= $secLogo; ?>" alt="" class="left">
-                                       </div>
-                                    <?php  } ?>
-                                    -->
+                                   <h3><?= $user['sectorName']; ?></h3>
                                 </div>
                             <?php  } ?>
                             <?php if($user['address']!=''){ ?>
                                 <div class="product-details">
                                     <label>Address:</label>
-                                    <p class="info-type"><?= $user['address'];?></p>
+                                    <h3><?= $user['address'];?></h3>
                                </div>
                             <?php  } ?>
                             <?php if($web!=''){ ?>
                                 <div class="product-details website-address">
                                     <label>Website:</label>
-                                    <p><?= $web; ?></p>
+                                    <h3><?= $web; ?></h3>
                                 </div>
                            <?php  } ?>
-                            <?php if($desc !=''){ ?>
-                                    <div class="description">
-                                        <label>Summary:</label>
-                                        <p><?= $desc ;?></p>
-                                    </div>
-                            <?php  } ?>
-                            <?php if($productImg !=''){ ?>
-                                <div class="img-container product-img-container">
-                                    <label>Product Image:</label>
-                                    <img src="<?= $productImg;?> " alt="" class="left">
-                                </div>
-                            <?php } ?>
-                                <br />
                         </div>
-                  </div>
-                  <div id="menu1" class="tab-pane fade">
-                        <div class="detail-container">
-                             <div class="product-di-container">
-                                <div class="small-details-container">
+                        <div class="detail-container main-dates-container">
                                      <?php if($user['acn_number']!=''){ ?>
                                         <div class="product-details small-details">
                                             <label>ACN Number:</label>
@@ -147,17 +115,18 @@ if(!empty($list)){
                                                 <label>Status:</label>
                                                 <?= $status;?>
                                         </div>
-                                    <?php }if($user['corporate_date']!=''){ ?>
+                                    <?php }
+                                    if($diff!=''){ ?>
+                                        <div class="product-details small-details">
+                                            <label>Days to go:</label>
+                                            <p class="info-type"><?= $diff;?></p>
+                                       </div>
+                                    <?php  } 
+                                    if($user['corporate_date']!=''){ ?>
                                         <div class="product-details small-details">
                                             <label>Incorporate Date:</label>
                                             <p class="info-type"><?= $user['corporate_date'];?></p>
                                        </div>
-                                    <?php  } ?>
-                                    <?php if($user['added_date']!=''){ ?>
-                                       <div class="product-details small-details">
-                                            <label>Added Date:</label>
-                                            <p class="info-type"><?= $user['added_date'];?></p>
-                                        </div>
                                     <?php  } ?>
                                     <?php if($user['expiry_date']!=''){ ?>
                                         <div class="product-details small-details">
@@ -165,11 +134,23 @@ if(!empty($list)){
                                             <p class="info-type"><?= $user['expiry_date'];?></p>
                                         </div>
                                     <?php  } ?>
-                                </div>
-                            </div>
+                                    <?php if($user['added_date']!=''){ ?>
+                                       <div class="product-details small-details">
+                                            <label>Added Date:</label>
+                                            <p class="info-type"><?= $user['added_date'];?></p>
+                                        </div>
+                                    <?php  } ?>
                         </div>
-                  </div>
-                  <div id="menu2" class="tab-pane fade">
+                        <div class="clear"></div>
+                        <div class="detail-container summary-details">
+                            <label>Summary:</label>
+                            <?php if($desc !=''){ ?>
+                                    <div class="description">
+                                        <p> <?php if($productImg !=''){ ?><img src="<?= $productImg;?> " hspace="0" vspace="6" align="left"alt="" class="left"> <?php } ?> <?= $desc ;?></p>
+                                    </div>
+                            <?php  } ?>
+                            <br />
+                        </div>
                         <div class="detail-container category-tab">
                          <?php if($user['institution']!=''){ ?>
                                 <div class="category-container">
@@ -254,7 +235,6 @@ if(!empty($list)){
                                         <?php  } ?>
                                     </div>
                             <?php  } ?>
-                        </div>
                     </div>
                 </div>
             </div>
