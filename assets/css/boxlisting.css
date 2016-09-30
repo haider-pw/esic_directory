@@ -1,7 +1,24 @@
 body,body * {
   box-sizing: border-box;
 }
+.thumbs-up{
+  float: right;
+  display: inline-block;
+  font-size: 16px;
+  border: none;
+  background: #eee;
+  color: #000;
+  border-radius: 4px;
+  padding: 0px 5px;
+  text-decoration: none!important;
+}
+.thumbs-up span{
+  font-size: 10px;
 
+}
+.thumbs-up i{
+
+}
 #load_more {
   background: #345;
   color: #fff;
@@ -108,13 +125,15 @@ body.single-item-layout{
         cursor: auto;
     }
      body #main-content ul li .product-details button{
-    font-size: 16px;
-    /*background: transparent;*/
-    border: none;
-    background: #eee;
-    color: #000;
-    border-radius: 4px;
-    /* color: #fff; */
+      font-size: 16px;
+      /* background: transparent; */
+      border: none;
+      background: #eee;
+      color: #000;
+      border-radius: 4px;
+      /* color: #fff; */
+      float: none;
+      margin-right: 10px;
     }
     body #main-content ul li.list-item .website-container{
         display: none;
@@ -131,6 +150,7 @@ body.single-item-layout{
           border-radius: 25px;
           padding: 10px 10px 5px;
           transition: all 0.5s ease;
+          text-align: right;
      }
 
 .background-img-container{
@@ -808,7 +828,8 @@ body #main-content .container-box ul.nav-tabs li.active{
 
 }
 body #main-content .container-box ul.nav-tabs li a{
-  color: #000;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.66);
 }
 body #main-content .container-box ul.nav-tabs li.active a{
   background: #000;

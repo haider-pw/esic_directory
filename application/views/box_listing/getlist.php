@@ -52,6 +52,7 @@ if(!empty($list) && is_array($list)){
                  	<button type="button" class="show-dates">
 	                		<i class="fa fa-calendar" aria-hidden="true"></i>
                     </button>
+                    <a href="#" data-link= "<?= $user['userID'];?>" class="thumbs-up"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <span><?= $user['thumbsUp'];?></span></a>
                  	<?php if(!empty($user['added_date'])){ ?>
 				     <div class="product-details date-container add">
 				     	<label>Added Date:</label>

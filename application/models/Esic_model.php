@@ -44,6 +44,7 @@ class Esic_model extends CI_Model
 	                score as Score,
 	                logo as Logo,
 	                website as Web,
+                    thumbsUp as thumbsUp,
 	                expiry_date as expiry_date,
 	                corporate_date as corporate_date,
 	                added_date as added_date,
@@ -89,6 +90,7 @@ class Esic_model extends CI_Model
 	                score as Score,
 	                logo as Logo,
 	                website as Web,
+                    thumbsUp as thumbsUp,
 	                expiry_date as expiry_date,
 	                corporate_date as corporate_date,
 	                added_date as added_date,
@@ -163,6 +165,7 @@ class Esic_model extends CI_Model
                     user.bannerImage as bannerImage,
                     user.productImage as productImage,
                     user.website as Web,
+                    user.thumbsUp as thumbsUp,
                     ERnD.rndname as rndname,
                     ERnD.IDNumber as IDNumber,
                     ERnD.AddressContact as AddressContact,
@@ -223,5 +226,20 @@ class Esic_model extends CI_Model
             );
             $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,false,'','','','','',true);
 			return $usersResult;
+    }
+        public function updatethumbs($userID,$thumbs,$newThumbs){
+            if(!isset($userID) || empty($userID)){
+                echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                return;
+            }
+            //UpdateData
+            $updateArray = array();
+            $updateArray['thumbsUp'] = $thumbs+1;
+            $whereUpdate = array(
+                'id' => $userID
+            );
+
+            $this->Common_model->update('user',$whereUpdate,$updateArray);
+            echo 'OK::'.$thumbs.'::'.$newThumbs;
     }
 }

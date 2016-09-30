@@ -126,6 +126,19 @@
             //console.log('link'+linkId);
             redirectToLink(linkId);
         });*/
+
+
+        function getSessionId(sessionString) {
+            return sessionStorage.getItem(sessionString)==null?"":sessionStorage.getItem(sessionString);
+        }
+        function setSessionId(userID) {
+            sessionStorage.setItem("thumbsUpSessionID"+userID,'thumbsUpID'+userID);
+        }
+
+
+
+
+
         $("body").on("click",".show-dates",function(e) {
              e.preventDefault();
             $(this).parent().find('.date-container').toggle();
@@ -133,6 +146,31 @@
         $("body").on("click","#show-filter",function(e) {
             e.preventDefault();
              $('#filter select, #sort-filters select').toggle();
+        });
+        $("body").on("click",".thumbs-up",function(e) {
+            e.preventDefault();
+             var thumbsUpDiv = $(this);
+             var userID = thumbsUpDiv.attr('data-link');
+             var thumbs = parseInt(thumbsUpDiv.find('span').text(), 10);
+             var newThumbs = thumbs + 1;
+             if(getSessionId("thumbsUpSessionID"+userID) != 'thumbsUpID'+userID){
+                 setSessionId(userID);
+                 $.ajax({
+                    url:"<?php echo base_url() ?>Esic2/updatethumbs",
+                    type:'POST',
+                    data: {userID:userID,
+                        thumbs:thumbs,
+                        newThumbs:newThumbs
+                        }
+                }).done(function(response){
+                    var data = response.split('::');
+                    if(data[0]=='OK'){
+                        thumbsUpDiv.find('span').text(newThumbs);
+                    }
+                });  
+            }else{
+                console.log('Sorry Already Set');
+            }
         });
         $("#filter_reset").click(function(e){
             e.preventDefault();

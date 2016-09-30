@@ -26,7 +26,7 @@ class Esic2 extends CI_Controller{
 
         ///Loading Pagination
 //        $this->load->library("pagination");
-        $this->load->library('Ajax_pagination');
+         $this->load->library('session');
 
         //Pagination Config
         $this->perPage = 5;
@@ -60,6 +60,14 @@ class Esic2 extends CI_Controller{
         $this->load->model('Esic_model');
         $data['list'] = $this->Esic_model->getfilterlist($page,$searchInput,$secSelect,$comSelect,$orderSelect,$orderSelectValue);
         $this->load->view("box_listing/getlist",$data);
+    }
+    public function updatethumbs(){
+        $userID = $this->input->post('userID');
+        $thumbs = $this->input->post('thumbs');
+        $newThumbs = $this->input->post('newThumbs');
+        $this->load->model('Esic_model');
+        $data = $this->Esic_model->updatethumbs($userID,$thumbs,$newThumbs);
+        echo $data;
     }
 
     public function info($userID){

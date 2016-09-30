@@ -26,6 +26,7 @@ class Esicdetails extends CI_Controller{
                     score as Score,
                     logo as Logo,
                     website as Web,
+                    thumbsUp as thumbsUp,
                     CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
                     ',
                 false
