@@ -32,6 +32,7 @@
                                     <th class="tablet desktop">Email</th>
                                     <th class="desktop">Company</th>
                                     <th>Business</th>
+                                    <th>Thumbs Up</th>
                                     <th class="tablet-l desktop">Status</th>
                                     <th class="mobile tablet desktop">Action</th>
                                 </tr>
@@ -45,6 +46,7 @@
                                     <th class="tablet desktop">Email</th>
                                     <th class="desktop">Company</th>
                                     <th>Business</th>
+                                    <th>Thumbs Up</th>
                                     <th class="tablet-l desktop">Status</th>
                                     <th class="mobile tablet desktop">Action</th>
                                 </tr>

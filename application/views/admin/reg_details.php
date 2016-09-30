@@ -264,6 +264,16 @@ margin: 10px 0px;
 .loading-image img{
 	margin-top: 20%;
 }
+.thumbsUp-container{
+
+}
+.thumbsUp-container:hover #resetThumbsUp{
+    display: block;
+}
+#resetThumbsUp{
+  float: right;
+    display: none;
+}
         </style>
 
 
@@ -333,6 +343,11 @@ margin: 10px 0px;
               </div>
             <?php } ?>
               <ul class="list-group list-group-unbordered dates">
+                <?php if(!empty($userProfile['dateDiff'])){ ?>
+                  <li class="list-group-item">
+                    <b>Days to go</b> <a class="pull-right bg-black"><?= $userProfile['dateDiff'];?></a>
+                  </li>
+                <?php } ?> 
               	<?php if(!empty($userProfile['expiry_date'])){ ?>
 	                <li class="list-group-item ">
 	                  <b>Expiry Date</b> <a class="pull-right bg-red"><?= $userProfile['expiry_date'];?></a>
@@ -350,7 +365,7 @@ margin: 10px 0px;
                   <a class="btn addBtn date-edit" data-date-title="Edit Added Date" data-date-type="added_date" data-date-value="<?= $userProfile['added_date_value'];?>" data-toggle="modal" data-target=".DateEditModal" id="addDateEditModal"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                 </li>
                 <?php } ?>
-              </ul>
+             </ul>
               <?php if(!empty($userProfile['Web'])){ ?>
                 <div class="web-container">
                     <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block website-text" target="_blank"><b><?= $userProfile['Web'];?></b></a>
@@ -424,6 +439,16 @@ margin: 10px 0px;
                   <div class="ipAddress-text">
                     <strong><i class="fa fa-globe margin-r-5"></i>IP Address</strong>
                     <p class="text-muted"> <?= $userProfile['ipAddress'];?></p>
+                  </div>
+
+               </div>
+               <hr>
+            <?php } if(!empty($userProfile['thumbsUp'])){ ?>
+               <div class="thumbsUp-container">
+                  <div class="thumbsUp-text">
+                    <strong><i class="fa fa-thumbs-o-up margin-r-5"></i>Total Thumbs Up</strong>
+                     <a class="btn addBtn resetThumbsUp" id="resetThumbsUp"><i class="fa fa-recycle"></i></a>
+                    <p class="text-muted"> <?= $userProfile['thumbsUp'];?></p>
                   </div>
                </div>
                <hr>

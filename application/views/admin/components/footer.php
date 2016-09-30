@@ -297,6 +297,9 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
                 /*  Buisness */ {
                     "mData": "Business"
                 },
+                /*  ThumbsUp */ {
+                    "mData": "thumbsUp"
+                },
                 /* Last User Login */ {
                     "mData": "Status"
                 },
@@ -1916,7 +1919,23 @@ if ($this->router->fetch_method() === 'details') {
                     }
                 });
             });
-
+            $("#resetThumbsUp").on("click", function () {
+                var userId  = $('#profile-box-container').attr('data-user-id');
+                var postData = {
+                    userID: userId
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/resetThumbsUp",
+                    data: postData,
+                    type: "POST",
+                    success: function (output) {
+                       var data = output.split("::");
+                        if(data[0] === 'OK'){
+                          $('.thumbsUp-container').find('p').text(0);                              
+                        }
+                    }
+                });
+            });
             $("#sector-edit").on("click", function (event) {
                 event.preventDefault();
                 var saveBtn = $('.save-sector');

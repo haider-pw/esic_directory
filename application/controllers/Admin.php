@@ -39,6 +39,7 @@ class Admin extends MY_Controller{
             email AS Email, company AS Company,
             business AS Business,
             score AS Score,
+            thumbsUp as thumbsUp,
             ES.id as StatusID,
             CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label status label-danger\'> ", ES.status," </span>") WHEN user.status = 7 THEN CONCAT ("<span class=\'label status label-success\'> ", ES.status, " </span>") ELSE CONCAT ("<span class=\'label status label-warning\'> ", ES.status, " </span>") END AS Status
             ',false);
@@ -106,6 +107,7 @@ class Admin extends MY_Controller{
                     user.productImage as productImage,
                     user.bannerImage as bannerImage,
                     user.website as Web,
+                    user.thumbsUp as thumbsUp,
                     user.business as business,
                     user.expiry_date as expiry_date,
                     user.corporate_date as corporate_date,
@@ -161,12 +163,15 @@ class Admin extends MY_Controller{
                     $TotalPoints = '';
                     $ScorePercentage='';
                 }
-
+                $date1 = new DateTime($returnedData[0]->corporate_date);
+                $date2 = new DateTime($returnedData[0]->expiry_date);
+                $diff = $date2->diff($date1)->format("%a");
                 $data['userProfile'] = array(
                     'userID' 			=> $userID,
                     'ScorePercentage' 	=> $ScorePercentage,
                     'Web' 				=> $returnedData[0]->Web,
                     'Logo' 				=> $returnedData[0]->Logo,
+                    'thumbsUp'          => $returnedData[0]->thumbsUp,
                     'bannerImage'       => $returnedData[0]->bannerImage,
                     'productImage'      => $returnedData[0]->productImage,
                     'Email' 			=> $returnedData[0]->Email,
@@ -177,6 +182,7 @@ class Admin extends MY_Controller{
                     'business' 			=> $returnedData[0]->business,
                     'FullName' 			=> $returnedData[0]->FullName,
                     'ipAddress'         => $returnedData[0]->ipAddress,
+                    'dateDiff'          => $diff,
                     'added_date' 		=> date("d-M-Y", strtotime($returnedData[0]->added_date)),
                     'expiry_date' 		=> date("d-M-Y", strtotime($returnedData[0]->expiry_date)),
                     'corporate_date' 	=> date("d-M-Y", strtotime($returnedData[0]->corporate_date)),
@@ -464,6 +470,20 @@ class Admin extends MY_Controller{
                 $whereUpdate = array('id' => $userID);
                 $this->Common_model->update('user',$whereUpdate,$updateArray);
                 echo 'OK::'.$fullName.'';
+            exit();
+    }
+    public function resetThumbsUp(){
+                $userID    = $this->input->post('userID');
+                if(!isset($userID) || empty($userID)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['thumbsUp'] = 0;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::';
             exit();
     }
     public function updatewebsite(){
