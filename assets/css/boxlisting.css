@@ -1052,6 +1052,11 @@ body #main-content .container-box .category-container .category-details p {
     float: none;
     display: block;
 }
+@media all and (min-width:601px) {
+.module .filter select {
+    display: inline-block!important;
+  }
+}
 
 @media all and (max-width:1100px) {
     ul.product-list li {

@@ -343,11 +343,11 @@ margin: 10px 0px;
               </div>
             <?php } ?>
               <ul class="list-group list-group-unbordered dates">
-                <?php if(!empty($userProfile['dateDiff'])){ ?>
+                <?php /*if(!empty($userProfile['dateDiff'])){ ?>
                   <li class="list-group-item">
                     <b>Days to go</b> <a class="pull-right bg-black"><?= $userProfile['dateDiff'];?></a>
                   </li>
-                <?php } ?> 
+                <?php } */?> 
               	<?php if(!empty($userProfile['expiry_date'])){ ?>
 	                <li class="list-group-item ">
 	                  <b>Expiry Date</b> <a class="pull-right bg-red"><?= $userProfile['expiry_date'];?></a>

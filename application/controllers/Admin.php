@@ -163,9 +163,13 @@ class Admin extends MY_Controller{
                     $TotalPoints = '';
                     $ScorePercentage='';
                 }
-                $date1 = new DateTime($returnedData[0]->corporate_date);
+               // $date1 = new DateTime($returnedData[0]->corporate_date);
+                $date1 = new DateTime(date('Y-m-d H:i:s'));
                 $date2 = new DateTime($returnedData[0]->expiry_date);
                 $diff = $date2->diff($date1)->format("%a");
+               // if($diff> 60){
+               //     $diff = '';
+                //}
                 $data['userProfile'] = array(
                     'userID' 			=> $userID,
                     'ScorePercentage' 	=> $ScorePercentage,

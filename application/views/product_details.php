@@ -55,9 +55,13 @@ if(!empty($list)){
         if(isset($user['rndLogo']) and !empty($user['rndLogo']) and is_file(FCPATH.'/'.$user['rndLogo'])){
             $rndLogo = base_url($user['rndLogo']);
         }
-        $date1 = new DateTime($user['corporate_date']);
+       // $date1 = new DateTime($user['corporate_date']);
+        $date1 = new DateTime(date('Y-m-d H:i:s'));
         $date2 = new DateTime($user['expiry_date']);
         $diff = $date2->diff($date1)->format("%a");
+        if($diff> 60){
+                    $diff = '';
+                }
         ?>
 
 <div id="single-container" class="single-item list-item hcard-search member_level_5">
