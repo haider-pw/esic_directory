@@ -132,7 +132,7 @@ if(!empty($list)){
                                             <p class="info-type"><?= $user['corporate_date'];?></p>
                                        </div>
                                     <?php  } ?>
-                                    <?php if($user['expiry_date']!=''){ ?>
+                                    <?php if($user['expiry_date']!='' and $user['ShowExpDate'] != '0'){ ?>
                                         <div class="product-details small-details">
                                             <label>Expiry Date:</label>
                                             <p class="info-type"><?= $user['expiry_date'];?></p>

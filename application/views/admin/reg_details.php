@@ -349,10 +349,16 @@ margin: 10px 0px;
                   </li>
                 <?php } */?> 
               	<?php if(!empty($userProfile['expiry_date'])){ ?>
-	                <li class="list-group-item ">
-	                  <b>Expiry Date</b> <a class="pull-right bg-red"><?= $userProfile['expiry_date'];?></a>
-	                  <a class="btn addBtn date-edit" data-date-title="Edit Expiry Date" data-date-type="expiry_date" data-date-value="<?= $userProfile['expiry_date_value'];?>" data-toggle="modal" data-target=".DateEditModal" id="addDateEditModal"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
-	                </li>
+                    <li class="list-group-item ">
+                        <b>Expiry Date</b>
+                        <a class="pull-right bg-red"><?= $userProfile['expiry_date']; ?></a>
+                        <i id="showExpDate" data-value="<?=($userProfile['ShowExpiryDate'] == 1)?'show':'hide';?>" class="pull-right fa <?php echo (isset($userProfile['ShowExpiryDate']) and $userProfile['ShowExpiryDate'] == 1)? 'fa-eye text-success':'fa-eye-slash text-warning' ?> " style="margin-right: 10px; cursor: pointer;"></i>
+                        <a class="btn addBtn date-edit" data-date-title="Edit Expiry Date" data-date-type="expiry_date"
+                           data-date-value="<?= $userProfile['expiry_date_value']; ?>" data-toggle="modal"
+                           data-target=".DateEditModal" id="addDateEditModal"><span style="font-size: 12px;"
+                                                                                    class="glyphicon glyphicon-pencil"></span></a>
+
+                    </li>
                 <?php } if(!empty($userProfile['corporate_date'])){ ?>
                 <li class="list-group-item">
                   <b>Corporate Date</b> <a class="pull-right bg-aqua"><?= $userProfile['corporate_date'];?></a>

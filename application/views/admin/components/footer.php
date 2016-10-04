@@ -503,6 +503,44 @@ if( $this->router->fetch_method() === 'details'){
                 });
 
             });
+
+            $('#showExpDate').on("click",function(){
+                var expDateEye = $(this);
+                var userId = $(this).parents('#profile-box-container').attr('data-user-id');
+                var currentStatus = expDateEye.attr('data-value');
+                var update = 'hide';
+                if(currentStatus !== 'show'){
+                    update = 'show';
+                }
+
+                $.ajax({
+                    url:"<?=base_url()?>Admin/showExpDate",
+                    data:{expDate:update,userID:userId},
+                    type:'POST',
+                    success:function(output){
+                        var data = output.split("::");
+                        if(data[0] === 'OK'){
+                            if(update=='show'){
+                                expDateEye.removeClass('fa-eye-slash');
+                                expDateEye.addClass('fa-eye');
+                                expDateEye.attr('data-value','show');
+                                //Changing Colors
+                                expDateEye.removeClass('text-warning');
+                                expDateEye.addClass('text-success');
+                            }else{
+                                expDateEye.removeClass('fa-eye');
+                                expDateEye.addClass('fa-eye-slash');
+                                expDateEye.attr('data-value','hide');
+                                //Changing Colors
+                                expDateEye.removeClass('text-success');
+                                expDateEye.addClass('text-warning');
+
+                            }
+
+                        }
+                    }
+                })
+            });
         });
     </script>
     <?php

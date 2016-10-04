@@ -110,6 +110,7 @@ class Admin extends MY_Controller{
                     user.thumbsUp as thumbsUp,
                     user.business as business,
                     user.expiry_date as expiry_date,
+                    user.showExpDate as ShowExpiryDate,
                     user.corporate_date as corporate_date,
                     user.added_date as added_date,
                     user.ipAddress as ipAddress,
@@ -193,7 +194,8 @@ class Admin extends MY_Controller{
                     'added_date_value'        => date("d-m-Y", strtotime($returnedData[0]->added_date)),
                     'expiry_date_value'       => date("d-m-Y", strtotime($returnedData[0]->expiry_date)),
                     'corporate_date_value'    => date("d-m-Y", strtotime($returnedData[0]->corporate_date)),
-                    'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc
+                    'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc,
+                    'ShowExpiryDate' => $returnedData[0]->ShowExpiryDate
                 );
                 if(!empty($returnedData2) and is_array($returnedData2)){
 	                $data['usersQuestionsAnswers'] = array();
@@ -1764,4 +1766,34 @@ class Admin extends MY_Controller{
         return NULL;
     }
 
+    //Show or HIde Exp Date for the Front.
+    public function showExpDate(){
+        $update = $this->input->post('expDate');
+        $userID = $this->input->post('userID');
+
+        if($update === 'show'){
+            $showExpDate = 1;
+        }else{
+            $showExpDate = 0;
+        }
+        $whereUpdate = array(
+            'id' =>  $userID
+        );
+        $updateData = array(
+            'showExpDate' => $showExpDate
+        );
+
+        $updateResult = $this->Common_model->update('user',$whereUpdate,$updateData);
+
+        if($updateResult === true){
+            echo "OK::Successfully Updated";
+        }else{
+            echo "FAIL::".$updateResult['message'];
+        }
+
+        var_dump($updateResult);
+
+        echo $this->db->last_query();
+
+    }
 }

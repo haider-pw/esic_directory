@@ -161,6 +161,7 @@ class Esic_model extends CI_Model
                     user.corporate_date as corporate_date,
                     user.added_date as added_date,
                     user.expiry_date as expiry_date,
+                    user.showExpDate as ShowExpDate,
                     user.acn_number as acn_number,                    
                     user.bannerImage as bannerImage,
                     user.productImage as productImage,
