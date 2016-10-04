@@ -94,10 +94,16 @@ if(!empty($list)){
                                    <h3><?= $user['sectorName']; ?></h3>
                                 </div>
                             <?php  } ?>
-                            <?php if($user['address']!=''){ ?>
+                            <?php if($user['address']!='' || $user['town']!='' || $user['state']!=''){ ?>
                                 <div class="product-details">
                                     <label>Address:</label>
-                                    <h3><?= $user['address'];?></h3>
+                                    <h3>
+                                    <?php
+                                    if($user['address']!=''){// echo $user['address'].', '; }
+                                    if($user['town']!=''){ echo $user['town'].', '; }
+                                    if($user['state']!=''){ echo $user['state']; }
+                                      ?>
+                                    </h3>
                                </div>
                             <?php  } ?>
                             <?php if($web!=''){ ?>
@@ -126,22 +132,22 @@ if(!empty($list)){
                                             <p class="info-type"><?= $diff;?></p>
                                        </div>
                                     <?php  } 
-                                    if($user['corporate_date']!=''){ ?>
+                                    if($user['corporate_date']!='' && date("Y", strtotime($user['corporate_date'])) > 1980){ ?>
                                         <div class="product-details small-details">
                                             <label>Incorporate Date:</label>
-                                            <p class="info-type"><?= $user['corporate_date'];?></p>
+                                            <p class="info-type"><?=  date("d-m-Y", strtotime($user['corporate_date']));?></p>
                                        </div>
                                     <?php  } ?>
-                                    <?php if($user['expiry_date']!='' and $user['ShowExpDate'] != '0'){ ?>
+                                    <?php if($user['expiry_date']!='' and $user['ShowExpDate'] != '0' && date("Y", strtotime($user['expiry_date'])) > 1980){ ?>
                                         <div class="product-details small-details">
                                             <label>Expiry Date:</label>
-                                            <p class="info-type"><?= $user['expiry_date'];?></p>
+                                            <p class="info-type"><?= date("d-m-Y", strtotime($user['expiry_date']));?></p>
                                         </div>
                                     <?php  } ?>
                                     <?php if($user['added_date']!=''){ ?>
                                        <div class="product-details small-details">
                                             <label>Added Date:</label>
-                                            <p class="info-type"><?= $user['added_date'];?></p>
+                                            <p class="info-type"><?= date("d-m-Y", strtotime($user['added_date']));?></p>
                                         </div>
                                     <?php  } ?>
                         </div>

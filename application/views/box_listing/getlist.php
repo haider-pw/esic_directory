@@ -56,19 +56,19 @@ if(!empty($list) && is_array($list)){
                  	<?php if(!empty($user['added_date'])){ ?>
 				     <div class="product-details date-container add">
 				     	<label>Added Date:</label>
-	                  	<p class="info-type"><?= $user['added_date'];?></p>
+	                  	<p class="info-type"><?= date("d-m-Y", strtotime($user['added_date']));?></p>
 	                 </div>
 	                 <?php } ?>
-	                 <?php if(!empty($user['corporate_date'])){ ?>
+	                 <?php if(!empty($user['corporate_date']) && date("Y", strtotime($user['corporate_date'])) > 1980 ){ ?>
 	                 <div class="product-details date-container cop">
 		                 <label>Incoporate Date:</label>
-		                 <p class="info-type"><?= $user['corporate_date']; ?></p>
+		                 <p class="info-type"><?= date("d-m-Y", strtotime($user['corporate_date'])); ?></p>
 	                 </div>
 	                 <?php } ?>
-	                 <?php if(!empty($user['expiry_date'])){ ?>
+	                 <?php if(!empty($user['expiry_date']) && date("Y", strtotime($user['expiry_date'])) > 1980 ){ ?>
 	                <div class="product-details date-container exp">
 	                	<label>Expiry Date:</label>
-	                	<p class="info-type"><?= $user['expiry_date'];?></p>
+	                	<p class="info-type"><?= date("d-m-Y", strtotime($user['expiry_date']));?></p>
 	                </div>
 	                <?php } ?>
                 </div>

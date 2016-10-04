@@ -1900,7 +1900,104 @@ if ($this->router->fetch_method() === 'details') {
 	                    }
                     }
                 });
-			});                
+			});
+            $("body").on("click", "#acn-edit", function (e) {
+                e.preventDefault();
+               $('.acn-text').hide();
+               $('.editable.acn').show()
+               $('.editable.acn input').focus();
+              
+            });
+            $("#acn-input").focusout(function() {
+               var userId = $('#profile-box-container').attr('data-user-id');
+               $('.acn-text').show();
+               $('.editable.acn').hide();
+               var acn = $('.editable.acn input').val();
+                var postData = {
+                    userID: userId,
+                    acn: acn
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updateacn",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+                           $('.acn-text p').text(acn);
+                        }
+                    }
+                });
+            });               
+            $("body").on("click", "#ipAddress-edit", function (e) {
+                e.preventDefault();
+               $('.ipAddress-text').hide();
+               $('.editable.ipAddress').show()
+               $('.editable.ipAddress input').focus();
+               var oldIpAddress = $(this).parents('.ipAddress-text').find('.text-muted').text();
+                $('.editable.ipAddress input').val(oldIpAddress);
+              
+            });
+            $("#ipAddress-input").focusout(function() {
+               var userId = $('#profile-box-container').attr('data-user-id');
+               $('.ipAddress-text').show();
+               $('.editable.ipAddress').hide();
+               var ipAddress = $('.editable.ipAddress input').val();
+                var postData = {
+                    userID: userId,
+                    ipAddress: ipAddress
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updateip",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+                           $('.ipAddress-text p').text(ipAddress);
+                        }
+                    }
+                });
+            });
+            $("body").on("click", "#address-edit", function (e) {
+                e.preventDefault();
+               $('.address-text').hide();
+               $('.editable.address').show()
+                var street = $('.address-text span.street').text();
+                var town = $('.address-text span.town').text();
+                var state =$('.address-text span.state').text();
+                $('.editable.address #street-input').val(street);
+                $('.editable.address #town-input').val(town);
+                $('.editable.address #state-input').val(state);
+              
+            });
+            $("body").on("click", "#address-save", function (e) {
+               var userId = $('#profile-box-container').attr('data-user-id');
+               $('.address-text').show();
+               $('.editable.address').hide();
+                var street = $('.editable.address #street-input').val();
+                var town = $('.editable.address #town-input').val();
+                var state = $('.editable.address #state-input').val();
+                var postData = {
+                    userID: userId,
+                    address: street,
+                    town: town,
+                    state: state
+                };
+                $.ajax({
+                    url: baseUrl + "Admin/updateAddress",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                       var data = output.split("::");
+                       if(data[0] === "OK") {
+                           $('.address-text .street').text(street);
+                           $('.address-text .town').text(town);
+                           $('.address-text .state').text(state);
+                        }
+                    }
+                });
+            });                        
 			$("body").on("click", "#bsName-edit", function (e) {
                 e.preventDefault();
                $('.bsName-text').hide();

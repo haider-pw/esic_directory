@@ -272,9 +272,68 @@ margin: 10px 0px;
 }
 #resetThumbsUp{
   float: right;
+  display: none;
+}
+.acn-container{
+  position: relative;
+}
+#acn-edit{
+  position: absolute;
+  top: -5px;
+  z-index: 100;
+  right: 0;
+  display: none;
+}
+.acn-container:hover #acn-edit{
+  display: inline-block;
+}
+.ipAddress-container{
+  position: relative;
+}
+#ipAddress-edit{
+    position: absolute;
+    top: -5px;
+    z-index: 100;
+    right: 0;
     display: none;
 }
-        </style>
+.ipAddress-container:hover #ipAddress-edit{
+    display: inline-block;
+}
+
+
+.address-container{
+  position: relative;
+}
+#address-edit{
+    position: absolute;
+    top: -5px;
+    z-index: 100;
+    right: 0;
+    display: none;
+}
+.address-container:hover #address-edit{
+   display: inline-block;
+}
+.address-container .address-text{}
+.address-container .address-text div.text-muted{}
+.address-container .address-text div.text-muted span{}
+.address-container .address-text div.text-muted span.street{}
+.address-container .address-text div.text-muted span.town{}
+.address-container .address-text div.text-muted span.state{}
+.address-container #address-edit{}
+.address-container .address{}
+.address-container .address input{}
+#address-save{
+  margin-top: 10px;
+    background: #3c8dbc;
+    color: #fff;
+    border: none;
+    width: 80px;
+    height: 25px;
+}
+
+</style>
 
 
 <!-- Content Wrapper. Contains page content -->
@@ -320,28 +379,38 @@ margin: 10px 0px;
                       <!--a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a-->
                   </div>
                 </div>
-            <?php if(!empty($userProfile['FullName'])){ ?>
-              <h3 class="profile-username text-center"><b><?= $userProfile['FullName'];?></b>
+            
+              <h3 class="profile-username text-center">
+              <b>
+              <?php if(!empty($userProfile['FullName'])){ 
+                     echo $userProfile['FullName'];
+                   }
+                ?>
+              </b>
               <a class="btn addBtn full-edit" id="full-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a></h3>
               <div class="editable fullname">
                 <div class="form-group">
+                  <label>Full Name:</label>
                   <input type="text" name="fullname" id="fullname" placeholder="<?= $userProfile['FullName'];?>"/> 
                 </div>
               </div>
-			       <?php } ?>
-            <?php if(!empty($userProfile['Company'])){ ?>
               <div class="company-container">
                   <div class="company-text">
-                    <p class="text-muted text-center"><?= $userProfile['Company']?></p>
+                    <p class="text-muted text-center">
+                     <?php if(!empty($userProfile['Company'])){ 
+                           echo $userProfile['Company'];
+                         }
+                     ?>
+                    </p>
                     <a class="btn addBtn company-edit" id="company-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                   </div>
                   <div class="editable company">
                     <div class="form-group">
+                      <label>Company Name:</label>
                       <input type="text" name="company" id="company-input" placeholder="<?= $userProfile['Company'];?>"/> 
                     </div>
                   </div>
               </div>
-            <?php } ?>
               <ul class="list-group list-group-unbordered dates">
                 <?php /*if(!empty($userProfile['dateDiff'])){ ?>
                   <li class="list-group-item">
@@ -372,17 +441,24 @@ margin: 10px 0px;
                 </li>
                 <?php } ?>
              </ul>
-              <?php if(!empty($userProfile['Web'])){ ?>
+              
                 <div class="web-container">
-                    <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block website-text" target="_blank"><b><?= $userProfile['Web'];?></b></a>
+                    <a href="http://<?= $userProfile['Web'];?>" class="btn btn-primary btn-block website-text" target="_blank">
+                      <b>
+                      <?php if(!empty($userProfile['Web'])){ 
+                              echo $userProfile['Web'];
+                            }
+                       ?> 
+                      </b>
+                    </a>
                     <a class="btn addBtn web-edit" id="web-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                     <div class="editable website">
                       <div class="form-group">
+                        <label>Website Address:</label>
                         <input type="text" name="web-input" id="web-input" placeholder="<?= $userProfile['Web'];?>"/> 
                       </div>
                     </div>
                 </div>
-              <?php } ?>
             </div>
             <!-- /.box-body -->
           </div>
@@ -395,61 +471,145 @@ margin: 10px 0px;
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-            <?php if(!empty($userProfile['Email'])){ ?>
                <div class="email-container">
                   <div class="email-text">
                     <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
                     <p class="text-muted">
-                       <?= $userProfile['Email'];?>
+                      <?php 
+                       if(!empty($userProfile['Email'])){ 
+                          echo $userProfile['Email'];
+                        }
+                       ?>
                     </p>
                       <a class="btn addBtn email-edit" id="email-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                   </div>
                   <div class="editable email">
                       <div class="form-group">
+                        <label>Email:</label>
                         <input type="email" name="email-input" id="email-input" placeholder="<?= $userProfile['Email'];?>"/> 
                       </div>
                   </div>
                 </div>
               <hr>
-            <?php }  if(!empty($userProfile['sector'])){ ?>
+               <div class="acn-container">
+                  <div class="acn-text">
+                    <strong><i class="fa fa-user margin-r-5"></i> ACN Number</strong>
+                    <p class="text-muted">
+                       <?php  if(!empty($userProfile['acn_number'])){ 
+                          echo $userProfile['acn_number'];
+                        }
+                      ?>
+                    </p>
+                      <a class="btn addBtn acn-edit" id="acn-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
+                  </div>
+                  <div class="editable acn">
+                      <div class="form-group">
+                        <label>ACN Number:</label>
+                        <input type="text" name="acn-input" id="acn-input" placeholder="<?= $userProfile['acn_number'];?>"/> 
+                      </div>
+                  </div>
+                </div>
+              <hr>
+            
               <div class="sector-container">
                 <div class="sector-text">
                   <strong><i class="fa fa-industry margin-r-5"></i> Sector</strong>
-                  <p class="text-muted"> <?= $userProfile['sector'];?></p>
+                  <p class="text-muted"> 
+                  <?php 
+                    if(!empty($userProfile['sector'])){ 
+                        echo $userProfile['sector'];
+                    }
+                  ?>
+                  </p>
                   <a class="btn addBtn sector-edit" id="sector-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                 </div>
                 <div class="edit-sector">
                   <div class="form-group">
-                    <label>Please Select Answer</label>
+                    <label>Please Select Sector</label>
                     <select class="form-control"></select>
                   </div>
                 </div>
               </div>
               <hr>
-            <?php }  if(!empty($userProfile['business'])){ ?>
                <div class="bsName-container">
                   <div class="bsName-text">
-                    <strong><i class="fa fa-briefcase margin-r-5"></i> Business</strong>
-                    <p class="text-muted"> <?= $userProfile['business'];?></p>
+                    <strong><i class="fa fa-briefcase margin-r-5"></i> Business Name</strong>
+                    <p class="text-muted"> 
+                      <?php 
+                        if(!empty($userProfile['business'])){
+                           echo $userProfile['business'];
+                         }
+                      ?>
+                    </p>
                     <a class="btn addBtn bsName-edit" id="bsName-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                   </div>
                   <div class="editable bsName">
                     <div class="form-group">
+                         <label>Business Name:</label>
                         <input type="text" name="bsName-input" id="bsName-input" placeholder="<?= $userProfile['business'];?>"/> 
                       </div>
                   </div>
                 </div>
               <hr>
-            <?php }  if(!empty($userProfile['ipAddress'])){ ?>
+           
                <div class="ipAddress-container">
                   <div class="ipAddress-text">
                     <strong><i class="fa fa-globe margin-r-5"></i>IP Address</strong>
-                    <p class="text-muted"> <?= $userProfile['ipAddress'];?></p>
+                    <p class="text-muted">
+                     <?php 
+                        if(!empty($userProfile['ipAddress'])){ 
+                          echo  $userProfile['ipAddress'];
+                        }
+                      ?>
+                     </p>
+                     <a class="btn addBtn ipAddress-edit" id="ipAddress-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
                   </div>
-
+                  <div class="editable ipAddress">
+                    <div class="form-group">
+                        <label>IP Address:</label>
+                        <input type="text" name="ipAddress-input" id="ipAddress-input" placeholder="<?= $userProfile['ipAddress'];?>"/> 
+                      </div>
+                  </div>
                </div>
                <hr>
-            <?php } if(!empty($userProfile['thumbsUp'])){ ?>
+               <div class="address-container">
+                  <div class="address-text">
+                    <strong><i class="fa fa-globe margin-r-5"></i>Address</strong>
+                      <?php
+                            echo '<div class="text-muted">Street: <span class="street">';
+                          if($userProfile['address']!=''){ 
+                            echo $userProfile['address']; 
+                          }
+                            echo '</span></div>';
+                            echo '<div class="text-muted">Town: <span class="town">';
+                          if($userProfile['town']!=''){ 
+                            echo $userProfile['town']; 
+                          }
+                            echo '</span></div>';
+                            echo '<div class="text-muted">State: <span class="state">';
+                          if($userProfile['state']!=''){ 
+                            echo $userProfile['state']; 
+                          }
+                            echo '</span></div>';
+                      ?>
+                     <a class="btn addBtn address-edit" id="address-edit"><span style="font-size: 12px;" class="glyphicon glyphicon-pencil"></span></a>
+                  </div>
+                  <div class="editable address">
+                    <div class="form-group">
+                        <label>Street:</label>
+                        <input type="text" name="street-input" id="street-input" placeholder="<?= $userProfile['address'];?>"/> 
+                        <label>Town:</label>
+                        <input type="text" name="town-input" id="town-input" placeholder="<?= $userProfile['town'];?>"/> 
+                         <label>State:</label>
+                        <input type="text" name="state-input" id="state-input" placeholder="<?= $userProfile['state'];?>"/> 
+                    </div>
+                    <div class="form-group">
+                      <button type="button" id="address-save">Save</button>
+                    </div>
+                  </div>
+               </div>
+               <hr>
+            <?php if(!empty($userProfile['thumbsUp'])){ ?>
                <div class="thumbsUp-container">
                   <div class="thumbsUp-text">
                     <strong><i class="fa fa-thumbs-o-up margin-r-5"></i>Total Thumbs Up</strong>

@@ -324,15 +324,25 @@
                 }
                 if(response=='NORESULT'){
                     $("#loader").hide();
+                    $('#no-result').remove();
                     $("#load_more").removeClass('loading');
                     $('#load_more').hide();
                     $('#no-result').remove();
-                    $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
+                    $('.btn-more').append('<div id="no-result">Sorry No Result Found.</div>');
                     //console.log(response);
+                }else if(response < 2){
+                    $("#loader").hide();
+                    $('#no-result').remove();
+                    $("#load_more").removeClass('loading');
+                    $('#load_more').hide();
+                    $('#no-result').remove();
+                    $('.btn-more').append('<div id="no-result">Sorry No Result Found.</div>');
                 }else{
                      //console.log(response);
+                     $('#no-result').remove();
                     $("#regList").append(response);
                     $("#loader").hide();
+                    $('#load_more').show();
                     $("#load_more").removeClass('loading');
                     $('#filter_search').data('val', ($('#filter_search').data('val')+1));
                     scroll();
@@ -348,16 +358,26 @@
                 data: {page:page}
             }).done(function(response){
                 if(response=='NORESULT'){
+                    $('#no-result').remove();
                     $("#loader").hide();
                     $("#load_more").removeClass('loading');
                     $('#load_more').hide();
                     $('#no-result').remove();
                     $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
                     //console.log(response);
+                }else if(response < 2){
+                    $('#no-result').remove();
+                    $("#loader").hide();
+                    $("#load_more").removeClass('loading');
+                    $('#load_more').hide();
+                    $('#no-result').remove();
+                    $('.btn-more').append('<div id="no-result">Sorry No More Result Found.</div>');
                 }else{
                      //console.log(response);
+                    $('#no-result').remove();
                     $("#regList").append(response);
                     $("#loader").hide();
+                     $('#load_more').show();
                     $("#load_more").removeClass('loading');
                     $('#load_more').data('val', ($('#load_more').data('val')+1));
                     if(page!=0){

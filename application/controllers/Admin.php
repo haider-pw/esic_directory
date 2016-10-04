@@ -109,6 +109,10 @@ class Admin extends MY_Controller{
                     user.website as Web,
                     user.thumbsUp as thumbsUp,
                     user.business as business,
+                    user.address as address,
+                    user.town as town,
+                    user.state as state,
+                    user.acn_number as acn_number,
                     user.expiry_date as expiry_date,
                     user.showExpDate as ShowExpiryDate,
                     user.corporate_date as corporate_date,
@@ -187,6 +191,10 @@ class Admin extends MY_Controller{
                     'business' 			=> $returnedData[0]->business,
                     'FullName' 			=> $returnedData[0]->FullName,
                     'ipAddress'         => $returnedData[0]->ipAddress,
+                    'address'           => $returnedData[0]->address,
+                    'town'              => $returnedData[0]->town,
+                    'state'             => $returnedData[0]->state,
+                    'acn_number'        => $returnedData[0]->acn_number,
                     'dateDiff'          => $diff,
                     'added_date' 		=> date("d-M-Y", strtotime($returnedData[0]->added_date)),
                     'expiry_date' 		=> date("d-M-Y", strtotime($returnedData[0]->expiry_date)),
@@ -535,6 +543,56 @@ class Admin extends MY_Controller{
                 $whereUpdate = array('id' => $userID);
                 $this->Common_model->update('user',$whereUpdate,$updateArray);
                 echo 'OK::'.$email.'';
+            exit();
+    }
+    public function updateip(){
+                $userID    = $this->input->post('userID');
+                $ip = $this->input->post('ipAddress');
+                if(!isset($userID) || empty($userID) || !isset($ip) || empty($ip)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['ipAddress'] = $ip;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$ip.'';
+            exit();
+    }
+    public function updateacn(){
+                $userID    = $this->input->post('userID');
+                $acn  = $this->input->post('acn');
+                if(!isset($userID) || empty($userID) || !isset($acn) || empty($acn)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['acn_number'] = $acn;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$acn.'';
+            exit();
+    }
+    public function updateAddress(){
+                $userID  = $this->input->post('userID');
+                $address = $this->input->post('address');
+                $town    = $this->input->post('town');
+                $state   = $this->input->post('state');
+                if(!isset($userID) || empty($userID)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['address'] = $address;
+                $updateArray['town']    = $town;
+                $updateArray['state']   = $state;
+
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.$address.'::'.$town.''.'::'.$state.'';
             exit();
     }
     public function updatebsName(){
