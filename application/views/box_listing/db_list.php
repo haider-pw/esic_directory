@@ -15,6 +15,14 @@
     <div class="content-wrap" id="wrap">
         <div class="content">
                 <div class="module">
+                    <div class="search-para module-para">
+                        <div id="wsite-content" class="wsite-elements wsite-not-footer">
+                            <h2 class="wsite-content-title" style="text-align:center;">Search for Early Stage Innovation Companies</h2>
+                            <div class="paragraph" style="text-align:center;color: #666666;">
+                                To help early stage companies progress through the qualification process we track and update them via our directory, allowing their investors authoritative status updates, with easy and an appropriate level of assurance. ESIC status is designed to be temporary, end date and assessed date search allow quick reference to the facts, and provide another gauge of the currency and accuracy of those ESIC's, that said, our ranking is not a substitute for date-specfic professional sign-off (unless that is indicated). Happy Searching!
+                            </div>
+                        </div>
+                    </div>
                     <div class="module-section">
                         <!--h3>Search by Location</h3-->
                         <div class="filter form">
@@ -27,59 +35,59 @@
                                 <div class="advance-filter-toggle">
                                     <a href="#" id="show-filter">Advance Filters</a>
                                 </div>
-                                <div class="selectFilters sectors">
-                                     <select id="sectorsSelect" placeholder="Select Sector">
-                                        <option value="" disabled selected>Select Sector</option>
-                                        <?php
-                                        if(isset($sectors) and !empty($sectors)){
-                                            foreach($sectors as $sector){
-                                                if(!empty($sector->sector))
-                                                echo '<option value="'.$sector->id.'">'.$sector->sector.'</option>';
+                                <div id="selectDiv" class="">
+                                    <div class="selectFilters sectors">
+                                         <select id="sectorsSelect" placeholder="Select Sector">
+                                            <option value="" disabled selected>Select Sector</option>
+                                            <?php
+                                            if(isset($sectors) and !empty($sectors)){
+                                                foreach($sectors as $sector){
+                                                    if(!empty($sector->sector))
+                                                    echo '<option value="'.$sector->id.'">'.$sector->sector.'</option>';
+                                                }
                                             }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                 <div class="selectFilters company">
-                                    <select id="companySelect" placeholder="Select Company">
-                                        <option value="" disabled selected>Select Company</option>
-                                        <?php
-                                        if(isset($company) and !empty($company)){
-                                            $checkArray = array();
-                                            foreach($company as $company){
-                                                if(!empty($company->company)){
-                                                   if (!(in_array($company->company, $checkArray))){
-                                                            echo '<option value="'.$company->id.'">'.$company->company.'</option>';
-                                                            array_push($checkArray, $company->company);
+                                            ?>
+                                        </select>
+                                    </div>
+                                     <div class="selectFilters company">
+                                        <select id="companySelect" placeholder="Select Company">
+                                            <option value="" disabled selected>Select Company</option>
+                                            <?php
+                                            if(isset($company) and !empty($company)){
+                                                $checkArray = array();
+                                                foreach($company as $company){
+                                                    if(!empty($company->company)){
+                                                       if (!(in_array($company->company, $checkArray))){
+                                                                echo '<option value="'.$company->id.'">'.$company->company.'</option>';
+                                                                array_push($checkArray, $company->company);
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="filter-inner" id="sort-filters">
-                                <div class="sortFilters">
-                                    <select id="dateAddedOrderSelect" placeholder="Order By date added">
-                                        <option value="" disabled selected>Order by date added</option>
-                                        <option value="desc">Newest</option>
-                                        <option value="asc">Oldest</option>
-                                    </select>
-                                </div>
-                                <div class="sortFilters">
-                                    <select id="assessmentOrderSelect" placeholder="Order By Incoporate date">
-                                        <option value="" disabled selected>Order by Incoporate date</option>
-                                        <option value="asc">Newest</option>
-                                        <option value="desc">Oldest</option>
-                                    </select>
-                                </div>
-                                <div class="sortFilters">
-                                    <select id="expiryOrderSelect" placeholder="Order By expiry date">
-                                        <option value="" disabled selected>Order by expiry date</option>
-                                        <option value="asc">Newest</option>
-                                        <option value="desc">Oldest</option>
-                                    </select>
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="sortFilters">
+                                        <select id="dateAddedOrderSelect" placeholder="Order By date added">
+                                            <option value="" disabled selected>Order by date added</option>
+                                            <option value="desc">Newest</option>
+                                            <option value="asc">Oldest</option>
+                                        </select>
+                                    </div>
+                                    <div class="sortFilters">
+                                        <select id="assessmentOrderSelect" placeholder="Order By Incoporate date">
+                                            <option value="" disabled selected>Order by Incoporate date</option>
+                                            <option value="asc">Newest</option>
+                                            <option value="desc">Oldest</option>
+                                        </select>
+                                    </div>
+                                    <div class="sortFilters">
+                                        <select id="expiryOrderSelect" placeholder="Order By expiry date">
+                                            <option value="" disabled selected>Order by expiry date</option>
+                                            <option value="asc">Newest</option>
+                                            <option value="desc">Oldest</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -88,6 +96,7 @@
                             <button  id="filter_reset" class="hero-link green-bg" value="Reset" data-val = "0">Reset</button>  
                         </div>
                     </div>
+                    <div class="clear"></div>
                 </div>
             <div class="new-results" >
                 <?php
@@ -145,7 +154,7 @@
         });
         $("body").on("click","#show-filter",function(e) {
             e.preventDefault();
-             $('#filter select, #sort-filters select').toggle();
+             $('#filter #selectDiv').slideToggle( "slow");
         });
         $("body").on("click",".thumbs-up",function(e) {
             e.preventDefault();
@@ -180,7 +189,7 @@
         $('#dateAddedOrderSelect').change(function(){
             OrderSelect = 'added_date';
             var selectvalue = $(this).val();
-            $(".module #sort-filters select").val($(".module #sort-filters select option:first").val());
+            $(".module .sortFilters select").val($(".module .sortFilters select option:first").val());
             $(this).val(selectvalue);
             var selectstring = JSON.stringify(selectvalue);
             if(selectstring == '"asc"'){
@@ -192,7 +201,7 @@
         $('#assessmentOrderSelect').change(function(){
             OrderSelect = 'corporate_date';
             var selectvalue = $(this).val();
-            $(".module #sort-filters select").val($(".module #sort-filters select option:first").val());
+            $(".module .sortFilters select").val($(".module .sortFilters select option:first").val());
             $(this).val(selectvalue);
             var selectstring = JSON.stringify(selectvalue);
             if(selectstring == '"asc"'){
@@ -204,7 +213,7 @@
         $('#expiryOrderSelect').change(function(){
             OrderSelect = 'expiry_date';
             var selectvalue = $(this).val();
-            $(".module #sort-filters select").val($(".module #sort-filters select option:first").val());
+            $(".module .sortFilters select").val($(".module .sortFilters select option:first").val());
             $(this).val(selectvalue);
             var selectstring = JSON.stringify(selectvalue);
             if(selectstring == '"asc"'){

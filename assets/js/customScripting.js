@@ -1,6 +1,66 @@
 /**
  * Created by Syed Haider Hassan. on 21/9/2015.
  */
+
+ function commonDataTablesPage(selector,url,aoColumns,sDom,HiddenColumnID,start,RowCallBack,DrawCallBack,filters,sortBy){
+    // console.log(HiddenColumnID);
+    //Little Code For Sorting.
+    if(typeof sortBy === "undefined"){
+        sortBy = {
+            'ColumnID' : 0,
+            'SortType' : 'asc'
+        }
+    }
+    oTable = selector.dataTable({
+        "bServerSide": true,
+        "bProcessing": true,
+        "bPaginate" :true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": true,
+        //"bDestroy":true,
+        "sPaginationType": "full_numbers",
+        "sServerMethod": "POST",
+        "aaSorting":[[ sortBy['ColumnID'], sortBy['SortType'] ]],
+        "sDom" : sDom,
+        "aoColumns":aoColumns,
+        "sAjaxSource": url,
+        "iDisplayStart": start,
+        "iDisplayLength": 10,
+        'fnServerData' : function(sSource, aoData, fnCallback){
+            $.ajax({
+                'dataType': 'json',
+                'type': 'POST',
+                'url': url,
+                'data': aoData,
+                'success': fnCallback
+            }); //end of ajax
+        },
+        'fnRowCallback': function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            if(typeof HiddenColumnID !== "undefined"){
+                $(nRow).attr("data-id",aData[HiddenColumnID]);
+            }else{
+                $(nRow).attr("data-id",aData[0]);
+            }
+
+            if(typeof RowCallBack !== "undefined" || RowCallBack === ''){
+                eval(RowCallBack);
+            }
+            return nRow;
+        },
+        //This function is called on every 'draw' event, and allows you to dynamically modify any aspect you want about the created DOM.
+        fnDrawCallback : function (oSettings) {
+            if(typeof DrawCallBack !== "undefined" || DrawCallBack === ''){
+                eval(DrawCallBack);
+            }
+        },
+        "fnServerParams": function (aoData, fnCallBack) {
+            if (typeof filters !== "undefined") {
+                eval(filters);
+            }
+        }
+    });
+}
 function commonDataTables(selector,url,aoColumns,sDom,HiddenColumnID,RowCallBack,DrawCallBack,filters,sortBy){
     // console.log(HiddenColumnID);
     //Little Code For Sorting.
@@ -337,3 +397,17 @@ function validateEmail(email) {
 function removeWidth(oTable){
     $(".table").css("width","100%");
 }
+jQuery.fn.dataTableExt.oApi.fnPagingInfo = function ( oSettings )
+{
+    return {
+        "iStart":         oSettings._iDisplayStart,
+        "iEnd":           oSettings.fnDisplayEnd(),
+        "iLength":        oSettings._iDisplayLength,
+        "iTotal":         oSettings.fnRecordsTotal(),
+        "iFilteredTotal": oSettings.fnRecordsDisplay(),
+        "iPage":          oSettings._iDisplayLength === -1 ?
+            0 : Math.ceil( oSettings._iDisplayStart / oSettings._iDisplayLength ),
+        "iTotalPages":    oSettings._iDisplayLength === -1 ?
+            0 : Math.ceil( oSettings.fnRecordsDisplay() / oSettings._iDisplayLength )
+    };
+};

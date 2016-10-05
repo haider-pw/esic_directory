@@ -253,6 +253,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url()?>assets/js/demo.js"></script>
 <script src="<?= base_url()?>assets/js/customScripting.js"></script>
+<script src="<?= base_url()?>assets/js/jquery.iframe-post-form.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
@@ -309,17 +310,24 @@ if ($this->router->fetch_method() === 'assessments_list' or $this->router->fetch
             ];
             var HiddenColumnID_DT = "UserID";
             var sDom_DT = '<"H"r>t<"F"<"row"<"col-lg-6 col-xs-12" i> <"col-lg-6 col-xs-12" p>>>';
-            commonDataTables(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT);
-
+            var newRowNumber =  localStorage.getItem("pageNumber") * 10;
+            if(newRowNumber == undefined || newRowNumber == '' ){
+                newRowNumber = 0;
+            }
+            commonDataTablesPage(regTableSelector, url_DT, aoColumns_DT, sDom_DT, HiddenColumnID_DT,newRowNumber);
+            //oTable.fnPageChange(40);
             new $.fn.dataTable.Responsive(oTable, {
-                details: true
+                details: true,
             });
             removeWidth(oTable);
-
             //Code for search box
             $("#search-input").on("keyup", function (e) {
                 oTable.fnFilter($(this).val());
             });
+            $(document).bind('click',"#regList_paginate .pagination li",function(evt){
+                    var pageNumber = oTable.fnPagingInfo().iPage;//becaue it get 0 for page 1
+                    localStorage.setItem("pageNumber", pageNumber);
+          }); 
 
             //Some Action To Perform When Modal Is Shown.
             $(".approval-modal").on("shown.bs.modal", function (e) {
@@ -462,17 +470,48 @@ if( $this->router->fetch_method() === 'details'){
             });
 
 
-            tinyMCE.init({
+           tinyMCE.init({
                 selector: '#desc-textarea',
                 height: 500,
+                automatic_uploads: true,
+                images_upload_base_path: baseUrl + 'tinyimage',
+                imageupload_url:baseUrl + 'tinyimage',
+                images_upload_credentials: true,
+                relative_urls: false,
+                remove_script_host: false,
                 plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table contextmenu paste code'
+                    'advlist autolink lists link image imagetools jbimages charmap print preview hr anchor pagebreak',
+                    'searchreplace wordcount visualblocks visualchars code fullscreen',
+                    'insertdatetime media nonbreaking table contextmenu directionality paste code'
                 ],
-                toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-                content_css: '//www.tinymce.com/css/codepen.min.css'
+                toolbar: 'undo redo preview| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image jbimages'
             });
+            /*tinymce.init({
+              selector: 'textarea',
+              height: 500,
+              theme: 'modern',
+            images_upload_base_path: baseUrl + 'tinyimage',
+            imageupload_url:baseUrl + 'tinyimage',
+            images_upload_credentials: true,
+              plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools jbimages'
+              ],
+              toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image jbimages',
+              toolbar2: 'print preview media | forecolor backcolor emoticons',
+              image_advtab: true,
+              templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+              ],
+              content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css'
+              ],
+              relative_urls: false
+             });*/
 
             $("body").on("click", ".save-desc", function (e) {
                 e.preventDefault();
@@ -1037,6 +1076,22 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
                 /* website */ {
                     "mData": "Website"
                 },
+                /* Logo  {
+                    "mData": "Logo"
+                },*/
+                {
+                //"bSortable": false, 
+                "mData": "Logo",
+                //"sTitle": "Actions", 
+                //"bSearchable": false, 
+                "render": function ( data, type, row ) {
+                    if(data!=''){
+                         return '<img data-target=".logo-edit-modal" data-toggle="modal" alt="Edit" src="'+baseUrl+data+'" class="acc-logo" style="height:50px;width:50px;cursor:pointer;" />';
+                    }
+                    return '<span data-target=".logo-edit-modal" data-toggle="modal" class="acc-logo">Empty </span>';
+                }
+               // "mRender": function () { return '<img alt="Edit" src="Logo" title="Edit" style="height:18px;width:19px;cursor:pointer;" />'; }
+                },
                 {
                     "mData": "ABR"
                 },
@@ -1073,6 +1128,52 @@ if ($this->router->fetch_method() === 'manage_accelerators') {
                 var modal = $(this);
                 modal.find("input#hiddenUserID").val(ID);
                 modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+            $(".logo-edit-modal").on("shown.bs.modal", function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var ID = button.parents("tr").attr("data-id");
+                var name = button.parents("tr").find('td').eq(1).text();
+                var src = button.attr('src');
+                var modal = $(this);
+                modal.find("input#hiddenUserID").val(ID);
+                modal.find("img#logo-show").attr('src', src);
+                modal.find(".modal-body").find('p > strong').text(' "' + name + '"');
+            });
+
+            $('body').on("click",'.acc-logo', function (event) {
+                var currentImage = $(this);
+                var imageSrc =  currentImage.attr('src');
+                console.log(imageSrc);
+
+            });
+
+            $("#updateLogo").on("click", function () {
+                var hiddenModalID = $(this).parents(".modal-content").find("#hiddenUserID").val();
+                var input = $(this).parents(".modal-content").find("#update-logo-file")[0];
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var formData = new FormData();
+                        formData.append('logo', input.files[0]);
+                        formData.append('id', hiddenModalID);
+                        $.ajax({       
+                                crossOrigin: true,
+                                type: 'POST',
+                                url: baseUrl + "Admin/manage_accelerators/updateLogo",
+                                data: formData,
+                                processData: false,
+                                contentType: false
+                        }).done(function (response) {
+                            var data = response.split("::");
+                            if (data[0] == 'OK') {
+                                $(".logo-edit-modal").modal('hide');
+                                oTable.fnDraw();
+                            }
+                       });
+                    
+                     };
+                    reader.readAsDataURL(input.files[0]);
+                }
             });
 
             $("#editAccelerationModal").on("shown.bs.modal", function (e) {

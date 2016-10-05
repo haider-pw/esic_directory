@@ -96,10 +96,10 @@ if(!empty($list)){
                             <?php  } ?>
                             <?php if($user['address']!='' || $user['town']!='' || $user['state']!=''){ ?>
                                 <div class="product-details">
-                                    <label>Address:</label>
+                                    <label>Region:</label>
                                     <h3>
                                     <?php
-                                    if($user['address']!=''){// echo $user['address'].', '; }
+                                   // if($user['address']!=''){// echo $user['address'].', '; }
                                     if($user['town']!=''){ echo $user['town'].', '; }
                                     if($user['state']!=''){ echo $user['state']; }
                                       ?>
@@ -156,7 +156,11 @@ if(!empty($list)){
                             <label>Summary:</label>
                             <?php if($desc !=''){ ?>
                                     <div class="description">
-                                        <p> <?php if($productImg !=''){ ?><img src="<?= $productImg;?> " hspace="0" vspace="6" align="left"alt="" class="left"> <?php } ?> <?= $desc ;?></p>
+                                        <p> <?php 
+
+                                        //if($productImg !=''){ <img src="<?= $productImg; " hspace="0" vspace="6" align="left"alt="" class="left"> } 
+                                        ?> 
+                                        <?= $desc ;?></p>
                                     </div>
                             <?php  } ?>
                             <br />

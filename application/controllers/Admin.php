@@ -1653,6 +1653,7 @@ class Admin extends MY_Controller{
             id AS ID,
             name AS Name,
             website AS Website,
+            logo AS Logo,
             CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
@@ -1818,6 +1819,60 @@ class Admin extends MY_Controller{
             }else{
                 echo "OK::FAIL::".$returnedData['message'];
             }
+            return NULL;
+        }
+        if($param === 'updateLogo'){
+	        	$accID = $this->input->post('id');
+	            $allowedExt = array('jpeg','jpg','png','gif');
+	            $uploadPath = './pictures/logos/';
+	            $uploadDirectory = './pictures/logos/';
+	            $uploadDBPath = 'pictures/logos/';
+	            $insertDataArray = array();
+	            //For Logo Upload
+	            if(isset($_FILES['logo']['name']))
+	            {
+	                $FileName = $_FILES['logo']['name'];
+	                $explodedFileName = explode('.',$FileName);
+	                $ext = end($explodedFileName);
+	                if(!in_array(strtolower($ext),$allowedExt))
+	                {
+	                    echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+	                    return;
+	                }else
+	                {
+
+	                    $FileName = "accLogo".$accID."_".time().".".$ext;
+	                    if(!is_dir($uploadDirectory)){
+	                        mkdir($uploadDirectory, 0755, true);
+	                    }
+
+	                    move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
+	                    $insertDataArray['logo'] = $uploadDBPath.$FileName;
+	                }
+	            }else{
+	                echo "FAIL::Logo Image Is Required";
+	                return;
+	            }
+	            
+	            if(empty($accID)){
+	                echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+	                exit;
+	            }
+                $selectData = array('logo AS logo',false);
+                $where = array(
+                    'id' => $accID
+                );
+                $returnedData = $this->Common_model->select_fields_where(' esic_acceleration_logo',$selectData, $where, false, '', '', '','','',false);
+                $logo = $returnedData[0]->logo;
+                if(!empty($logo) && is_file(FCPATH.'/'.$logo)){
+                    unlink('./'.$logo);
+                }
+                $resultUpdate = $this->Common_model->update(' esic_acceleration_logo',$where,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
             return NULL;
         }
         $this->show_admin('admin/configuration/accelerators');
