@@ -749,12 +749,128 @@ class Admin extends MY_Controller{
         $this->show_admin('admin/configuration/status');
         return NULL;
     }
+    public function manage_appstatus($param = NULL){
+        if($param === 'listing'){
+            $selectData = array('
+            id AS ID,
+            CASE WHEN id = 2 THEN CONCAT("<span class=\'label label-danger\'> ", status," </span>") WHEN id = 1 THEN CONCAT ("<span class=\'label label-success\'> ", status, " </span>") ELSE CONCAT ("<span class=\'label label-warning\'> ", status, " </span>") END AS Status
+            ',false);
+            $addColumns = array(
+                'ViewEditActionButtons' => array('<a href="#" data-target="#editStatusModal" data-toggle="modal"><span data-toggle="tooltip" title="Edit" data-placement="left" aria-hidden="true" class="fa fa-pencil text-blue"></span></a> &nbsp; <a href="#" data-target=".approval-modal" data-toggle="modal"><i data-toggle="tooltip" title="Trash" data-placement="right"  class="fa fa-trash-o text-red"></i></a>','ID')
+            );
+            $returnedData = $this->Common_model->select_fields_joined_DT($selectData,'esic_appstatus','','','','','',$addColumns);
+            print_r($returnedData);
+            return NULL;
+        }
+        if($param === 'allvalues'){
+            $returnedData = $this->Common_model->select('esic_appstatus');
+            echo json_encode($returnedData);
+            return NULL;
+        }
+        if($param === 'delete'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'delete'){
+
+                $whereUpdate = array(
+                    'id' => $id
+                );
+
+                $returnedData = $this->Common_model->delete('esic_appstatus',$whereUpdate);
+                    echo "OK::Record Deleted";
+            }else{
+                    echo "FAIL::Record Not Deleted";
+            }
+            return NULL;
+        }
+        if($param === 'update'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('status');
+
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $updateData = array(
+                'status' => $value
+            );
+
+            $whereUpdate = array(
+                'id' => $id
+            );
+
+            $updateResult = $this->Common_model->update('esic_appstatus',$whereUpdate,$updateData);
+            if($updateResult === true){
+                echo "OK::Record Successfully Updated";
+            }else{
+                if($updateResult['code'] == 0){
+                    echo "OK::Record Already Exist";
+                }else{
+                    echo $updateResult['message'];
+                }
+            }
+            return NULL;
+        }
+        if($param === 'new'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+            $value = $this->input->post('status');
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $insertData = array(
+                'status' => $value
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_appstatus',$insertData);
+            if($insertResult){
+                echo "OK::Record Successfully Entered";
+            }else{
+                echo "FAIL::Record Failed Entered";
+            }
+            return NULL;
+        }
+        $this->show_admin('admin/configuration/appstatus');
+        return NULL;
+    }
     public function manage_universities($param = NULL){
         if($param === 'listing'){
             $selectData = array('
             id AS ID,
             institution AS University,
-            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+            CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
@@ -992,7 +1108,7 @@ class Admin extends MY_Controller{
             $selectData = array('
             id AS ID,
             sector AS Sector,
-            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+            CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
@@ -1235,7 +1351,7 @@ class Admin extends MY_Controller{
             IDNumber AS IDNumber,
             AddressContact AS AddressContact,
             ANZSRC AS ANZSRC,
-            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+            CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
@@ -1460,7 +1576,7 @@ class Admin extends MY_Controller{
             Market AS Market,
             Technology AS Technology,
             Type AS Type,
-            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+            CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed
@@ -1654,7 +1770,7 @@ class Admin extends MY_Controller{
             name AS Name,
             website AS Website,
             logo AS Logo,
-            CASE WHEN AppStatus = "No" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = "Lodged" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = "Yes" THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
+            CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
             CASE WHEN trashed = 1 THEN CONCAT(\'<span class="label label-danger">YES</span>\') WHEN trashed = 0 THEN CONCAT(\'<span class="label label-success">NO</span>\') ELSE "" END AS Trashed

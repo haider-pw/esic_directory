@@ -50,6 +50,7 @@ class Reg extends CI_Controller {
 
         $selectData ='*';
         $data['userID'] = $this->input->get('id');
+        $data['statusApp'] = $this->Common_model->select('esic_appstatus');
         $data['RnDs'] = $this->Common_model->select_fields_where('esic_RnD',$selectData, $where);
         $data['institutions'] = $this->Common_model->select_fields_where('esic_institution',$selectData, $where, false, '', '', '','','',false);
         $data['accelerationCommercials'] = $this->Common_model->select_fields_where('esic_acceleration',$selectData, $where, false, '', '', '','','',false);

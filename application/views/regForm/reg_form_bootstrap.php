@@ -413,7 +413,6 @@
                         <div class="radio">
                             <label><input type="radio" value="No" name="researchOrganization">No</label>
                         </div>
-    <!--                    Div For Selector-->
                         <div class="selectorDiv" id="selectorUniversityDiv">
                             <label for="selectorUniversity">Select University</label>
                             <div class="row">
@@ -556,10 +555,13 @@
                     <label for="rndAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
                     <select id="rndAppStatus" name="rndAppStatus" style="width: 80%;">
                             <option value="0">Select...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="Lodged">Application Lodged</option>
-                                 
+                            <?php 
+                                if(isset($statusApp) and !empty($statusApp)){
+                                    foreach($statusApp as $statusAppRnd){
+                                         echo '<option value="'.$statusAppRnd->id.'">'.$statusAppRnd->status.'</option>';
+                                     }
+                                }   
+                            ?>    
                     </select>
                 </div>
             </div>
@@ -604,10 +606,13 @@
                     <label for="institutionAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
                     <select id="institutionAppStatus" name="institutionAppStatus" style="width: 80%;">
                             <option value="0">Select...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="Lodged">Application Lodged</option>
-                                 
+                            <?php 
+                                if(isset($statusApp) and !empty($statusApp)){
+                                    foreach($statusApp as $statusAppInt){
+                                         echo '<option value="'.$statusAppInt->id.'">'.$statusAppInt->status.'</option>';
+                                     }
+                                }   
+                            ?>     
                     </select>
                 </div>
             </div>
@@ -680,10 +685,13 @@
                     <label for="EntrepreneurProgrammeAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
                     <select id="EntrepreneurProgrammeAppStatus" name="EntrepreneurProgrammeAppStatus" style="width: 80%;">
                             <option value="0">Select...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="Lodged">Application Lodged</option>
-                                 
+                            <?php 
+                                if(isset($statusApp) and !empty($statusApp)){
+                                    foreach($statusApp as $statusAppsEp){
+                                         echo '<option value="'.$statusAppsEp->id.'">'.$statusAppsEp->status.'</option>';
+                                     }
+                                }   
+                            ?>   
                     </select>
                 </div>
             </div>
@@ -732,9 +740,13 @@
                     <label for="acceleratorProgrammeAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
                     <select id="acceleratorProgrammeAppStatus" name="acceleratorProgrammeAppStatus" style="width: 80%;">
                             <option value="0">Select...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="Lodged">Application Lodged</option>     
+                             <?php 
+                                if(isset($statusApp) and !empty($statusApp)){
+                                    foreach($statusApp as $statusAppsAp){
+                                         echo '<option value="'.$statusAppsAp->id.'">'.$statusAppsAp->status.'</option>';
+                                     }
+                                }   
+                            ?>   
                     </select>
                 </div>
             </div>
@@ -778,10 +790,14 @@
                 <div class="form-group">
                     <label for="industryAppStatus">Australian Business Registration (Commonwealth of Australia)</label>
                     <select id="industryAppStatus" name="industryAppStatus" style="width: 80%;">
-                            <option value="0">Select...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="Lodged">Application Lodged</option>     
+                            <option value="0">Select...</option> 
+                            <?php 
+                                if(isset($statusApp) and !empty($statusApp)){
+                                    foreach($statusApp as $statusAppsIn){
+                                         echo '<option value="'.$statusAppsIn->id.'">'.$statusAppsIn->status.'</option>';
+                                     }
+                                }   
+                            ?>
                     </select>
                 </div>
             </div>
