@@ -41,6 +41,8 @@ class Admin extends MY_Controller{
             score AS Score,
             thumbsUp as thumbsUp,
             ES.id as StatusID,
+            CASE WHEN user.Publish = 0 THEN CONCAT("<span class=\'label publish label-danger\' data-target=\'.publish-modal\' data-toggle=\'modal\' > ","UnPublished"," </span>") WHEN user.Publish = 1 THEN CONCAT ("<span class=\'label publish label-success\' data-target=\'.unpublish-modal\' data-toggle=\'modal\' > ","Published", " </span>") ELSE CONCAT ("<span class=\'label publish label-danger\' data-target=\'.unpublish-modal\' data-toggle=\'modal\' > ", "Unknown", " </span>") 
+            END AS Publish,
             CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label status label-danger\'> ", ES.status," </span>") WHEN user.status = 7 THEN CONCAT ("<span class=\'label status label-success\'> ", ES.status, " </span>") ELSE CONCAT ("<span class=\'label status label-warning\'> ", ES.status, " </span>") END AS Status
             ',false);
             $joins = array(
@@ -81,11 +83,15 @@ class Admin extends MY_Controller{
         }
         //UpdateData
         $updateArray = array();
-        if($status === 'approve' || !empty($statusValue)){
+        if($status === 'approve' && !empty($statusValue)){
             $updateArray['status'] = $statusValue;
         }
-
-
+        if($status === 'publish'){
+            $updateArray['Publish'] = 1;
+        }
+        if($status === 'unpublish'){
+            $updateArray['Publish'] = 0;
+        }
         $whereUpdate = array(
             'id' => $userID
         );
@@ -93,7 +99,8 @@ class Admin extends MY_Controller{
         $this->Common_model->update('user',$whereUpdate,$updateArray);
         echo 'OK::';
     }
-    public function details($userID){
+    public function details($userID){ 
+
 //            $userID = $this->input->post('id');
             $status = $this->input->post('value');
             $selectData = array('
@@ -118,9 +125,14 @@ class Admin extends MY_Controller{
                     user.corporate_date as corporate_date,
                     user.added_date as added_date,
                     user.ipAddress as ipAddress,
+                    user.sectorID as sectorID,
+                    user.RnDID as RnDID,
+                    user.AccCoID as AccCoID,
+                    user.AccID as AccID,
+                    user.inID as inID,
                     ESEC.sector as sector,
-                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\'label label-danger\'> ", ES.status," </span>") WHEN user.status = 7 THEN CONCAT ("<span class=\'label label-success\'> ", ES.status, " </span>") WHEN user.status = 3 THEN CONCAT ("<span class=\'label label-warning\'> ", ES.status, " </span>") ELSE "" END as Status
-            ',false);
+                    user.Publish as Publish
+                    ',false);
             //EQS.SolVal as solval,
               //      EQS.Points as points,
             $where = "user.id =".$userID;
@@ -142,6 +154,7 @@ class Admin extends MY_Controller{
                     esic_questions_answers.questionID as questionID,
                     esic_questions_answers.Solution as solution,
                     EQ.Question as Question,
+                    EQ.tablename as tablenames,
                     ES.score as score
             ',false);//ES.Score as points
             $where2 = "userID =".$userID;
@@ -186,7 +199,7 @@ class Admin extends MY_Controller{
                     'Email' 			=> $returnedData[0]->Email,
                     'Score' 			=> $returnedData[0]->Score,
                     'sector' 			=> $returnedData[0]->sector,
-                    'Status' 			=> $returnedData[0]->Status,
+                    //'Status' 			=> $returnedData[0]->Status,
                     'Company'			=> $returnedData[0]->Company,
                     'business' 			=> $returnedData[0]->business,
                     'FullName' 			=> $returnedData[0]->FullName,
@@ -195,6 +208,12 @@ class Admin extends MY_Controller{
                     'town'              => $returnedData[0]->town,
                     'state'             => $returnedData[0]->state,
                     'acn_number'        => $returnedData[0]->acn_number,
+                    'sectorID'          => $returnedData[0]->sectorID,
+                    'RnDID'             => $returnedData[0]->RnDID,
+                    'AccCoID'           => $returnedData[0]->AccCoID,
+                    'AccID'             => $returnedData[0]->AccID,
+                    'inID'              => $returnedData[0]->inID,
+                    'Publish'           => $returnedData[0]->Publish,
                     'dateDiff'          => $diff,
                     'added_date' 		=> date("d-M-Y", strtotime($returnedData[0]->added_date)),
                     'expiry_date' 		=> date("d-M-Y", strtotime($returnedData[0]->expiry_date)),
@@ -211,6 +230,7 @@ class Admin extends MY_Controller{
     	                    $arrayToInsert = array(
     	                    	'points' 		=> $obj->score,
     	                        'Question' 		=> $obj->Question,
+                                'TableName'     => $obj->tablenames,
     	                        'solution' 		=> $obj->solution,
     	                        'questionID' 	=> $obj->questionID
     	                    );
@@ -234,6 +254,9 @@ class Admin extends MY_Controller{
                 $userID 		= $this->input->post('userID');
                 $oldScore 		= $this->input->post('oldScore');
                 $Answervalue 	= $this->input->post('Answervalue');
+                $tableName      = $this->input->post('tableName');
+                $tableUpdateID  = $this->input->post('tableUpdateID');
+                $SpAnswervalue  = $this->input->post('SpAnswervalue');
                 $dataQuestionId = $this->input->post('dataQuestionId');
                 if(!isset($userID) || empty($userID) || !isset($Answervalue) || empty($Answervalue) || !isset($dataQuestionId) || empty($dataQuestionId)){
                     echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
@@ -275,6 +298,12 @@ class Admin extends MY_Controller{
                 $whereUpdate2 = array('id' => $userID);
                 $this->Common_model->update('user',$whereUpdate2,$updateArray2);
                 echo 'OK::'.$score.'::'.$ScorePercentage.'::'.$TotalOldscore.'::'.$Totalscore;
+                if(isset($tableName) && !empty($tableName) && isset($SpAnswervalue) && !empty($SpAnswervalue) && isset($tableUpdateID) && !empty($tableUpdateID)){
+                    $updateArray3 = array();
+                    $updateArray3[$tableUpdateID] = $SpAnswervalue;
+                    $whereUpdate3 = array('id' => $userID);
+                    $this->Common_model->update('user',$whereUpdate3,$updateArray3);
+                }
             exit();
     }
     public function savedate(){

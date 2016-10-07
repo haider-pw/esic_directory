@@ -144,7 +144,8 @@ class Reg extends CI_Controller {
             'AccCoID'           => $AccCoID,
             'inID'              => $inID,
             'businessShortDescription'  => $shortDescription,
-            'score'             => 0
+            'score'             => 0,
+            'Publish'           => 0
         ); 
 
 

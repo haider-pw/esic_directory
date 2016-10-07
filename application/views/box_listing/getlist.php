@@ -30,23 +30,24 @@ if(!empty($list) && is_array($list)){
 		</div>
 	</a>	
 		<div class="product-container">
-			<div class="status-container">
-				<?= $status;?>	
-			</div>
 			<div class="name-container person-name">
 			        <a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID'];?>"><h3><?= $user['FullName']; ?></h3></a>
 			</div>
 			<div class="clear"></div>
 			<div class="product-details company-name">
-			<a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID'];?>">
-			      <p class="info-type">
-			      		<?= $user['Company']; ?>	
-			      </p>
-			</a>
+				<a href="<?= '#'.$user['userID']; ?>" class="permalink" data-link= "<?= $user['userID'];?>">
+				      <p class="info-type">
+				      		<?= $user['Company']; ?>	
+				      </p>
+				</a>
 			</div>
+			<div class="status-container">
+				<?= $status;?>	
+			</div>
+			<div class="clear"></div>
 			<div class="product-details">
 			     <div class="description overlay-desc">
-                    <p><?= $desc; ?> </p>
+                    <p><?= strip_tags($desc); ?> </p>
                  </div>
                  <div class="dates-box">
                  	<button type="button" class="show-dates">

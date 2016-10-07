@@ -332,6 +332,12 @@ margin: 10px 0px;
     width: 80px;
     height: 25px;
 }
+.edit-category.sp-question{
+    margin: 10px 0px;
+}
+.edit-category.sp-question select{
+
+}
 
 </style>
 
@@ -639,7 +645,20 @@ margin: 10px 0px;
                 </div>
             <?php } ?>
             <div class="action-buttons">
-             <a href="#" data-target=".approval-modal" data-toggle="modal" class="btn-primary" data-id="<?= $userProfile['userID'];?>">Approval</a>
+             <a href="#" data-target=".approval-modal" data-toggle="modal" class="btn-primary" data-id="<?= $userProfile['userID'];?>">Update Status</a>
+             <div class="publish-buttons">
+             <?php 
+	             if($userProfile['Publish'] == 0){
+	             	?>
+	             		<a href="#" data-target=".publish-modal" data-toggle="modal" class="btn btn-warning" data-id="<?= $userProfile['userID'];?>">UnPublished</a>
+	             	<?php
+	             }else if($userProfile['Publish'] == 1){
+	             	?>
+	             		<a href="#" data-target=".unpublish-modal" data-toggle="modal" class="btn-primary" data-id="<?= $userProfile['userID'];?>">Published</a>
+	             	<?php
+				}
+             ?>
+             </div>
              <a href="#" data-target=".delete-modal" data-toggle="modal" class="bg-red" data-id="<?= $userProfile['userID'];?>">Delete</a>
              </div>
             </div>
@@ -675,8 +694,56 @@ margin: 10px 0px;
                     <div class="edit-question">
                       <div class="form-group">
                         <label>Please Select Answer</label>
-                        <select class="form-control">
+                        <select class="form-control answer-solution">
                         </select>
+                        <?php 
+	                        if(!empty($value['TableName'])){ 
+	                        		$tableName = trim($value['TableName']);
+			                          if($tableName=='esic_RnD'){
+			                          	$TableIDCheck = trim($userProfile['RnDID']);
+			                          	$tableUpdateID = 'RnDID';
+			                          }else if($tableName =='esic_acceleration'){	
+			                          	$TableIDCheck = trim($userProfile['AccCoID']);
+			                          	$tableUpdateID = 'AccCoID';
+			                          }else if($tableName == 'esic_institution'){
+			                          	$TableIDCheck = trim($userProfile['inID']);
+			                          	$tableUpdateID = 'inID';
+			                          }else if($tableName=='esic_acceleration_logo'){
+			                          	$TableIDCheck = trim($userProfile['AccID']);
+			                          	$tableUpdateID = 'AccID';
+			                          }else{
+			                          	$TableIDCheck ='';
+			                          }
+			                          $esic_tableName = $this->Common_model->select($tableName);
+			                          $assocArray = json_decode(json_encode($esic_tableName),true);
+			                    if(isset($esic_tableName) and !empty($esic_tableName)){
+	                        	?>
+		                        <div class="edit-category sp-question" data-tablename="<?= $tableName;?>" data-tableUpdateID="<?= $tableUpdateID; ?>">
+			                        <select class="form-control">
+			                        	<option value="0">Select...</option>
+			                                 <?php 
+				                                     foreach($assocArray as $esic_tableName_data){
+
+				                                     		//$dataTable = json_decode($esic_tableName_data,true);
+				                                     		$totalItems = count($esic_tableName_data);
+				                                     		$count = 0;
+				                                     		$innerArray = array();
+				                                     		foreach($esic_tableName_data as $data){
+				                                     			$innerArray[$count] = $data;
+				                                     			$count++;
+				                                     		}
+				                                     		$selected ='';
+				                                     		if(trim($TableIDCheck) == trim($innerArray[0])){
+				                                     			$selected= 'selected';
+				                                     		}
+
+				                                          echo '<option data-id-check"'.$TableIDCheck.'" value="'.$innerArray[0].'"  '.$selected.'>'.$innerArray[1].'</option>';
+				                                     }
+			                                    }   
+			                                   ?>    
+			                        </select>
+		                        </div>
+                        <?php }?>
                       </div>
                     </div>
                   </div>

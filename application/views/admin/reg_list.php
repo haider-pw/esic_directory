@@ -27,7 +27,7 @@
                             <table id="regList" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="mobile tablet desktop">ID</th>
+                                    <th class="tablet desktop">ID</th>
                                     <th class="mobile tablet desktop">Name</th>
                                     <th class="tablet desktop">Email</th>
                                     <th class="desktop">Company</th>
@@ -35,13 +35,14 @@
                                     <th>Thumbs Up</th>
                                     <th class="tablet-l desktop">Status</th>
                                     <th class="mobile tablet desktop">Action</th>
+                                    <th class="mobile tablet desktop">Publish</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <th class="mobile tablet desktop">ID</th>
+                                    <th class="tablet desktop">ID</th>
                                     <th class="mobile tablet desktop">Name</th>
                                     <th class="tablet desktop">Email</th>
                                     <th class="desktop">Company</th>
@@ -49,6 +50,7 @@
                                     <th>Thumbs Up</th>
                                     <th class="tablet-l desktop">Status</th>
                                     <th class="mobile tablet desktop">Action</th>
+                                    <th class="mobile tablet desktop">Publish</th>
                                 </tr>
                                 </tfoot>
                             </table>

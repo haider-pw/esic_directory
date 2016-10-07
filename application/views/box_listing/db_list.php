@@ -8,7 +8,23 @@
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 <!-- Latest compiled and minified CSS -->
+<!--
 
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="//ctsdemo.com/demos/esic/assets/js/jquery.ba-bbq.min.js"></script>
+    <script type="text/javascript">
+        (function($){
+            var url = 'https://ctsdemo.com/demos/esic/Esic2/index';
+            $.ajax({
+                crossOrigin: true,
+                url: url,
+                success: function(data) {
+                    $("#wsite-content").append(data);
+                }
+            });
+        })(window._W && _W.jQuery);
+    </script>
+    -->
 
     
 <div class="content-shell">
@@ -189,7 +205,7 @@
                     }
                 });  
             }else{
-                console.log('Sorry Already Set');
+                //console.log('Sorry Already Set');
             }
         });
         $("#filter_reset").click(function(e){

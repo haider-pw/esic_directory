@@ -1,7 +1,5 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
     <title>Esic Form For Registering</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
@@ -15,7 +13,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
     <script type="text/javascript" src="<?=base_url();?>assets/vendors/select2/dist/js/select2.full.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
-
     <script type="text/javascript">
         $(function() {
             $('#SaveAccount').click(function(event) {
@@ -23,7 +20,7 @@
                 $("#form1").slideUp('slow');
                 $("#SignupFormStep2").slideDown('slow');
                 var test = $('#cop_date').val();
-                console.log('cop_date:'+test);
+               // console.log('cop_date:'+test);
             });
             $('#back').click(function(event) {
                 event.preventDefault();
@@ -65,7 +62,33 @@
     </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!--script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script-->
+    <!-- 
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="//ctsdemo.com/demos/esic/assets/vendors/select2/dist/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    (function($){
+        var url = 'https://ctsdemo.com/demos/esic/reg';
+        $.ajax({
+            crossOrigin: true,
+            url: url,
+            success: function(data) {
+                $("#wsite-content").html(data);
+            }
+        });
 
+          
+$('body').on('DOMNodeInserted', function(e) {
+    if ($(e.target).is('.leadform-popup-widget')) {
+       $('.leadform-popup-widget').remove();
+
+
+    }
+});
+
+    })(window._W && _W.jQuery);
+</script>-->
 </head>
 
 <body>
@@ -435,7 +458,7 @@
                     </div>
                    </fieldset>
                 <div class="button-container">
-                    <button type="button" id="SaveAccount" class="btn btn-primary">Submit form</button>
+                    <button type="button" id="SaveAccount" class="btn btn-primary">NEXT</button>
                 </div>
               </div>
             <div class="clear"></div>
@@ -501,7 +524,7 @@
                     <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
                     <div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2"</div>
                     <button id="back"  class="btn btn-primary submit">Back</button>
-                    <button id="SubmitForm" type="button" class="btn btn-primary submit">Submit</button>
+                    <button id="SubmitForm" type="button" class="btn btn-primary submit">Submit Form</button>
                 </div>
             </div>
         </form>
@@ -920,7 +943,7 @@
                             }).done(function (response) {
                                 var data = response.split("::");
                                 if(data[0] === 'OK'){
-                                    $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(255, 255, 255, 0.8); padding: 5px; color: #333; font-weight: bold; border: 2px solid #333; width: 100%;display: block;">Thank you, Your Record have been successfully Updated</span>');
+                                    $("#mainFormDiv").html('<span id="sucess-box" style="background:rgba(255, 255, 255, 0.8); padding: 5px; color: #333; font-weight: bold; border: 2px solid #333; width: 100%;display: block;">Thank you, Your Esic Pre-assessment Entry has been Saved.</span>');
                                     $('#loading-submit').hide();
                                 }else if(data[0] === 'FAIL'){
                                      $('#loading-submit').hide();
@@ -989,7 +1012,7 @@
                     success:function(output){
                             var  data =  output.split('::');
                                if(data[0]== 'OK'){
-                                    console.log('RndName'+RndName);
+                                    ///console.log('RndName'+RndName);
                                    var RnDID   = data[1];
                                    var RnDName = data[2];
                                    var newOption = new Option(RnDName,RnDID, true, true);

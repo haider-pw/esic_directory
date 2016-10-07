@@ -48,10 +48,11 @@ class Esic_model extends CI_Model
 	                expiry_date as expiry_date,
 	                corporate_date as corporate_date,
 	                added_date as added_date,
-	                 CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
+	                 CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") END as Status
 	            ',
 	            false
 	        );
+            $where = "Publish = 1 ";
 			$orderBy = array('user.id','DESC');
 	        $joins = array(
 	            array(
@@ -60,7 +61,7 @@ class Esic_model extends CI_Model
 	                'type' => 'LEFT'
 	            )
 	        );
-	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,'',FALSE,'','','',$orderBy,$limit,true);
+	        $usersResult = $this->Common_model->select_fields_where_like_join('user',$selectData,$joins,$where,FALSE,'','','',$orderBy,$limit,true);
 	     return $usersResult;
 		}else{
 			 return "NORESULT";
@@ -94,32 +95,32 @@ class Esic_model extends CI_Model
 	                expiry_date as expiry_date,
 	                corporate_date as corporate_date,
 	                added_date as added_date,
-	                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
+	                CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") END as Status
 	                ',
 	            false
 	        );
 
-            $where = '';
+            $where = "Publish = 1 ";
             if(!empty($secSelect)){
-                $where .= "user.sectorID =".$secSelect;
+                $where .= "AND user.sectorID =".$secSelect;
             }
             if(!empty($comSelect)){
-                if(!empty($where)){
+                /*if(!empty($where)){
                     $where .=" AND ";
-                }
-                $where .= "user.company =".$comSelect;
+                }*/
+                $where .= "AND user.company =".$comSelect;
             }
             if(!empty($search)){
-				if(!empty($where)){
+				/*if(!empty($where)){
 			        $where .=" AND ";
-			     }
-			     $where .= "user.firstname LIKE '%".$search."%'
+			     }*/
+			     $where .= " AND ( user.firstname LIKE '%".$search."%'
 				        OR user.lastname LIKE '%".$search."%'
 				        OR user.email LIKE '%".$search."%'
 				        OR user.company LIKE '%".$search."%'
 				        OR user.business LIKE '%".$search."%'
 				        OR user.businessShortDescription LIKE '%".$search."%'
-				        OR user.website LIKE '%".$search."%'";
+				        OR user.website LIKE '%".$search."%' )";
 			}
 			
 			$orderBy='';
@@ -186,13 +187,13 @@ class Esic_model extends CI_Model
                     ESec.sector as sectorName,
                     ESec.secLogo as secLogo,
                     ESec.AppStatus as ESecAppStatus,
-                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE "" END as Status
+                    CASE WHEN user.status = 1 THEN CONCAT("<span class=\"featured-red\">",ES.status,"</span>") WHEN user.status = 2 THEN CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") WHEN user.status = 3 THEN CONCAT("<span class=\"featured-green\">",ES.status,"</span>") ELSE CONCAT("<span class=\"featured-yellow\">",ES.status,"</span>") END as Status
                     ',
                 false
             );
 
 
-            $where = "user.id =".$id;
+            $where = "user.id =".$id." AND Publish = 1";
             $joins = array(
                 array(
                     'table' => 'esic_status ES',

@@ -185,7 +185,7 @@ body #main-content ul li.list-item .website-container {
 }
 
 body #main-content ul li.list-item .company-name {
-    min-height: 30px;
+    min-height: 45px;
 }
 
 body #main-content ul li.list-item .dates-box {
@@ -806,7 +806,7 @@ body #wrap .btn-back.container {
 }
 
 ul.product-list {
-    max-width: 1050px;
+    max-width: 1120px;
     display: block;
     list-style-type: none;
     /* max-width: 900px; */
@@ -850,7 +850,7 @@ ul.product-list li .img-container img:hover {
 }
 
 ul.product-list li .product-container {
-    padding: 10px 15px;
+    padding: 10px 8px;
 }
 
 ul.product-list li .name-container {
@@ -880,6 +880,7 @@ ul.product-list li .status-container {
 
 ul.product-list li .status-container span {
     /* float: none; */
+    font-size: 10px;
 }
 
 ul.product-list li .product-details {}
@@ -907,7 +908,7 @@ ul.product-list li .product-details p.info-type {
     color: #555;
     margin: 0px 0;
     padding: 0px;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 ul.product-list li .product-details a.website {
