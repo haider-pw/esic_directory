@@ -39,6 +39,9 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Manage Acceleration</h3>
+                        <div class="add-New-container">
+                            <a href="#" data-target=".addNewModal" data-toggle="modal" class="addNewBtn">Add New</a>
+                        </div>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -72,6 +75,11 @@
                         </table>
                     </div>
                     <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="add-New-container">
+                            <a href="#" data-target=".addNewModal" data-toggle="modal" class="addNewBtn">Add New</a>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.box -->
             </div>
@@ -93,11 +101,13 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <input type="hidden" id="hiddenID">
+                    <input type="hidden" id="hiddenAccelerationID">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="editAccelerationTextBox">Acceleration</label>
+                            <label for="editAccelerationTextBox">Acceleration Name</label>
                             <input type="text" id="editAccelerationTextBox" class="form-control" />
+                            </br>
+                            <label for="editAccelerationTextBox">Acceleration Website</label>
                             <input type="text" id="editAccelerationTextBoxWeb" class="form-control" />
                         </div>
                     </div>
@@ -114,13 +124,45 @@
 </div><!-- /.modal -->
 <!-- /.End Edit Ward Modal --><!-- /.modal -->
 
+<!--Edit Acc Modal-->
+<div class="modal addNewModal" id="addUniversity">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add Acceleration</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hiddenID">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="addAccelerationTextBox">Acceleration Name</label>
+                            <input type="text" id="addAccelerationTextBox" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright"  data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="addAccelerationBtn">Add</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+
+
 <!--Edit Ward Modal-->
 <div class="modal logo-edit-modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Update Esic Status</h4>
+                <h4 class="modal-title">Update Logo</h4>
             </div>
 
             <div class="modal-body">

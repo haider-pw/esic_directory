@@ -78,6 +78,7 @@ class Reg extends CI_Controller {
         $town                   = $this->input->post('town');
         $business               = $this->input->post('business');
         $shortDescription       = $this->input->post('shortDescription');
+        $tinyDescription        = $this->input->post('tinyDescription');
         $date_pickter_format    = $this->input->post('cop_date');
         if(!empty($date_pickter_format)){
             $cop_date               = date("Y-m-d",strtotime($date_pickter_format));
@@ -144,6 +145,7 @@ class Reg extends CI_Controller {
             'AccCoID'           => $AccCoID,
             'inID'              => $inID,
             'businessShortDescription'  => $shortDescription,
+            'tinyDescription'   => $tinyDescription,
             'score'             => 0,
             'Publish'           => 0
         ); 
@@ -185,7 +187,7 @@ class Reg extends CI_Controller {
             }
         }
         //Now calculate total score 
-        $total_Score=0;
+        $total_Score='';
         foreach($questions as $question){
             if(!empty($question->solutionValue)){
                 $questions_score = $this->Common_model->select('esic_questions_score'); 
@@ -196,20 +198,20 @@ class Reg extends CI_Controller {
                 }
             }
         }
-        $scoreInsertArray = array('score' => $total_Score);
-        $whereUpdate = array( 'id' => $insertID);
-        $resultUpdate = $this->Common_model->update('user',$whereUpdate,$scoreInsertArray);
-        if($resultUpdate === true){
-            if ($this->db->trans_status() === FALSE){
-                $this->db->trans_rollback();
-                echo 'FAIL::Something Went Wrong';
+            $scoreInsertArray = array('score' => $total_Score);
+            $whereUpdate = array( 'id' => $insertID);
+            $resultUpdate = $this->Common_model->update('user',$whereUpdate,$scoreInsertArray);
+            if($resultUpdate === true){
+                if ($this->db->trans_status() === FALSE){
+                    $this->db->trans_rollback();
+                    echo 'FAIL::Something Went Wrong';
+                }else{
+                    $this->db->trans_commit();
+                    echo 'OK::Thank you. Your information has been submitted.::'.$insertID;
+                }
             }else{
-                $this->db->trans_commit();
-                echo 'OK::Thank you. Your information has been submitted.::'.$insertID;
+                echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
             }
-        }else{
-            echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
-        }
 }
 
     public function step2(){

@@ -118,8 +118,8 @@ class Esic_model extends CI_Model
 			     }*/
 			     $where .= " AND ( user.firstname LIKE '%".$search."%'
 				        OR user.lastname LIKE '%".$search."%'
-				        
 				        OR user.company LIKE '%".$search."%'
+                        OR user.website LIKE '%".$search."%'
 				        OR user.business LIKE '%".$search."%' )";
 			}
              // OR user.businessShortDescription LIKE '%".$search."%'
@@ -207,22 +207,22 @@ class Esic_model extends CI_Model
                 ),
                 array(
                     'table' => ' esic_RnD ERnD',
-                    'condition' => 'ERnD.id = user.RnDID',
+                    'condition' => 'ERnD.id = user.RnDID AND ERnD.trashed != 1',
                     'type' => 'LEFT'
                 ),
                 array(
                     'table' => 'esic_acceleration EAccCo',
-                    'condition' => 'EAccCo.id = user.AccCoID',
+                    'condition' => 'EAccCo.id = user.AccCoID AND EAccCo.trashed != 1',
                     'type' => 'LEFT'
                 ),
                 array(
                     'table' => 'esic_acceleration_logo EAcc',
-                    'condition' => 'EAcc.id = user.AccID',
+                    'condition' => 'EAcc.id = user.AccID AND EAcc.trashed != 1',
                     'type' => 'LEFT'
                 ),
                 array(
                     'table' => 'esic_institution EIn',
-                    'condition' => 'EIn.id = user.inID',
+                    'condition' => 'EIn.id = user.inID AND EIn.trashed != 1',
                     'type' => 'LEFT'
                 ),
                 array(

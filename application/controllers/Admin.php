@@ -77,7 +77,9 @@ class Admin extends MY_Controller{
         }
         if($status === 'delete'){
         	$whereUpdate = array( 'id' 	=> $userID);
+            $where2 = array( 'userID'  => $userID);
             $this->Common_model->delete('user',$whereUpdate);
+            $this->Common_model->delete('esic_questions_answers',$where2);
             echo 'OK::';
             return null;
         }
@@ -226,6 +228,18 @@ class Admin extends MY_Controller{
                     'tinyDescription' => $returnedData[0]->tinyDescription,
                     'ShowExpiryDate' => $returnedData[0]->ShowExpiryDate
                 );
+                $QuestionNotAnswered = array();
+                $QuestionAnswered = array();
+                $QuestionAll = array();
+                $QuestionsFirstArray = $this->Common_model->select('esic_questions');
+                if(!empty($QuestionsFirstArray) and is_array($QuestionsFirstArray)){
+                    foreach($QuestionsFirstArray as $key=>$questionsObj){
+                            $QuestionAll = array(
+                                'questionID'    => $questionsObj->id,
+                                'Question'      => $questionsObj->Question
+                            );
+                    }
+                }
                 if(!empty($returnedData2) and is_array($returnedData2)){
 	                $data['usersQuestionsAnswers'] = array();
 	                foreach($returnedData2 as $key=>$obj){
@@ -237,8 +251,28 @@ class Admin extends MY_Controller{
     	                        'questionID' 	=> $obj->questionID
     	                    );
     	                    array_push($data['usersQuestionsAnswers'],$arrayToInsert);
+                            if(!in_array($obj->questionID, $QuestionAnswered)){
+                                 array_push($QuestionAnswered,$obj->questionID);
+                            }
 	                }
 	            }
+                if(!empty($QuestionAnswered) and is_array($QuestionAnswered)){
+                    $QuestionsArray = $this->Common_model->select('esic_questions');
+                    $data['usersQuestionsNotAnswers'] = array();
+                    if(!empty($QuestionsArray) and is_array($QuestionsArray)){
+                        foreach($QuestionsArray as $key=>$questionsObj){
+                                if(!in_array($questionsObj->id, $QuestionAnswered)){
+                                     $QuestionNotAnswered = array(
+                                        'questionID'    => $questionsObj->id,
+                                        'Question'      => $questionsObj->Question,
+                                        'TableName'     => $questionsObj->tablename
+                                    );
+                                     array_push($data['usersQuestionsNotAnswers'],$QuestionNotAnswered);
+                                }
+                               
+                        }
+                    }
+                }
             }
         $this->show_admin("admin/reg_details",$data);
     }
@@ -278,6 +312,19 @@ class Admin extends MY_Controller{
                     'questionID' => $dataQuestionId
                 );
                 $this->Common_model->update('esic_questions_answers',$whereUpdate,$updateArray);
+                if($this->db->affected_rows() < 1){
+                    $insertArray = array(
+                        'userID' => $userID,
+                        'questionID' => $dataQuestionId,
+                        'Solution' =>  $Answervalue
+                    );
+                    $insertResult = $this->Common_model->insert_record('esic_questions_answers',$insertArray);
+                    //if($insertResult){
+                    //    echo "OK::Record Successfully Entered";
+                    //}else{
+                    //    echo "FAIL::Record Failed Entered";
+                    //}
+                }
                 $selectData2 = array('score AS score',false);
                 $where2 = array('id' => $userID);
                 $returnedData2 = $this->Common_model->select_fields_where('user',$selectData2, $where2, false, '', '', '','','',false);
@@ -916,6 +963,7 @@ class Admin extends MY_Controller{
             $selectData = array('
             id AS ID,
             institution AS University,
+            institutionLogo AS Logo,
             CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
@@ -1144,6 +1192,60 @@ class Admin extends MY_Controller{
             }else{
                 echo "FAIL::Record Failed Entered";
             }
+            return NULL;
+        }
+        if($param === 'updateLogo'){
+                $uniID = $this->input->post('id');
+                $allowedExt = array('jpeg','jpg','png','gif');
+                $uploadPath = './pictures/logos/';
+                $uploadDirectory = './pictures/logos/';
+                $uploadDBPath = 'pictures/logos/';
+                $insertDataArray = array();
+                //For Logo Upload
+                if(isset($_FILES['logo']['name']))
+                {
+                    $FileName = $_FILES['logo']['name'];
+                    $explodedFileName = explode('.',$FileName);
+                    $ext = end($explodedFileName);
+                    if(!in_array(strtolower($ext),$allowedExt))
+                    {
+                        echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                        return;
+                    }else
+                    {
+
+                        $FileName = "uniLogo".$uniID."_".time().".".$ext;
+                        if(!is_dir($uploadDirectory)){
+                            mkdir($uploadDirectory, 0755, true);
+                        }
+
+                        move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
+                        $insertDataArray['institutionLogo'] = $uploadDBPath.$FileName;
+                    }
+                }else{
+                    echo "FAIL::Logo Image Is Required";
+                    return;
+                }
+                
+                if(empty($uniID)){
+                    echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                    exit;
+                }
+                $selectData = array('institutionLogo AS logo',false);
+                $where = array(
+                    'id' => $uniID
+                );
+                $returnedData = $this->Common_model->select_fields_where(' esic_institution',$selectData, $where, false, '', '', '','','',false);
+                $logo = $returnedData[0]->logo;
+                if(!empty($logo) && is_file(FCPATH.'/'.$logo)){
+                    unlink('./'.$logo);
+                }
+                $resultUpdate = $this->Common_model->update(' esic_institution',$where,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
             return NULL;
         }
         $this->show_admin('admin/configuration/universities');
@@ -1397,6 +1499,7 @@ class Admin extends MY_Controller{
             IDNumber AS IDNumber,
             AddressContact AS AddressContact,
             ANZSRC AS ANZSRC,
+            rndLogo AS Logo,
             CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
             CASE WHEN insertionType = 1 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-danger">YES</span>\') WHEN insertionType = 2 THEN CONCAT(\'<span data-target="#permanent-modal" data-toggle="modal" class="label label-success">NO</span>\') ELSE "" END AS Permanent,
@@ -1604,6 +1707,87 @@ class Admin extends MY_Controller{
             }
             return NULL;
         }
+        if($param === 'new'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+            $rndname        = $this->input->post('Rnd');
+            $IDNumber       = $this->input->post('IDNumber');
+            $AddressContact = $this->input->post('AddressContact');
+            $ANZSRC         = $this->input->post('ANZSRC');
+
+            if(empty($rndname)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $insertData = array(
+                'rndname'       => $rndname,
+                'IDNumber'      => $IDNumber,
+                'AddressContact'=> $AddressContact,
+                'ANZSRC'        => $ANZSRC,
+                'insertionType' => 1
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_RnD',$insertData);
+            echo "OK::Record Successfully Entered";
+            return NULL;
+        }
+        if($param === 'updateLogo'){
+                $accID = $this->input->post('id');
+                $allowedExt = array('jpeg','jpg','png','gif');
+                $uploadPath = './pictures/logos/';
+                $uploadDirectory = './pictures/logos/';
+                $uploadDBPath = 'pictures/logos/';
+                $insertDataArray = array();
+                //For Logo Upload
+                if(isset($_FILES['logo']['name']))
+                {
+                    $FileName = $_FILES['logo']['name'];
+                    $explodedFileName = explode('.',$FileName);
+                    $ext = end($explodedFileName);
+                    if(!in_array(strtolower($ext),$allowedExt))
+                    {
+                        echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                        return;
+                    }else
+                    {
+
+                        $FileName = "rndLogo".$accID."_".time().".".$ext;
+                        if(!is_dir($uploadDirectory)){
+                            mkdir($uploadDirectory, 0755, true);
+                        }
+
+                        move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
+                        $insertDataArray['rndLogo'] = $uploadDBPath.$FileName;
+                    }
+                }else{
+                    echo "FAIL::Logo Image Is Required";
+                    return;
+                }
+                
+                if(empty($accID)){
+                    echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                    exit;
+                }
+                $selectData = array('rndLogo AS logo',false);
+                $where = array(
+                    'id' => $accID
+                );
+                $returnedData = $this->Common_model->select_fields_where('esic_RnD',$selectData, $where, false, '', '', '','','',false);
+                $logo = $returnedData[0]->logo;
+                if(!empty($logo) && is_file(FCPATH.'/'.$logo)){
+                    unlink('./'.$logo);
+                }
+                $resultUpdate = $this->Common_model->update('esic_RnD',$where,$insertDataArray);
+               // if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                //}else{
+                //    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                //}
+            return NULL;
+        }
         $this->show_admin('admin/configuration/rd');
         return NULL;
     }
@@ -1621,6 +1805,7 @@ class Admin extends MY_Controller{
             Project_Success AS Project_Success,
             Market AS Market,
             Technology AS Technology,
+            accLogo AS Logo,
             Type AS Type,
             CASE WHEN AppStatus = 2 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-danger">No</span>\') WHEN AppStatus = 3 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Lodged</span>\') WHEN AppStatus = 1 THEN CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">Yes</span>\') ELSE 
                 CONCAT(\'<span data-target="#abr-modal" data-toggle="modal" class="label label-success">No</span>\') END AS ABR,
@@ -1648,14 +1833,64 @@ class Admin extends MY_Controller{
                 echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
+            if(empty($id) or !is_numeric($id)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            if($value=='permanentDelete'){
+                $whereUpdate = array(
+                    'id' => $id
+                );
+                $this->Common_model->delete('esic_acceleration',$whereUpdate);
+                echo "OK::Record Deleted Successfully";
+            }else{
 
-            if(empty($value) or $value !== 'approve'){
+                $updateData = array(
+                    'trashed' => 1
+                );
+
+                $whereUpdate = array(
+                    'id' => $id
+                );
+
+                $returnedData = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
+               // if($returnedData === true){
+                    echo "OK::Record Successfully Trashed";
+               // }else{
+                    echo "FAIL::".$returnedData['message'];
+               // }
+            }
+            return NULL;
+        }
+        if($param === 'trash'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
                 echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
 
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'trash'){
+                $data = 1;
+            }else if($value == 'untrash'){
+                $data = 0;
+            }else{
+                $data = 2;
+            }
+
             $updateData = array(
-                'trashed' => 1
+                'trashed' => $data
             );
 
             $whereUpdate = array(
@@ -1663,11 +1898,11 @@ class Admin extends MY_Controller{
             );
 
             $returnedData = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
-            if($returnedData === true){
-                echo "OK::Record Successfully Trashed";
-            }else{
-                echo "FAIL::".$returnedData['message'];
-            }
+            //if($returnedData === true){
+                echo "OK::Record Successfully";
+            //}else{
+               // echo "FAIL::".$returnedData['message'];
+           // }
             return NULL;
         }
         if($param === 'permanent'){
@@ -1756,22 +1991,22 @@ class Admin extends MY_Controller{
 
             $id                 = $this->input->post('id');
             $Member             = $this->input->post('Member');
-            $Web_Address        = $this->input->post('Web_Address');
-            $State_Territory    = $this->input->post('State_Territory');
-            $Project_Location   = $this->input->post('Project_Location');
-            $Project_Title      = $this->input->post('Project_Title');
-            $Project_Summary    = $this->input->post('Project_Summary');
-            $Project_Success    = $this->input->post('Project_Success');
-            $Market             = $this->input->post('Market');
-            $Technology         = $this->input->post('Technology');
-            $Type               = $this->input->post('Type');
+            $Web_Address        = $this->input->post('webaddress');
+            //$State_Territory    = $this->input->post('State_Territory');
+            //$Project_Location   = $this->input->post('Project_Location');
+            $Project_Title      = $this->input->post('projecttitle');
+            //$Project_Summary    = $this->input->post('Project_Summary');
+            //$Project_Success    = $this->input->post('Project_Success');
+            //$Market             = $this->input->post('Market');
+            //$Technology         = $this->input->post('Technology');
+            //$Type               = $this->input->post('Type');*/
 
             if(empty($id) or !is_numeric($id)){
                 echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
 
-            if(empty($value)){
+            if(empty($Member)){
                 echo "FAIL::Value Must Be Entered";
                 return NULL;
             }
@@ -1779,14 +2014,14 @@ class Admin extends MY_Controller{
             $updateData = array(
                 'Member'            => $Member,
                 'Web_Address'       => $Web_Address,
-                'State_Territory'   => $State_Territory,
-                'Project_Location'  => $Project_Location,
+                //'State_Territory'   => $State_Territory,
+                //'Project_Location'  => $Project_Location,
                 'Project_Title'     => $Project_Title,
-                'Project_Summary'   => $Project_Summary,
-                'Project_Success'   => $Project_Success,
-                'Market'            => $Market,
-                'Technology'        => $Technology,
-                'Type'              => $Type,
+                //'Project_Summary'   => $Project_Summary,
+                //'Project_Success'   => $Project_Success,
+                //'Market'            => $Market,
+                //'Technology'        => $Technology,
+                //'Type'              => $Type,
                 'insertionType' => 1
             );
 
@@ -1795,15 +2030,98 @@ class Admin extends MY_Controller{
             );
 
             $updateResult = $this->Common_model->update('esic_acceleration',$whereUpdate,$updateData);
-            if($updateResult === true){
+           // if($updateResult === true){
                 echo "OK::Record Successfully Updated";
-            }else{
+           /* }else{
                 if($updateResult['code'] == 0){
                     echo "OK::Record Already Exist";
                 }else{
                     echo $updateResult['message'];
                 }
+            }*/
+            return NULL;
+        }
+        if($param === 'updateLogo'){
+                $accID = $this->input->post('id');
+                $allowedExt = array('jpeg','jpg','png','gif');
+                $uploadPath = './pictures/logos/';
+                $uploadDirectory = './pictures/logos/';
+                $uploadDBPath = 'pictures/logos/';
+                $insertDataArray = array();
+                //For Logo Upload
+                if(isset($_FILES['logo']['name']))
+                {
+                    $FileName = $_FILES['logo']['name'];
+                    $explodedFileName = explode('.',$FileName);
+                    $ext = end($explodedFileName);
+                    if(!in_array(strtolower($ext),$allowedExt))
+                    {
+                        echo "FAIL:: Only Image JPEG, PNG and GIF Images Allowed, No Other Extensions Are Allowed::error";
+                        return;
+                    }else
+                    {
+
+                        $FileName = "accLogo".$accID."_".time().".".$ext;
+                        if(!is_dir($uploadDirectory)){
+                            mkdir($uploadDirectory, 0755, true);
+                        }
+
+                        move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
+                        $insertDataArray['accLogo'] = $uploadDBPath.$FileName;
+                    }
+                }else{
+                    echo "FAIL::Logo Image Is Required";
+                    return;
+                }
+                
+                if(empty($accID)){
+                    echo "FAIL::Something went wrong with the Post, Please Contact System Administrator For Further Assistance.";
+                    exit;
+                }
+                $selectData = array('accLogo AS logo',false);
+                $where = array(
+                    'id' => $accID
+                );
+                $returnedData = $this->Common_model->select_fields_where('esic_acceleration',$selectData, $where, false, '', '', '','','',false);
+                $logo = $returnedData[0]->logo;
+                if(!empty($logo) && is_file(FCPATH.'/'.$logo)){
+                    unlink('./'.$logo);
+                }
+                $resultUpdate = $this->Common_model->update('esic_acceleration',$where,$insertDataArray);
+                if($resultUpdate === true){
+                    echo "OK::Record Updated Successfully";
+                }else{
+                    echo "FAIL::Something went wrong during Update, Please Contact System Administrator";
+                }
+            return NULL;
+        }
+        if($param === 'new'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
             }
+            $value  = $this->input->post('Acceleration');
+            $WA     = $this->input->post('webaddress');
+            $PT     = $this->input->post('projecttitle');
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $insertData = array(
+                'Member' => $value,
+                'Web_Address' => $WA,
+                'Project_Title' => $PT,
+                'insertionType' => 1
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_acceleration',$insertData);
+            //if($insertResult){
+                echo "OK::Record Successfully Entered";
+            //}else{
+                //echo "FAIL::Record Failed Entered";
+            //}
             return NULL;
         }
         $this->show_admin('admin/configuration/acc_commercials');
@@ -1843,13 +2161,65 @@ class Admin extends MY_Controller{
                 return NULL;
             }
 
-            if(empty($value) or $value !== 'approve'){
+            //if(empty($value) or $value !== 'approve'){
+                //echo "FAIL::Posted values are not VALID";
+                //return NULL;
+          //  }
+            if($value=='permanentDelete'){
+                $whereUpdate = array(
+                    'id' => $id
+                );
+
+                $this->Common_model->delete('esic_acceleration_logo',$whereUpdate);
+                echo "OK::Record Deleted Successfully";
+            }else{
+
+                $updateData = array(
+                    'trashed' => 1
+                );
+
+                $whereUpdate = array(
+                    'id' => $id
+                );
+
+                $returnedData = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$updateData);
+                if($returnedData === true){
+                    echo "OK::Record Successfully Trashed";
+                }else{
+                    echo "FAIL::".$returnedData['message'];
+                }
+            }
+            return NULL;
+        }
+        if($param === 'trash'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+
+            $id = $this->input->post('id');
+            $value = $this->input->post('value');
+
+            if(empty($id) or !is_numeric($id)){
                 echo "FAIL::Posted values are not VALID";
                 return NULL;
             }
 
+            if(empty($value)){
+                echo "FAIL::Posted values are not VALID";
+                return NULL;
+            }
+            $data='';
+            if($value == 'trash'){
+                $data = 1;
+            }else if($value == 'untrash'){
+                $data = 0;
+            }else{
+                $data = 2;
+            }
+
             $updateData = array(
-                'trashed' => 1
+                'trashed' => $data
             );
 
             $whereUpdate = array(
@@ -1858,7 +2228,7 @@ class Admin extends MY_Controller{
 
             $returnedData = $this->Common_model->update('esic_acceleration_logo',$whereUpdate,$updateData);
             if($returnedData === true){
-                echo "OK::Record Successfully Trashed";
+                echo "OK::Record Successfully";
             }else{
                 echo "FAIL::".$returnedData['message'];
             }
@@ -1915,7 +2285,7 @@ class Admin extends MY_Controller{
 
             $id   = $this->input->post('id');
             $name = $this->input->post('name');
-            $Web  = $this->input->post('Web');
+            $Web  = $this->input->post('web');
             if(empty($id) or !is_numeric($id)){
                 echo "FAIL::Posted values are not VALID";
                 return NULL;
@@ -1941,7 +2311,7 @@ class Admin extends MY_Controller{
                 echo "OK::Record Successfully Updated";
             }else{
                 if($updateResult['code'] == 0){
-                    echo "OK::Record Already Exist";
+                    echo "OK::Record Already Exist::".$updateResult['message'];
                 }else{
                     echo $updateResult['message'];
                 }
@@ -1980,6 +2350,31 @@ class Admin extends MY_Controller{
                 echo "OK::Record Successfully";
             }else{
                 echo "OK::FAIL::".$returnedData['message'];
+            }
+            return NULL;
+        }
+        if($param === 'new'){
+            if(!$this->input->post()){
+                echo "FAIL::No Value Posted";
+                return false;
+            }
+            $value = $this->input->post('Acceleration');
+
+            if(empty($value)){
+                echo "FAIL::Value Must Be Entered";
+                return NULL;
+            }
+
+            $insertData = array(
+                'name' => $value,
+                'insertionType' => 1
+            );
+
+            $insertResult = $this->Common_model->insert_record('esic_acceleration_logo',$insertData);
+            if($insertResult){
+                echo "OK::Record Successfully Entered";
+            }else{
+                echo "FAIL::Record Failed Entered";
             }
             return NULL;
         }
@@ -2040,7 +2435,6 @@ class Admin extends MY_Controller{
         $this->show_admin('admin/configuration/accelerators');
         return NULL;
     }
-
     //Show or HIde Exp Date for the Front.
     public function showExpDate(){
         $update = $this->input->post('expDate');

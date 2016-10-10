@@ -13,6 +13,25 @@
             <li class="active">list</li>
         </ol>
     </section>
+        <style type="text/css">
+        .img-logo{
+            max-width: 350px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .img-logo img{
+            width: 100%;
+        }
+        .btn-logo-edit{
+            bottom: 0px;
+            width: 100%;
+            max-width: 200px;
+            margin: 10px auto;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
 
     <!-- Main content -->
     <section class="content">
@@ -32,6 +51,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>University</th>
+                                <th>Logo</th>
                                 <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
@@ -44,6 +64,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>University</th>
+                                <th>Logo</th>
                                 <th>ABR</th>
                                 <th>Permanent</th>
                                 <th>Trashed</th>
@@ -123,6 +144,45 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger mright"  data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-success" id="addUniversityBtn">Add</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /.End Edit Ward Modal --><!-- /.modal -->
+
+<!--Edit Ward Modal-->
+<div class="modal logo-edit-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update University Logo</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="hidden" id="hiddenUserID">
+                            <input type="hidden" id="hiddenID">
+                            <label for="editStatusTextBox">Update Logo</label>
+                            <div class="img-container img-logo img-responsive">
+                                <img src="dummy" class="image-show" id="logo-show" />
+                            </div>
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <span class="btn btn-file btn-logo-edit"><span class="fileupload-new">Click To</span><span class="fileupload-exists"> Edit</span>
+                                    <input id="update-logo-file" type="file" name="logo" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mright" id="updateLogo">Save</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
 
         </div><!-- /.modal-content -->
