@@ -41,6 +41,7 @@ class Esic_model extends CI_Model
 	                company as Company,
 	                business as Business,
 	                businessShortDescription as BusinessShortDesc,
+                    tinyDescription as tinyDescription,
 	                score as Score,
 	                logo as Logo,
 	                website as Web,
@@ -88,6 +89,7 @@ class Esic_model extends CI_Model
 	                company as Company,
 	                business as Business,
 	                businessShortDescription as BusinessShortDesc,
+                    tinyDescription as tinyDescription,
 	                score as Score,
 	                logo as Logo,
 	                website as Web,
@@ -116,12 +118,14 @@ class Esic_model extends CI_Model
 			     }*/
 			     $where .= " AND ( user.firstname LIKE '%".$search."%'
 				        OR user.lastname LIKE '%".$search."%'
-				        OR user.email LIKE '%".$search."%'
+				        
 				        OR user.company LIKE '%".$search."%'
-				        OR user.business LIKE '%".$search."%'
-				        OR user.businessShortDescription LIKE '%".$search."%'
-				        OR user.website LIKE '%".$search."%' )";
+				        OR user.business LIKE '%".$search."%' )";
 			}
+             // OR user.businessShortDescription LIKE '%".$search."%'
+                       /// OR user.tinyDescription LIKE '%".$search."%'
+            //OR user.email LIKE '%".$search."%'
+            //OR user.website LIKE '%".$search."%'
 			
 			$orderBy='';
 			if(!empty($OrderSelect)){
@@ -157,6 +161,7 @@ class Esic_model extends CI_Model
                     user.town as town,
                     user.business as Business,
                     user.businessShortDescription as BusinessShortDesc,
+                    user.tinyDescription as tinyDescription,
                     user.score as Score,
                     user.logo as Logo,
                     user.corporate_date as corporate_date,

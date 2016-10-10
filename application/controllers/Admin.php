@@ -109,6 +109,7 @@ class Admin extends MY_Controller{
                     user.company as Company,
                     user.business as Business,
                     user.businessShortDescription as BusinessShortDesc,
+                    user.tinyDescription as tinyDescription,
                     user.score as Score,
                     user.logo as Logo,
                     user.productImage as productImage,
@@ -222,6 +223,7 @@ class Admin extends MY_Controller{
                     'expiry_date_value'       => date("d-m-Y", strtotime($returnedData[0]->expiry_date)),
                     'corporate_date_value'    => date("d-m-Y", strtotime($returnedData[0]->corporate_date)),
                     'BusinessShortDesc' => $returnedData[0]->BusinessShortDesc,
+                    'tinyDescription' => $returnedData[0]->tinyDescription,
                     'ShowExpiryDate' => $returnedData[0]->ShowExpiryDate
                 );
                 if(!empty($returnedData2) and is_array($returnedData2)){
@@ -332,6 +334,21 @@ class Admin extends MY_Controller{
 
                 $updateArray = array();
                 $updateArray['businessShortDescription'] = $descDataText;
+                $whereUpdate = array('id' => $userID);
+                $this->Common_model->update('user',$whereUpdate,$updateArray);
+                echo 'OK::'.urldecode($descDataText).'';
+            exit();
+    }
+    public function saveshortdesc(){
+                $userID        = $this->input->post('userID');
+                $descDataText  = $this->input->post('descDataText');
+                if(!isset($userID) || empty($userID) || !isset($descDataText) || empty($descDataText)){
+                    echo "FAIL::Something went wrong with the post, Please Contact System Administrator for Further Assistance";
+                    return;
+                }
+
+                $updateArray = array();
+                $updateArray['tinyDescription'] = $descDataText;
                 $whereUpdate = array('id' => $userID);
                 $this->Common_model->update('user',$whereUpdate,$updateArray);
                 echo 'OK::'.urldecode($descDataText).'';

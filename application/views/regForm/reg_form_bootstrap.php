@@ -106,7 +106,7 @@ $('body').on('DOMNodeInserted', function(e) {
                     </p>
 
                     <div class="form-group">
-                        <label for="Name">Name</label>
+                        <label for="Name">Name<span class="required-fields">*</span></label>
                         <div class="row">
                             <div class="col-lg-6">
                                 <input id="NameFirst" name="firstName" type="text" placeholder="First" class="form-control"
@@ -120,15 +120,15 @@ $('body').on('DOMNodeInserted', function(e) {
                     </div>
 
                     <div class="form-group">
-                        <label for="Email">Email</label>
+                        <label for="Email">Email<span class="required-fields">*</span></label>
                         <input id="Email" name="email" type="email" class="form-control" placeholder="e-g: jhon@example.com" required />
                     </div>
                     <div class="form-group">
-                        <label for="Website">Website Address</label>
+                        <label for="Website">Website Address<span class="required-fields">*</span></label>
                         <input id="Website" name="website" type="text" class="form-control" placeholder="e-g: www.example.com" required />
                     </div>
                     <div class="form-group">
-                        <label for="Company">Company Name</label>
+                        <label for="Company">Company Name<span class="required-fields">*</span></label>
                         <input id="Company" name="company" type="text" class="form-control" placeholder="Company" />
                     </div>
                      <div class="form-group address-container">
@@ -142,7 +142,12 @@ $('body').on('DOMNodeInserted', function(e) {
                         <input id="Business" name="business" type="text" class="form-control" placeholder="Business Name" />
                     </div>
                     <div class="form-group">
-                        <label for="shortDescription">Short Description of business</label>
+                        <label for="tinyDescription">Short Description of Business</label>
+                        <textarea id="tinyDescription" class="form-control" name="tinyDescription"></textarea>
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="shortDescription">Detail Description of Business</label>
                         <textarea id="shortDescription" class="form-control" name="shortDescription"></textarea>
                     </div>
                 </fieldset>
@@ -150,7 +155,7 @@ $('body').on('DOMNodeInserted', function(e) {
                 <fieldset>
                     <legend>Early Stage Limb</legend>
                     <div>
-                        <strong>Did your business have less than or equal to $1 million in expenses in the previous income year?</strong>
+                        <strong>Did your business have less than or equal to $1 million in expenses in the previous income year?<span class="required-fields">*</span></strong>
                         <div class="radio">
                             <label><input type="radio" value="Yes" name="1mExpense">Yes</label>
                         </div>
@@ -160,7 +165,7 @@ $('body').on('DOMNodeInserted', function(e) {
                     </div>
 
                     <div>
-                        <strong>Did your business have less than or equal to $200,000 in assessable income in the previous income year? (Excluding Accelerating Commercialisation Grant)</strong>
+                        <strong>Did your business have less than or equal to $200,000 in assessable income in the previous income year? (Excluding Accelerating Commercialisation Grant)<span class="required-fields">*</span></strong>
                         <div class="radio">
                             <label><input type="radio" value="Yes" name="assessableIncomeYear">Yes</label>
                         </div>
@@ -170,7 +175,7 @@ $('body').on('DOMNodeInserted', function(e) {
                     </div>
 
                     <div>
-                        <strong>Is your business listed on any stock exchanges?</strong>
+                        <strong>Is your business listed on any stock exchanges?<span class="required-fields">*</span></strong>
                         <div class="radio">
                             <label><input type="radio" value="Yes" name="listedInSExchange">Yes</label>
                         </div>
@@ -180,7 +185,7 @@ $('body').on('DOMNodeInserted', function(e) {
                     </div>
 
                     <div>
-                        <strong>When was your company incorporated in Australia?</strong>
+                        <strong>When was your company incorporated in Australia?<span class="required-fields">*</span></strong>
                         <div class="radio">
                             <label><input type="radio" value="Within the past three years" name="incorporatedAus">Within the past three years</label>
                         </div>

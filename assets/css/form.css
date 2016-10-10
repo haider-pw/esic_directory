@@ -113,7 +113,12 @@ form .address-container input{
   width: 25%;
   display: inline-block;
 }
-
+form .required-fields{
+   color: #ec1515;
+    font-size: 15px;
+    vertical-align: middle;
+    margin-left: 2px;
+}
 #SaveAccount {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -231,4 +236,10 @@ form {
 
 #SignupFormStep2 {
   display: none;
+}
+@media (max-width: 550px){
+  body #form1 legend{
+    height: inherit;
+    min-height: 65px;
+  }
 }

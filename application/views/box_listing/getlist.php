@@ -8,13 +8,20 @@ if(!empty($list) && is_array($list)){
 			    	if(!empty($user['Status'])){
 			    		$status = $user['Status'];
 			    	}
-			    	if(!empty($user['BusinessShortDesc'])){
+			    	if(!empty($user['tinyDescription'])){
+			    		if(strlen($user['tinyDescription']) > 170){
+			    			$desc =  substr($user['tinyDescription'],0,160).'...';
+			    		}else{
+			    			$desc =   $user['tinyDescription'];
+			    		}
+			    	}
+			    	/*if(!empty($user['BusinessShortDesc'])){
 			    		if(strlen($user['BusinessShortDesc']) > 170){
 			    			$desc =  substr($user['BusinessShortDesc'],0,160).'...';
 			    		}else{
 			    			$desc =   $user['BusinessShortDesc'];
 			    		}
-			    	}
+			    	}*/
 			    	if(isset($user['Logo']) and !empty($user['Logo']) and is_file(FCPATH.'/'.$user['Logo'])){
 			    		$img = base_url($user['Logo']);
 			    	}else{

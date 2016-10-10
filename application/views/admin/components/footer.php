@@ -634,7 +634,22 @@ if( $this->router->fetch_method() === 'details'){
                     }
                 });
             });
-
+        tinyMCE.init({
+                selector: '#short-desc-textarea',
+                height: 200,
+                //automatic_uploads: true,
+                //images_upload_base_path: baseUrl + 'tinyimage',
+                //imageupload_url:baseUrl + 'tinyimage',
+                //images_upload_credentials: true,
+                //relative_urls: false,
+                //remove_script_host: false,
+                plugins: [
+                    'hr anchor',
+                    'searchreplace wordcount visualblocks visualchars code fullscreen',
+                    'insertdatetime nonbreaking  directionality paste code'
+                ],
+                toolbar: 'undo redo preview| styleselect | bold italic |  outdent indent'
+            });
            tinyMCE.init({
                 selector: '#desc-textarea',
                 height: 500,
@@ -701,6 +716,35 @@ if( $this->router->fetch_method() === 'details'){
                             descText.html(data[1]);
                             ansDiv.hide();
                             $('#desc-edit').show();
+                            descText.show();
+                        }
+                    }
+                });
+
+            });
+             $("body").on("click", ".save-short-desc", function (e) {
+                e.preventDefault();
+                var userId = $(this).attr('data-user-id');
+                var textArea = tinyMCE.get('short-desc-textarea').getContent();
+                var ansDiv = $('.edit-short-desc');
+                var saveBtn = $('#save-short-desc');
+                var descText = $('#short-desc-text pre');
+                var descDataText = $.trim(textArea);
+                var postData = {
+                    userID: userId,
+                    descDataText: descDataText
+                };
+                saveBtn.parent().remove();
+                $.ajax({
+                    url: baseUrl + "Admin/saveshortdesc",
+                    data: postData,
+                    type: "POST",
+                    success: function(output) {
+                        var data = output.split("::");
+                        if (data[0] === "OK") {
+                            descText.html(data[1]);
+                            ansDiv.hide();
+                            $('#short-desc-edit').show();
                             descText.show();
                         }
                     }
@@ -2098,6 +2142,23 @@ if ($this->router->fetch_method() === 'details') {
                 descText.text('');
                 textArea.val($.trim(descDataText));
                 ansDiv.children('.form-group').append('<div class="question-action-buttons"><button id="save-desc" data-user-id="'+userId+'" class="save-desc">Save</button></div>');
+                $(this).hide();
+                
+              
+            });
+            $("#short-desc-edit").on("click", function (event) {
+                event.preventDefault();
+                var userId = $(this).attr('data-user-id');
+                var textArea = $('#short-desc-textarea');
+                var ansDiv = $('.edit-short-desc');
+                var saveBtn = $('#save-short-desc');
+                var descText = $('#short-desc-text pre');
+                ansDiv.show();
+                descText.hide();
+                var descDataText = descText.text();
+                descText.text('');
+                textArea.val($.trim(descDataText));
+                ansDiv.children('.form-group').append('<div class="question-action-buttons"><button id="save-short-desc" data-user-id="'+userId+'" class="save-short-desc">Save</button></div>');
                 $(this).hide();
                 
               

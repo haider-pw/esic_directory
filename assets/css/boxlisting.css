@@ -970,7 +970,7 @@ ul.product-list li .product-details.date-container label {
 
 body #main-content ul.product-list li:hover .overlay-desc {
     height: 143px;
-    top: 100px;
+    top: 123px;
     visibility: visible;
     opacity: 1;
 }
