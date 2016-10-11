@@ -1,4 +1,5 @@
 <?php
+///$this->load->library('resize');
 if(!empty($list) && is_array($list)){
 			    foreach($list as $key=>$user){
 			    	$status='';
@@ -23,7 +24,12 @@ if(!empty($list) && is_array($list)){
 			    		}
 			    	}*/
 			    	if(isset($user['Logo']) and !empty($user['Logo']) and is_file(FCPATH.'/'.$user['Logo'])){
-			    		$img = base_url($user['Logo']);
+			    		//$img = base_url($user['Logo']);
+			    		$filename = base_url($user['Logo']);
+				        $ext = Get_file_extension($filename);
+				        $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+			    		$img = $withoutExt.'_thumbnail_258.'.$ext;
+
 			    	}else{
 			    		$img = base_url('pictures/defaultLogo.png');
 			    	}
@@ -87,4 +93,11 @@ if(!empty($list) && is_array($list)){
 			       
 			    }
 			}
+function Get_file_extension($filename){
+       $filename = strtolower($filename) ;
+       $exts = explode(".", $filename) ;
+       $n = count($exts)-1;
+       $exts = $exts[$n];
+       return $exts;
+    }
 ?>

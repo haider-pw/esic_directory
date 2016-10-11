@@ -14,6 +14,14 @@ body div#main-content{
   }
 }
 
+body #SignupForm *{
+  word-break: break-word;
+}
+#footer-wrap table td[class*=col-], table th[class*=col-] {
+    position: inherit;
+    display: inherit;
+    float: inherit;
+}
 .wrap {
   max-width: 980px;
   margin: 10px auto 0;
@@ -237,8 +245,20 @@ form {
 #SignupFormStep2 {
   display: none;
 }
+body #mainFormDiv {
+    padding-bottom: 10px;
+}
+body .g-recaptcha div{
+  max-width: 100%;
+  width: 100%!important;
+}
 @media (max-width: 550px){
+
   body #form1 legend{
+    height: inherit;
+    min-height: 65px;
+  }
+  body #SignupFormStep2 legend{
     height: inherit;
     min-height: 65px;
   }

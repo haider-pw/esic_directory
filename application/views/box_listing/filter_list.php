@@ -28,7 +28,11 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script-->
 <!-- Latest compiled and minified CSS -->
 
-
+<style type="text/css" >
+    #location_search:focus{
+        border: red solid thin;
+    }
+</style>
     
 <div class="content-shell">
     <div class="content-wrap" id="wrap">
@@ -126,11 +130,11 @@
         var sectorsSelect,companySelect,searchInput,OrderSelect,OrderSelectValue,AdOrderSelect,ASOrderSelect,ExOrderSelect,AdOrderSelectValue,ASOrderSelectValue,ExOrderSelectValue;
         var urlToListingPage = 'https://www.esic.directory/esic-database.html';
         
-        $("body").on("click","#show-filter",function(e) {
+        $("body").on("click touchstart","#show-filter",function(e) {
             e.preventDefault();
              $('#filter #selectDiv').slideToggle( "slow");
         });
-        $("#filter_reset").click(function(e){
+        $("body").on("click touchstart","#filter_reset",function(e) {
             e.preventDefault();
             $(".module select").val($("module select option:first").val());
             $(".module input").val('');
@@ -172,9 +176,9 @@
             }
             //console.log('s'+OrderSelectValue+' cc '+selectstring);
         });
-        $("#filter_search").click(function(e){
+        $("body").on("click touchstart","#filter_search",function(e) {
             e.preventDefault();
-            console.log('Cheched');
+            //console.log('Cheched');
             var clickBtn ='filter_search';
             callfilter(clickBtn);
 
@@ -204,18 +208,20 @@
                 //ASOrderSelectValue = $('#assessmentOrderSelect option:selected').val();
                 //ExOrderSelectValue = $('#expiryOrderSelect option:selected').val();
                 //console.log('OrderSelectValue'+OrderSelectValue);
-                console.log('searchInput= '+searchInput);
-                console.log('companySelectValue= '+companySelectValue);
-                console.log('sectorsSelectValue= '+sectorsSelectValue);
-                console.log('OrderSelectValue= '+OrderSelectValue);
+                //console.log('searchInput= '+searchInput);
+                //console.log('companySelectValue= '+companySelectValue);
+                //console.log('sectorsSelectValue= '+sectorsSelectValue);
+                //console.log('OrderSelectValue= '+OrderSelectValue);
         		if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' && (OrderSelectValue=='' || OrderSelectValue==undefined)){
 		        		sessionStorage.setItem("filter-searchInput",'');
 		            	sessionStorage.setItem("filter-sectorsSelectValue",'');
 		            	sessionStorage.setItem("filter-companySelect",'');
 		            	sessionStorage.setItem("filter-OrderSelect",'');
 		            	sessionStorage.setItem("filter-OrderSelectValue",'');
-                   	  window.location.href = urlToListingPage;
-                    return false;
+
+                   	  //window.location.href = urlToListingPage;
+                      $('#location_search').focus();
+                      return false;
                 }
                 if(companySelectValue==''){
                     companySelect='';
@@ -229,14 +235,15 @@
                 	OrderSelectValue='';
                 	OrderSelect='';
                 }
-
-            	sessionStorage.setItem("filter-searchInput",searchInput);
-            	sessionStorage.setItem("filter-sectorsSelectValue",sectorsSelectValue);
-            	sessionStorage.setItem("filter-companySelect",companySelect);
-            	sessionStorage.setItem("filter-OrderSelect",OrderSelect);
-            	sessionStorage.setItem("filter-OrderSelectValue",OrderSelectValue);
-            	window.location.href = urlToListingPage;
-            	return false;
+                if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' || OrderSelectValue!='' ){
+                	sessionStorage.setItem("filter-searchInput",searchInput);
+                	sessionStorage.setItem("filter-sectorsSelectValue",sectorsSelectValue);
+                	sessionStorage.setItem("filter-companySelect",companySelect);
+                	sessionStorage.setItem("filter-OrderSelect",OrderSelect);
+                	sessionStorage.setItem("filter-OrderSelectValue",OrderSelectValue);
+                	window.location.href = urlToListingPage;
+                	return false;
+                }
         
         }
 

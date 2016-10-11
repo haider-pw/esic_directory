@@ -29,6 +29,7 @@ class Reg extends CI_Controller {
         parent::__construct();
         $this->load->model('Common_model');
         $this->load->helper('my_site_helper');
+        $this->load->model("Imagecreate_model");
 
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: PUT, GET, POST");
@@ -254,6 +255,8 @@ class Reg extends CI_Controller {
 
                     move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
                     $insertDataArray['logo'] = $uploadDBPath.$FileName;
+                    $fileToCreateThumbnail   = $uploadDBPath.$FileName;
+                    $this->Imagecreate_model->createimage($fileToCreateThumbnail);
                 }
             }else{
                 echo "FAIL::Logo Image Is Required";

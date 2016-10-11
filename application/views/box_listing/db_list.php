@@ -145,11 +145,11 @@
                         sessionStorage.setItem("filter-companySelect",'');
                         sessionStorage.setItem("filter-OrderSelect",'');
                         sessionStorage.setItem("filter-OrderSelectValue",'');
-        if( filtersearchInput !='' && 
-            filtersectorsSelectValue !='' && 
-            filtercompanySelect !='' && 
-            filterOrderSelect !='' && 
-            filterOrderSelectValue !=''){
+        if( filtersearchInput =='' && 
+            filtersectorsSelectValue =='' && 
+            filtercompanySelect =='' && 
+            filterOrderSelect =='' && 
+            filterOrderSelectValue ==''){
              getlist(0);
         }else{
             getfilterlist(0,filtersearchInput,filtersectorsSelectValue,filtercompanySelect,filterOrderSelect,filterOrderSelectValue);
@@ -175,15 +175,15 @@
 
 
 
-        $("body").on("click",".show-dates",function(e) {
+        $("body").on("click touchstart",".show-dates",function(e) {
              e.preventDefault();
             $(this).parent().find('.date-container').toggle();
         });
-        $("body").on("click","#show-filter",function(e) {
+        $("body").on("click touchstart","#show-filter",function(e) {
             e.preventDefault();
              $('#filter select, #sort-filters select').toggle();
         });
-        $("body").on("click",".thumbs-up",function(e) {
+        $("body").on("click touchstart",".thumbs-up",function(e) {
             e.preventDefault();
              var thumbsUpDiv = $(this);
              var userID = thumbsUpDiv.attr('data-link');
@@ -208,7 +208,7 @@
                 //console.log('Sorry Already Set');
             }
         });
-        $("#filter_reset").click(function(e){
+        $("body").on("click touchstart","#filter_reset",function(e) {
             e.preventDefault();
             $(".module select").val($("module select option:first").val());
             $(".module input").val('');
@@ -250,7 +250,7 @@
             }
             //console.log('s'+OrderSelectValue+' cc '+selectstring);
         });
-        $("#load_more").click(function(e){
+        $("body").on("click touchstart","#load_more",function(e) {
             e.preventDefault();
             var clickBtn ='load_more';
             var page = $(this).data('val');
@@ -279,7 +279,7 @@
                  getlist(page);
               }, 500);
         });
-        $("#filter_search").click(function(e){
+        $("body").on("click touchstart","#filter_search",function(e) {
             e.preventDefault();
             var clickBtn ='filter_search';
             callfilter(clickBtn);

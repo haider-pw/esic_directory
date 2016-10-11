@@ -20,11 +20,12 @@ class Admin extends MY_Controller{
     {
         parent::__construct();
         $this->load->model("Common_model");
+        $this->load->model("Imagecreate_model");
         $this->load->model('Users_auth');
         $this->load->helper('cookie');
         $this->Users_auth->is_logged_in();
+        //$this->load->library('resize');
     }
-
 
     public function index(){
         $this->assessments_list();
@@ -429,6 +430,8 @@ class Admin extends MY_Controller{
 
                     move_uploaded_file($_FILES['logo']['tmp_name'],$uploadPath.$FileName);
                     $insertDataArray['logo'] = $uploadDBPath.$FileName;
+                    $fileToCreateThumbnail   = $uploadDBPath.$FileName;
+                    $this->Imagecreate_model->createimage($fileToCreateThumbnail);
                 }
             }else{
                 echo "FAIL::Logo Image Is Required";

@@ -26,6 +26,7 @@ class Esic2 extends CI_Controller{
 
         ///Loading Pagination
 //        $this->load->library("pagination");
+
          $this->load->library('session');
 
         //Pagination Config

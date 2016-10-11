@@ -36,6 +36,9 @@ body.single-item-layout #main-content #wsite-content{
     padding: 0px 5px;
     text-decoration: none!important;
 }
+body #main-content .container-box .wrapper {
+    padding: 11% 0px 0px;
+}
 
 .thumbs-up span {
     font-size: 10px;
@@ -1106,7 +1109,22 @@ body #main-content .single-item .description iframe{
     ul.product-list li {
         margin: 20px 0.7%;
     }
+    body #main-content #wsite-content .wsite-content-title {
+    	padding: 0px 1em;
+	}
+    body #main-content #wsite-content div.paragraph {
+	    padding: 0px 1em;
+	}
+    body ul.product-list {
+	    border-radius: 0px;
+	    padding: 1em!important;
+	    text-align: center;
+	}
+	body #main-content .module {
+	    padding: 15px 1em;
+	}
 }
+
 
 @media (max-width:992px) {
     ul.product-list li {
@@ -1133,6 +1151,29 @@ body #main-content .single-item .description iframe{
     }
 }
 @media (max-width:768px) {
+	body #main-content.container {
+	   /* padding: 2em!important;*/
+	}
+	body #main-content #wsite-content .wsite-content-title {
+	    text-align: center!important;
+	    padding: 0px 7%;
+	}
+	body #main-content #wsite-content div.paragraph{
+		padding: 0px 7%;
+	}
+	body #main-content #wsite-content div.paragraph *{
+		font-size: 15px;
+	}
+	body #main-content ul.product-list li:hover .overlay-desc {
+	    bottom: 132px;
+	    top: auto;
+	}
+	body.single-item-layout .container-box {
+	    padding: 0px 4%;
+	}
+	body.single-item-layout #main-content.container{
+        padding: 0em!important;
+    }
     body.single-item-layout .detail-container.main-details {
         width:60%;
     }
@@ -1260,7 +1301,16 @@ body #main-content .single-item .description iframe{
       max-width: 300px;
       padding-left: 2%;
     }
-
+    .module .module-section {
+	    border: solid 1px rgba(0,0,0,0.13);
+	    text-align: center;
+	    padding: 20px 10px;
+	    max-width: 335px;
+	    display: block;
+	    width: 70%;
+	    float: none;
+	    margin: 0 auto;
+	}
 }
 
 @media (max-width:480px) {
@@ -1326,6 +1376,9 @@ body.menu-open #navmobile {
     #navmobile {
         z-index: -1;
     }
+    body.single-item-layout #wrap .container-box {
+    	padding: 0px 2%
+    }
 }
 
 
@@ -1350,3 +1403,13 @@ body.menu-open #navmobile {
 
 
 /*End of CSS Haider*/
+@media (max-width:270px) {
+    .module .module-section {
+	    width: 90%;
+	}
+}
+body table td[class*=col-], table th[class*=col-] {
+    position: inherit;
+    display: inherit;
+    float: inherit;
+}

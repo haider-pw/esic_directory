@@ -525,11 +525,12 @@ $('body').on('DOMNodeInserted', function(e) {
                     </div>
                 </fieldset>
                 <div class="button-container">
-                <div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2"></div>
+                <div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2" style="transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;float: left;"></div>
                     <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
-                    <div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2"</div>
+                    <!--div class="g-recaptcha" data-sitekey="6LdkvgcUAAAAAJmtbVlO47p0o07zgjaa2g8RWTC2"></div-->
                     <button id="back"  class="btn btn-primary submit">Back</button>
                     <button id="SubmitForm" type="button" class="btn btn-primary submit">Submit Form</button>
+                    <div  style="clear:both;"></div>
                 </div>
             </div>
         </form>

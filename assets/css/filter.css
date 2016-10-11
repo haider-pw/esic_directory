@@ -56,15 +56,14 @@ body * {
     letter-spacing: 1px;
     height: 40px;
     min-width: 150px;
+    opacity: 1!important;
 }
 
 .advance-filter-toggle {
     display: none;
 }
 
-.advance-filter-toggle a,
-.advance-filter-toggle a:focus,
-.advance-filter-toggle a:hover {
+.advance-filter-toggle a{
     background: #345;
     display: block;
     color: #fff;
@@ -79,6 +78,11 @@ body * {
     max-width: 280px;
     text-decoration: none;
     margin: 10px auto;
+}
+.advance-filter-toggle a:focus,
+.advance-filter-toggle a:hover {
+    color: #fff;
+    opacity: 1!important;
 }
 
 .module {
@@ -348,6 +352,8 @@ body .module .module-section {
         display: inline-block;
         width: 40%;
         float: left;
+        position: relative;
+        z-index: 3000;
     }
     .advance-filter-toggle {
         display: block;
@@ -373,6 +379,10 @@ body .module .module-section {
     #filter_submit button {
         display: block;
         margin: 5px auto;
+        opacity: 1 !important;
+    }
+    #filter_submit button:active{
+        opacity: 1 !important; 
     }
     #filter select {
         display: block;

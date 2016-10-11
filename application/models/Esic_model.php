@@ -14,6 +14,7 @@ class Esic_model extends CI_Model
     {
         parent::__construct();
         $this->load->library('Datatables');
+        
     }
 
     public function record_count(){
@@ -104,13 +105,13 @@ class Esic_model extends CI_Model
 
             $where = "Publish = 1 ";
             if(!empty($secSelect)){
-                $where .= "AND user.sectorID =".$secSelect;
+                $where .= " AND user.sectorID =".$secSelect;
             }
             if(!empty($comSelect)){
                 /*if(!empty($where)){
                     $where .=" AND ";
                 }*/
-                $where .= "AND user.company =".$comSelect;
+                $where .= " AND user.company =".$comSelect;
             }
             if(!empty($search)){
 				/*if(!empty($where)){
