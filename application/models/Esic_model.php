@@ -111,7 +111,8 @@ class Esic_model extends CI_Model
                 /*if(!empty($where)){
                     $where .=" AND ";
                 }*/
-                $where .= " AND user.company =".$comSelect;
+                $where .= " AND user.status =".$comSelect;
+               // $where .= " AND user.company =".$comSelect;
             }
             if(!empty($search)){
 				/*if(!empty($where)){

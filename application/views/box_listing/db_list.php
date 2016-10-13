@@ -56,10 +56,11 @@
                                         ?>
                                     </select>
                                 </div>
-                                 <div class="selectFilters company">
+                                 <!--div class="selectFilters company">
                                     <select id="companySelect" placeholder="Select Company">
                                         <option value="" disabled selected>Select Company</option>
                                         <?php
+                                        /*
                                         if(isset($company) and !empty($company)){
                                             $checkArray = array();
                                             foreach($company as $company){
@@ -69,6 +70,19 @@
                                                             array_push($checkArray, $company->company);
                                                     }
                                                 }
+                                            }
+                                        }
+                                        */
+                                        ?>
+                                    </select>
+                                </div-->
+                                <div class="selectFilters company">
+                                    <select id="companySelect" placeholder="Select Company">
+                                        <option value="" disabled selected>Select Status</option>
+                                        <?php
+                                        if(isset($Statuss) and !empty($Statuss)){
+                                            foreach($Statuss as $Status){     
+                                            	echo '<option value="'.$Status->id.'">'.$Status->status.'</option>';    
                                             }
                                         }
                                         ?>
@@ -334,7 +348,8 @@
                 $("#load_more").addClass('loading');
                 $("#loader").show();
                 setTimeout(function(){
-                     getfilterlist(page,searchInput,sectorsSelectValue,companySelect,OrderSelect,OrderSelectValue);
+                	getfilterlist(page,searchInput,sectorsSelectValue,companySelectValue,OrderSelect,OrderSelectValue);
+                     //getfilterlist(page,searchInput,sectorsSelectValue,companySelect,OrderSelect,OrderSelectValue);
                   }, 500);
         }
 

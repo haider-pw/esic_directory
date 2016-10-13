@@ -72,10 +72,11 @@
                                             ?>
                                         </select>
                                     </div>
-                                     <div class="selectFilters company">
+                                     <!--div class="selectFilters company">
                                         <select id="companySelect" placeholder="Select Company">
                                             <option value="" disabled selected>Select Company</option>
                                             <?php
+                                            /*
                                             if(isset($company) and !empty($company)){
                                                 $checkArray = array();
                                                 foreach($company as $company){
@@ -85,6 +86,19 @@
                                                                 array_push($checkArray, $company->company);
                                                         }
                                                     }
+                                                }
+                                            }
+                                            */
+                                            ?>
+                                        </select>
+                                    </div-->
+                                    <div class="selectFilters company">
+                                        <select id="companySelect" placeholder="Select Company">
+                                            <option value="" disabled selected>Select Status</option>
+                                            <?php
+                                            if(isset($Statuss) and !empty($Statuss)){
+                                                foreach($Statuss as $Status){     
+                                                    echo '<option value="'.$Status->id.'">'.$Status->status.'</option>';    
                                                 }
                                             }
                                             ?>
@@ -238,7 +252,8 @@
                 if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' || OrderSelectValue!='' ){
                 	sessionStorage.setItem("filter-searchInput",searchInput);
                 	sessionStorage.setItem("filter-sectorsSelectValue",sectorsSelectValue);
-                	sessionStorage.setItem("filter-companySelect",companySelect);
+                	//sessionStorage.setItem("filter-companySelect",companySelect);
+                    sessionStorage.setItem("filter-companySelect",companySelectValue);
                 	sessionStorage.setItem("filter-OrderSelect",OrderSelect);
                 	sessionStorage.setItem("filter-OrderSelectValue",OrderSelectValue);
                 	window.location.href = urlToListingPage;
