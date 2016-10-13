@@ -1,16 +1,16 @@
 <!--script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-	<script type="text/javascript">
-		(function($){
-			var url = 'https://ctsdemo.com/demos/esic/Esicfilter/index';
-			$.ajax({
-				crossOrigin: true,
-				url: url,
-				success: function(data) {
-					$("#filter-area").append(data);
-				}
-			});
-		})(window._W && _W.jQuery);
-	</script>
+    <script type="text/javascript">
+        (function($){
+            var url = 'https://ctsdemo.com/demos/esic/Esicfilter/index';
+            $.ajax({
+                crossOrigin: true,
+                url: url,
+                success: function(data) {
+                    $("#filter-area").append(data);
+                }
+            });
+        })(window._W && _W.jQuery);
+    </script>
 
 <div id="filter-area" class="filter-area">
 </div-->
@@ -19,11 +19,13 @@
 
 <?php ?>
 
-<!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"-->
-<!--link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+<!--link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?=base_url();?>assets/css/filter.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script-->
+
 <!--script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script-->
 <!-- Latest compiled and minified CSS -->
@@ -32,8 +34,59 @@
     #location_search:focus{
         border: red solid thin;
     }
+/* added by hamid raza  */
+    .search { position: relative; }
+    .search input { text-indent: 30px;}
+    .search .fa-search {
+        position: absolute;
+        top: 12px;
+        right: 20px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+    span.icon {
+        color: gray;
+    }
+
+    img.slider_image {
+        width: 70px;
+        height: 70px;
+    }
+
+    /* slider code */
+
+    .glyphicon-chevron-right{
+        color: gray;
+        font-size: 15px !important;
+    }
+    .glyphicon-chevron-left{
+        color: gray;
+        font-size: 15px !important;
+    }
+    .carousel-control {
+       background-image: none !important;
+        width: 1% !important;
+        display: none;
+
+    }
+    #theCarousel:hover .carousel-control {
+        display: block;
+
+    }
+   img.img-responsive{
+       width: 60px;
+       height: 50px;
+       margin-top: 10px;
+       margin-left: 6px;
+
+
+   }
+    .row{
+        margin: none !important;
+    }
+
 </style>
-    
+
 <div class="content-shell">
     <div class="content-wrap" id="wrap">
         <div class="content">
@@ -46,16 +99,61 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="module-section">
                         <!--h3>Search by Location</h3-->
-                        <div class="filter form">
-                            <div class="filter3" id="filter">
-                                <div class="searchbox">
+
+  <div class="filter form">
+      <div class="filter3" id="filter">
+                                <div class="searchbox search">
+                                    <span class="icon" id="filter_search" > <i class="fa fa-search"></i></span>
                                     <input type="text" value="" name="location_value" id="location_search"
-                                       class="locationSuggest ac_input" placeholder="Name, website"
+                                       class="locationSuggest ac_input" placeholder="Search Now"
                                        autocomplete="off">
+
                                 </div>
-                                <div class="advance-filter-toggle">
+
+          <div class="row">
+                <div class="col-md-12">
+                     <div class="carousel slide multi-item-carousel" id="theCarousel">
+                           <div class="carousel-inner">
+
+                               <?php
+
+
+                                    $i  = 1;
+                                      if(isset($company) and !empty($company)){
+                                        foreach ($company as $companyi) {
+
+                                          $item_class = ($i == 1) ? 'item active' : 'item';
+                                            ?>
+                                              <div class="<?php echo $item_class; ?>">
+                                               <div class="col-xs-4">
+                                                 <a href="#">
+                                                   <img src="<?php echo  base_url($companyi->logo) ?>" class="img-responsive" />
+                                                 </a>
+                                               </div>
+                                               </div>
+                                             <?php
+                                        $i++;
+                                                }}
+                                                ?>
+
+
+
+                          </div>
+                                            <a class="left carousel-control" href="#theCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                                            <a class="right carousel-control" href="#theCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                                        </div>
+             </div>
+           </div>
+ </div>
+
+
+
+
+
+                                <?php /*    <div class="advance-filter-toggle">
                                     <a href="#" id="show-filter">Advance Filters</a>
                                 </div>
                                 <div id="selectDiv" class="">
@@ -76,19 +174,7 @@
                                         <select id="companySelect" placeholder="Select Company">
                                             <option value="" disabled selected>Select Company</option>
                                             <?php
-                                            /*
-                                            if(isset($company) and !empty($company)){
-                                                $checkArray = array();
-                                                foreach($company as $company){
-                                                    if(!empty($company->company)){
-                                                       if (!(in_array($company->company, $checkArray))){
-                                                                echo '<option value="'.$company->id.'">'.$company->company.'</option>';
-                                                                array_push($checkArray, $company->company);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            */
+
                                             ?>
                                         </select>
                                     </div-->
@@ -128,10 +214,12 @@
                                 </div>
                             </div>
                         </div>
+
                         <div id="filter_submit">
                             <button  id="filter_search" class="hero-link green-bg" value="Search Now" data-val = "0">Search Now</button>
                             <button  id="filter_reset" class="hero-link green-bg" value="Reset" data-val = "0">Reset</button>  
                         </div>
+                   */ ?>
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -200,24 +288,24 @@
         function callfilter(clickBtn){
                 var page = $("#filter_search").data('val');
                 //console.log('page ='+page);
-                if(clickBtn=='filter_search'){
+                /*if(clickBtn=='filter_search'){
                     if(sectorsSelect != $('#sectorsSelect option:selected').text()){
                         page = 0;
                     }
                     if(companySelect != $('#companySelect option:selected').text()){
                         page = 0;
                     }
-                }
+                }*/
                 searchInput = $('#location_search').val();
-                companySelect = $('#companySelect option:selected').text();
-                sectorsSelect = $('#sectorsSelect option:selected').text();
+               // companySelect = $('#companySelect option:selected').text();
+              //  sectorsSelect = $('#sectorsSelect option:selected').text();
                 //AdOrderSelect = $('#dateAddedOrderSelect option:selected').text();
                 //ASOrderSelect = $('#assessmentOrderSelect option:selected').text();
                 //ExOrderSelect = $('#expiryOrderSelect option:selected').text();
 
                 //console.log(searchInput);
-                companySelectValue = $('#companySelect option:selected').val();
-                sectorsSelectValue = $('#sectorsSelect option:selected').val();
+                //companySelectValue = $('#companySelect option:selected').val();
+                //sectorsSelectValue = $('#sectorsSelect option:selected').val();
                 //AdOrderSelectValue = $('#dateAddedOrderSelect option:selected').val();
                 //ASOrderSelectValue = $('#assessmentOrderSelect option:selected').val();
                 //ExOrderSelectValue = $('#expiryOrderSelect option:selected').val();
@@ -226,18 +314,20 @@
                 //console.log('companySelectValue= '+companySelectValue);
                 //console.log('sectorsSelectValue= '+sectorsSelectValue);
                 //console.log('OrderSelectValue= '+OrderSelectValue);
-        		if(searchInput=='' && companySelectValue=='' && sectorsSelectValue=='' && (OrderSelectValue=='' || OrderSelectValue==undefined)){
-		        		sessionStorage.setItem("filter-searchInput",'');
-		            	sessionStorage.setItem("filter-sectorsSelectValue",'');
-		            	sessionStorage.setItem("filter-companySelect",'');
-		            	sessionStorage.setItem("filter-OrderSelect",'');
-		            	sessionStorage.setItem("filter-OrderSelectValue",'');
+                if(searchInput=='' ){
+                    //&& companySelectValue=='' && sectorsSelectValue=='' && (OrderSelectValue=='' || OrderSelectValue==undefined)){
 
-                   	  //window.location.href = urlToListingPage;
+                        sessionStorage.setItem("filter-searchInput",'');
+                        sessionStorage.setItem("filter-sectorsSelectValue",'');
+                        sessionStorage.setItem("filter-companySelect",'');
+                        sessionStorage.setItem("filter-OrderSelect",'');
+                        sessionStorage.setItem("filter-OrderSelectValue",'');
+
+                      //window.location.href = urlToListingPage;
                       $('#location_search').focus();
                       return false;
                 }
-                if(companySelectValue==''){
+               /* if(companySelectValue==''){
                     companySelect='';
                 }else{
                    companySelect = '"'+companySelect+'"';
@@ -246,21 +336,57 @@
                     sectorsSelect='';
                 }
                 if(OrderSelectValue==undefined){
-                	OrderSelectValue='';
-                	OrderSelect='';
+                    OrderSelectValue='';
+                    OrderSelect='';
                 }
-                if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' || OrderSelectValue!='' ){
-                	sessionStorage.setItem("filter-searchInput",searchInput);
-                	sessionStorage.setItem("filter-sectorsSelectValue",sectorsSelectValue);
-                	//sessionStorage.setItem("filter-companySelect",companySelect);
+                if(searchInput!='' || companySelectValue!='' || sectorsSelectValue!='' || OrderSelectValue!='' ){*/
+                    sessionStorage.setItem("filter-searchInput",searchInput);
+                    /*sessionStorage.setItem("filter-sectorsSelectValue",sectorsSelectValue);
+                    //sessionStorage.setItem("filter-companySelect",companySelect);
                     sessionStorage.setItem("filter-companySelect",companySelectValue);
-                	sessionStorage.setItem("filter-OrderSelect",OrderSelect);
-                	sessionStorage.setItem("filter-OrderSelectValue",OrderSelectValue);
-                	window.location.href = urlToListingPage;
-                	return false;
-                }
-        
+                    sessionStorage.setItem("filter-OrderSelect",OrderSelect);
+                    sessionStorage.setItem("filter-OrderSelectValue",OrderSelectValue);*/
+                    window.location.href = urlToListingPage;
+                    return false;
+                //}
+
         }
+
+        // Instantiate the Bootstrap carousel
+        $('.multi-item-carousel').carousel({
+            interval:2400
+
+        });
+
+// for every slide in carousel, copy the next slide's item in the slide.
+// Do the same for the next, next item.
+        $('.multi-item-carousel .item').each(function(){
+            var next = $(this).next();
+
+            if (!next.length) {
+                next = $(this).siblings(':first');
+            }
+            next.children(':first-child').clone().appendTo($(this));
+
+            if (next.next().length>0) {
+                next.next().children(':first-child').clone().appendTo($(this));
+            } else {
+                $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+            }
+        });
+
+        /*function search_func(e)
+        {
+            e = e || window.event;
+            if (e.keyCode == 13)
+            {
+                document.getElementById('location_search').click();
+                return false;
+            }
+            return true;
+        }*/
 
     });
 </script>
+
+
